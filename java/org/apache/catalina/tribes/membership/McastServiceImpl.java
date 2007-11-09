@@ -21,14 +21,15 @@ package org.apache.catalina.tribes.membership;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
-import java.net.MulticastSocket;
-
-import org.apache.catalina.tribes.MembershipListener;
-import java.util.Arrays;
-import java.net.SocketTimeoutException;
-import org.apache.catalina.tribes.Member;
-import org.apache.catalina.tribes.Channel;
 import java.net.InetSocketAddress;
+import java.net.MulticastSocket;
+import java.net.SocketTimeoutException;
+import java.util.Arrays;
+
+import org.apache.catalina.tribes.Channel;
+import org.apache.catalina.tribes.Member;
+import org.apache.catalina.tribes.MembershipListener;
+import java.net.BindException;
 
 /**
  * A <b>membership</b> implementation using simple multicast.
@@ -121,6 +122,20 @@ public class McastServiceImpl
     protected InetAddress mcastBindAddress = null;
     
     /**
+     * nr of times the system has to fail before a recovery is initiated
+     */
+    protected int recoveryCounter = 10;
+    
+    /**
+     * The time the recovery thread sleeps between recovery attempts
+     */
+    protected long recoverySleepTime = 5000;
+    
+    /**
+     * Add the ability to turn on/off recovery
+     */
+    protected boolean recoveryEnabled = true;
+    /**
      * Create a new mcast service impl
      * @param member - the local member
      * @param sendFrequency - the time (ms) in between pings sent out
@@ -151,6 +166,10 @@ public class McastServiceImpl
         this.timeToExpiration = expireTime;
         this.service = service;
         this.sendFrequency = sendFrequency;
+        init();
+    }
+
+    public void init() throws IOException {
         setupSocket();
         sendPacket = new DatagramPacket(new byte[MAX_PACKET_SIZE],MAX_PACKET_SIZE);
         sendPacket.setAddress(address);
@@ -158,12 +177,28 @@ public class McastServiceImpl
         receivePacket = new DatagramPacket(new byte[MAX_PACKET_SIZE],MAX_PACKET_SIZE);
         receivePacket.setAddress(address);
         receivePacket.setPort(port);
-        membership = new Membership(member);
+        member.setCommand(new byte[0]);
+        member.getData(true, true);
+        if ( membership == null ) membership = new Membership(member);
     }
     
     protected void setupSocket() throws IOException {
-        if (mcastBindAddress != null) socket = new MulticastSocket(new InetSocketAddress(mcastBindAddress, port));
-        else socket = new MulticastSocket(port);
+        if (mcastBindAddress != null) {
+            try {
+                log.info("Attempting to bind the multicast socket to "+address+":"+port);
+                socket = new MulticastSocket(new InetSocketAddress(address,port));
+            } catch (BindException e) {
+                /*
+                 * On some plattforms (e.g. Linux) it is not possible to bind
+                 * to the multicast address. In this case only bind to the
+                 * port.
+                 */
+                log.info("Binding to multicast address, failed. Binding to port only.");
+                socket = new MulticastSocket(port);
+            }
+        } else {
+            socket = new MulticastSocket(port);
+        }
         socket.setLoopbackMode(false); //hint that we don't need loop back messages
         if (mcastBindAddress != null) {
 			if(log.isInfoEnabled())
@@ -354,25 +389,42 @@ public class McastServiceImpl
        return this.serviceStartTime;
     }
 
+    public int getRecoveryCounter() {
+        return recoveryCounter;
+    }
+
+    public boolean isRecoveryEnabled() {
+        return recoveryEnabled;
+    }
+
+    public long getRecoverySleepTime() {
+        return recoverySleepTime;
+    }
 
     public class ReceiverThread extends Thread {
+        int errorCounter = 0;
         public ReceiverThread() {
             super();
-            setName("Cluster-MembershipReceiver");
+            setName("Tribes-MembershipReceiver");
         }
         public void run() {
             while ( doRunReceiver ) {
                 try {
                     receive();
+                    errorCounter=0;
                 } catch ( ArrayIndexOutOfBoundsException ax ) {
                     //we can ignore this, as it means we have an invalid package
                     //but we will log it to debug
                     if ( log.isDebugEnabled() )
                         log.debug("Invalid member mcast package.",ax);
                 } catch ( Exception x ) {
-                    log.warn("Error receiving mcast package. Sleeping 500ms",x);
+                    if (errorCounter==0) log.warn("Error receiving mcast package. Sleeping 500ms",x);
+                    else log.debug("Error receiving mcast package. Sleeping 500ms",x);
                     try { Thread.sleep(500); } catch ( Exception ignore ){}
-                    
+                    if ( (++errorCounter)>=recoveryCounter ) {
+                        errorCounter=0;
+                        new RecoveryThread(McastServiceImpl.this);
+                    }
                 }
             }
         }
@@ -380,20 +432,103 @@ public class McastServiceImpl
 
     public class SenderThread extends Thread {
         long time;
+        int errorCounter=0;
         public SenderThread(long time) {
             this.time = time;
-            setName("Cluster-MembershipSender");
+            setName("Tribes-MembershipSender");
 
         }
         public void run() {
             while ( doRunSender ) {
                 try {
                     send(true);
+                    errorCounter = 0;
                 } catch ( Exception x ) {
-                    log.warn("Unable to send mcast message.",x);
+                    if (errorCounter==0) log.warn("Unable to send mcast message.",x);
+                    else log.debug("Unable to send mcast message.",x);
+                    if ( (++errorCounter)>=recoveryCounter ) {
+                        errorCounter=0;
+                        new RecoveryThread(McastServiceImpl.this);
+                    }
                 }
                 try { Thread.sleep(time); } catch ( Exception ignore ) {}
             }
         }
     }//class SenderThread
+
+    protected static class RecoveryThread extends Thread {
+        static boolean running = false;
+        McastServiceImpl parent = null;
+        public RecoveryThread(McastServiceImpl parent) {
+            this.parent = parent;
+            if (!init(this)) parent = null;
+        }
+        
+        public static synchronized boolean init(RecoveryThread t) {
+            if ( running ) return false;
+            if ( !t.parent.isRecoveryEnabled()) return false;
+            running = true;
+            t.setName("Tribes-MembershipRecovery");
+            t.setDaemon(true);
+            t.start();
+            return true;
+        }
+
+        public boolean stopService() {
+            try {
+                parent.stop(Channel.MBR_RX_SEQ | Channel.MBR_TX_SEQ);
+                return true;
+            } catch (Exception x) {
+                log.warn("Recovery thread failed to stop membership service.", x);
+                return false;
+            }
+        }
+        public boolean startService() {
+            try {
+                parent.init();
+                parent.start(Channel.MBR_RX_SEQ | Channel.MBR_TX_SEQ);
+                return true;
+            } catch (Exception x) {
+                log.warn("Recovery thread failed to start membership service.", x);
+                return false;
+            }
+        }
+        public void run() {
+            boolean success = false;
+            int attempt = 0;
+            try {
+                while (!success) {
+                    if(log.isInfoEnabled())
+                        log.info("Tribes membership, running recovery thread, multicasting is not functional.");
+                    if (stopService() & startService()) {
+                        success = true;
+                        if(log.isInfoEnabled())
+                            log.info("Membership recovery was successful.");
+                    }
+                    try {
+                        if (!success) {
+                            if(log.isInfoEnabled())
+                                log.info("Recovery attempt "+(++attempt)+" failed, trying again in " +parent.recoverySleepTime+ " seconds");
+                            Thread.sleep(parent.recoverySleepTime);
+                        }
+                    }catch (InterruptedException ignore) {
+                    }
+                }
+            }finally {
+                running = false;
+            }
+        }
+    }
+
+    public void setRecoveryCounter(int recoveryCounter) {
+        this.recoveryCounter = recoveryCounter;
+    }
+
+    public void setRecoveryEnabled(boolean recoveryEnabled) {
+        this.recoveryEnabled = recoveryEnabled;
+    }
+
+    public void setRecoverySleepTime(long recoverySleepTime) {
+        this.recoverySleepTime = recoverySleepTime;
+    }
 }

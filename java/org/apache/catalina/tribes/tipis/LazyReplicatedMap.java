@@ -26,6 +26,7 @@ import org.apache.catalina.tribes.MembershipListener;
 import org.apache.catalina.tribes.group.RpcCallback;
 import org.apache.catalina.tribes.util.Arrays;
 import org.apache.catalina.tribes.UniqueId;
+import org.apache.catalina.tribes.tipis.AbstractReplicatedMap.MapOwner;
 
 /**
  * A smart implementation of a stateful replicated map. uses primary/secondary backup strategy. 
@@ -68,7 +69,7 @@ public class LazyReplicatedMap extends AbstractReplicatedMap
     implements RpcCallback, ChannelListener, MembershipListener {
     protected static org.apache.juli.logging.Log log = org.apache.juli.logging.LogFactory.getLog(LazyReplicatedMap.class);
     
-    
+
     
 //------------------------------------------------------------------------------    
 //              CONSTRUCTORS / DESTRUCTORS
@@ -81,7 +82,7 @@ public class LazyReplicatedMap extends AbstractReplicatedMap
          * @param initialCapacity int - the size of this map, see HashMap
          * @param loadFactor float - load factor, see HashMap
          */
-        public LazyReplicatedMap(Object owner, Channel channel, long timeout, String mapContextName, int initialCapacity, float loadFactor, ClassLoader[] cls) {
+        public LazyReplicatedMap(MapOwner owner, Channel channel, long timeout, String mapContextName, int initialCapacity, float loadFactor, ClassLoader[] cls) {
             super(owner,channel,timeout,mapContextName,initialCapacity,loadFactor, Channel.SEND_OPTIONS_DEFAULT,cls);
         }
 
@@ -92,7 +93,7 @@ public class LazyReplicatedMap extends AbstractReplicatedMap
          * @param mapContextName String - unique name for this map, to allow multiple maps per channel
          * @param initialCapacity int - the size of this map, see HashMap
          */
-        public LazyReplicatedMap(Object owner, Channel channel, long timeout, String mapContextName, int initialCapacity, ClassLoader[] cls) {
+        public LazyReplicatedMap(MapOwner owner, Channel channel, long timeout, String mapContextName, int initialCapacity, ClassLoader[] cls) {
             super(owner, channel,timeout,mapContextName,initialCapacity, LazyReplicatedMap.DEFAULT_LOAD_FACTOR, Channel.SEND_OPTIONS_DEFAULT, cls);
         }
 
@@ -102,7 +103,7 @@ public class LazyReplicatedMap extends AbstractReplicatedMap
          * @param timeout long - timeout for RPC messags
          * @param mapContextName String - unique name for this map, to allow multiple maps per channel
          */
-        public LazyReplicatedMap(Object owner, Channel channel, long timeout, String mapContextName, ClassLoader[] cls) {
+        public LazyReplicatedMap(MapOwner owner, Channel channel, long timeout, String mapContextName, ClassLoader[] cls) {
             super(owner, channel,timeout,mapContextName, LazyReplicatedMap.DEFAULT_INITIAL_CAPACITY,LazyReplicatedMap.DEFAULT_LOAD_FACTOR,Channel.SEND_OPTIONS_DEFAULT, cls);
         }
 
@@ -137,10 +138,10 @@ public class LazyReplicatedMap extends AbstractReplicatedMap
         boolean success = false;
         do {
             //select a backup node
-            Member next = members[firstIdx];
+            Member next = members[nextIdx];
             
             //increment for the next round of back up selection
-            nextIdx = firstIdx + 1;
+            nextIdx = nextIdx + 1;
             if ( nextIdx >= members.length ) nextIdx = 0;
             
             if (next == null) {
@@ -151,7 +152,7 @@ public class LazyReplicatedMap extends AbstractReplicatedMap
                 backup = wrap(next);
                 //publish the backup data to one node
                 msg = new MapMessage(getMapContextName(), MapMessage.MSG_BACKUP, false,
-                                     (Serializable) key, (Serializable) value, null, backup);
+                                     (Serializable) key, (Serializable) value, null, channel.getLocalMember(false), backup);
                 if ( log.isTraceEnabled() ) 
                     log.trace("Publishing backup data:"+msg+" to: "+next.getName());
                 UniqueId id = getChannel().send(backup, msg, getChannelSendOptions());
@@ -167,7 +168,7 @@ public class LazyReplicatedMap extends AbstractReplicatedMap
                 Member[] proxies = excludeFromSet(backup, getMapMembers());
                 if (success && proxies.length > 0 ) {
                     msg = new MapMessage(getMapContextName(), MapMessage.MSG_PROXY, false,
-                                         (Serializable) key, null, null, backup);
+                                         (Serializable) key, null, null, channel.getLocalMember(false),backup);
                     if ( log.isTraceEnabled() ) 
                     log.trace("Publishing proxy data:"+msg+" to: "+Arrays.toNameString(proxies));
                     getChannel().send(proxies, msg, getChannelSendOptions());

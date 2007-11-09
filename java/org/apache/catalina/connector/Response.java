@@ -52,8 +52,6 @@ import org.apache.tomcat.util.http.FastHttpDateFormat;
 import org.apache.tomcat.util.http.MimeHeaders;
 import org.apache.tomcat.util.http.ServerCookie;
 import org.apache.tomcat.util.net.URL;
-import org.apache.coyote.ActionCode;
-import org.apache.tomcat.util.MutableBoolean;
 
 /**
  * Wrapper object for the Coyote response.
@@ -307,7 +305,13 @@ public class Response
     public int getContentCount() {
         return outputBuffer.getContentWritten();
     }
-
+    
+    /**
+     * Return the number of bytes actually written to the output stream.
+     */
+    public long getContentCountLong() {
+        return outputBuffer.getContentWrittenLong();
+    }
 
     /**
      * Set the application commit flag.
@@ -531,16 +535,6 @@ public class Response
     }
 
 
-    /**
-     * Return true if bytes are available.
-     */
-    public boolean isWriteable() {
-        MutableBoolean bool = new MutableBoolean(false);
-        coyoteResponse.action(ActionCode.ACTION_COMET_WRITEABLE,bool);
-        return bool.get();    
-    }
-
-    
     // ------------------------------------------------ ServletResponse Methods
 
 
@@ -1447,7 +1441,8 @@ public class Response
             String file = url.getFile();
             if ((file == null) || !file.startsWith(contextPath))
                 return (false);
-            if( file.indexOf(";jsessionid=" + session.getIdInternal()) >= 0 )
+            String tok = ";" + Globals.SESSION_PARAMETER_NAME + "=" + session.getIdInternal();
+            if( file.indexOf(tok, contextPath.length()) >= 0 )
                 return (false);
         }
 
@@ -1581,7 +1576,9 @@ public class Response
         }
         StringBuffer sb = new StringBuffer(path);
         if( sb.length() > 0 ) { // jsessionid can't be first.
-            sb.append(";jsessionid=");
+            sb.append(";");
+            sb.append(Globals.SESSION_PARAMETER_NAME);
+            sb.append("=");
             sb.append(sessionId);
         }
         sb.append(anchor);

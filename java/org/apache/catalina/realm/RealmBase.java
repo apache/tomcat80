@@ -37,6 +37,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.catalina.Container;
 import org.apache.catalina.Context;
+import org.apache.catalina.Globals;
 import org.apache.catalina.Lifecycle;
 import org.apache.catalina.LifecycleException;
 import org.apache.catalina.LifecycleListener;
@@ -458,7 +459,7 @@ public abstract class RealmBase
     public SecurityConstraint [] findSecurityConstraints(Request request,
                                                          Context context) {
 
-        ArrayList results = null;
+        ArrayList<SecurityConstraint> results = null;
         // Are there any defined security constraints?
         SecurityConstraint constraints[] = context.findConstraints();
         if ((constraints == null) || (constraints.length == 0)) {
@@ -502,7 +503,7 @@ public abstract class RealmBase
                         found = true;
                         if(collection[j].findMethod(method)) {
                             if(results == null) {
-                                results = new ArrayList();
+                                results = new ArrayList<SecurityConstraint>();
                             }
                             results.add(constraints[i]);
                         }
@@ -571,7 +572,7 @@ public abstract class RealmBase
                     }
                     if(collection[j].findMethod(method)) {
                         if(results == null) {
-                            results = new ArrayList();
+                            results = new ArrayList<SecurityConstraint>();
                         }
                         results.add(constraints[i]);
                     }
@@ -629,7 +630,7 @@ public abstract class RealmBase
                 found = true;
                 if(collection[pos].findMethod(method)) {
                     if(results == null) {
-                        results = new ArrayList();
+                        results = new ArrayList<SecurityConstraint>();
                     }
                     results.add(constraints[i]);
                 }
@@ -673,7 +674,7 @@ public abstract class RealmBase
                 }
                 if(matched) {
                     if(results == null) {
-                        results = new ArrayList();
+                        results = new ArrayList<SecurityConstraint>();
                     }                    
                     results.add(constraints[i]);
                 }
@@ -691,7 +692,8 @@ public abstract class RealmBase
     /**
      * Convert an ArrayList to a SecurityContraint [].
      */
-    private SecurityConstraint [] resultsToArray(ArrayList results) {
+    private SecurityConstraint [] resultsToArray(
+            ArrayList<SecurityConstraint> results) {
         if(results == null) {
             return null;
         }
@@ -944,7 +946,9 @@ public abstract class RealmBase
         String requestedSessionId = request.getRequestedSessionId();
         if ((requestedSessionId != null) &&
             request.isRequestedSessionIdFromURL()) {
-            file.append(";jsessionid=");
+            file.append(";");
+            file.append(Globals.SESSION_PARAMETER_NAME);
+            file.append("=");
             file.append(requestedSessionId);
         }
         String queryString = request.getQueryString();
@@ -1327,8 +1331,12 @@ public abstract class RealmBase
     protected boolean initialized=false;
     
     public void init() {
-        this.containerLog = container.getLogger();
         if( initialized && container != null ) return;
+
+        // We want logger as soon as possible
+        if (container != null) {
+            this.containerLog = container.getLogger();
+        }
         
         initialized=true;
         if( container== null ) {

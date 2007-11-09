@@ -1,4 +1,20 @@
 <?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
 <!DOCTYPE document [
   <!ENTITY project SYSTEM "project.xml">
 ]>
@@ -27,7 +43,7 @@
   <section name="Introduction">
   <p>
     Tomcat 6.0 uses 
-    <a href="http://jakarta.apache.org/commons/logging">Commons Logging</a>
+    <a href="http://commons.apache.org/logging">Commons Logging</a>
     throughout its internal code allowing the 
     developer to choose a logging configuration that suits their needs, e.g
     java.util.logging or 
@@ -171,8 +187,8 @@
   </p>
   <p>
     The default logging.properties specifies a ConsoleHandler for routing logging to stdout and
-    also a FileHandler. A handler's log level threshold can be set using SEVERE, CONFIG, INFO, 
-    WARN, FINE, FINEST or ALL. The logging.properties shipped with JDK is set to INFO. You
+    also a FileHandler. A handler's log level threshold can be set using SEVERE, WARNING, INFO,
+    CONFIG, FINE, FINER, FINEST or ALL. The logging.properties shipped with JDK is set to INFO. You
     can also target specific packages to collect logging from and specify a level. Here is how
     you would set debugging from Tomcat. You would need to ensure the ConsoleHandler's level is also
     set to collect this threshold, so FINEST or ALL should be set. Please refer to Sun's java.util.logging
