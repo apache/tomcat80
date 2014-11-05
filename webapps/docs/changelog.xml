@@ -45,6 +45,13 @@
   issues to not "pop up" wrt. others).
 -->
 <section name="Tomcat 8.0.16 (markt)">
+  <subsection name="Catalina">
+    <changelog>
+      <fix>
+        <bug>57187</bug>: Regression handling the special * URL. (remm)
+      </fix>
+    </changelog>
+  </subsection>
   <subsection name="Coyote">
     <changelog>
       <fix>
