@@ -88,7 +88,7 @@
       </add>
       <fix>
         <bug>55951</bug>: Allow cookies to use UTF-8 encoded values in HTTP
-        headers. This requires the use of the RFC6265.
+        headers. This requires the use of the RFC6265
         <strong>CookieProcessor</strong>. (markt)
       </fix>
       <fix>
