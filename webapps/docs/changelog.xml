@@ -304,7 +304,7 @@
         expression language. (markt)
       </fix>
       <fix>
-        When coercing an object to an array type in Expression Langauage, handle
+        When coercing an object to an array type in Expression Language, handle
         the case where the source object is an array of primitives.
         (markt/kkolinko)
       </fix>
