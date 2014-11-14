@@ -50,6 +50,11 @@
       <fix>
         <bug>57187</bug>: Regression handling the special * URL. (remm)
       </fix>
+      <fix>
+        <bug>57208</bug>: Prevent NPE in JNDI Realm when no results are found
+        in a directory context for a user with specified user name. Based on
+        a patch provided by Jason McIntosh. (violetagg)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Coyote">
