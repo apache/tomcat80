@@ -60,6 +60,12 @@
         in a directory context for a user with specified user name. Based on
         a patch provided by Jason McIntosh. (violetagg)
       </fix>
+      <fix>
+        <bug>57216</bug>: Improve handling of invalid context paths. A value of
+        <code>null</code> is now correctly changed to <code>&quot;&quot;</code>
+        and a value of <code>&quot;/&quot;</code> is now also changed to
+        <code>&quot;&quot;</code> and logged as invalid. (markt)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Coyote">
