@@ -66,6 +66,9 @@
         and a value of <code>&quot;/&quot;</code> is now also changed to
         <code>&quot;&quot;</code> and logged as invalid. (markt)
       </fix>
+      <fix>
+        Update storeconfig with the CredentialHandler element. (remm)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Coyote">
