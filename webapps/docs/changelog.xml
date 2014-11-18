@@ -61,10 +61,13 @@
         a patch provided by Jason McIntosh. (violetagg)
       </fix>
       <fix>
-        <bug>57216</bug>: Improve handling of invalid context paths. A value of
-        <code>null</code> is now correctly changed to <code>&quot;&quot;</code>
-        and a value of <code>&quot;/&quot;</code> is now also changed to
-        <code>&quot;&quot;</code> and logged as invalid. (markt)
+        <bug>57216</bug>: Improve handling of invalid context paths. A context
+        path should either be an empty string or start with a
+        <code>&apos;/&apos;</code> and do not end with a
+        <code>&apos;/&apos;</code>. Invalid context path are automatically
+        corrected and a warning is logged. The <code>null</code> and
+        <code>&quot;/&quot;</code> values are now correctly changed to
+        <code>&quot;&quot;</code>. (markt/kkolinko)
       </fix>
       <fix>
         Update storeconfig with the CredentialHandler element. (remm)
