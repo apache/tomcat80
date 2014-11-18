@@ -50,7 +50,7 @@
       <fix>
         <bug>57172</bug>: Provide a better error message if an attempt is made
         access a resource through a web application class loader that has been
-        stopped. (markt)
+        stopped. (markt/kkolinko)
       </fix>
       <fix>
         <bug>57187</bug>: Regression handling the special * URL. (remm)
