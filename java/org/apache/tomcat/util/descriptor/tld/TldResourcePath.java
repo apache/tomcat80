@@ -127,7 +127,15 @@ public class TldResourcePath {
         }
     }
 
+    /**
+     * @deprecated Renamed, as it is not just a getter method. Use {@link #openJar()}.
+     */
+    @Deprecated
     public Jar getJar() throws IOException {
+        return openJar();
+    }
+
+    public Jar openJar() throws IOException {
         if (entryName == null) {
             return null;
         } else {

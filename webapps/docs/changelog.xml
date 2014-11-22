@@ -80,6 +80,9 @@
         <bug>57239</bug>: Correct several message typos. Includes patch by
         vladk. (kkolinko)
       </fix>
+      <fix>
+        Fix closing of Jars during annotation scanning. (schultz/kkolinko)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Coyote">
