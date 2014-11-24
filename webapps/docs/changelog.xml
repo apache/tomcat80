@@ -93,6 +93,14 @@
       </fix>
     </changelog>
   </subsection>
+  <subsection name="Jasper">
+    <changelog>
+      <fix>
+        <bug>57247</bug>: Correct the default Java source and target versions in
+        the JspC usage message to <code>1.7</code> for Java 7. (markt)
+      </fix>
+    </changelog>
+  </subsection>
   <subsection name="WebSocket">
     <changelog>
       <fix>
