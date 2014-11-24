@@ -128,6 +128,11 @@
         Simplify <code>setproxy</code> task in <code>build.xml</code>.
         Taskdef there is not needed since Ant 1.8.2. (kkolinko)
       </update>
+      <fix>
+        Update "ide-eclipse" target in <code>build.xml</code> to create Eclipse
+        project that uses Java 7 compliance settings instead of workspace-wide
+        defaults. (kkolinko)
+      </fix>
     </changelog>
   </subsection>
 </section>
