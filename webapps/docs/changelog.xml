@@ -120,6 +120,11 @@
         Improve HTML version of build instructions and align with
         BUILDING.txt. (kkolinko)
       </update>
+      <fix>
+        <bug>57245</bug>: Correct the reference to <code>allowLinking</code> in
+        the security configuration guide since that attribute has moved from the
+        Context element to the nested Resources element. (markt)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Other">
