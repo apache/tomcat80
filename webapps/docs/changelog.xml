@@ -91,6 +91,10 @@
         Allow HTTP upgrade process to complete without data corruption when
         additional content is sent along with the upgrade header. (remm)
       </fix>
+      <fix>
+        <bug>57234</bug>: Make SSL protocol filtering to remove insecure
+        protoccols case insensitive. (markt)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Jasper">
