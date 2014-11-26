@@ -128,6 +128,10 @@
         Improve HTML version of build instructions and align with
         BUILDING.txt. (kkolinko)
       </update>
+      <update>
+        Improve Tomcat Manager documentation. Rearrange, add section on
+        HTML GUI, document /expire command and Server Status page. (kkolinko)
+      </update>
       <fix>
         <bug>57245</bug>: Correct the reference to <code>allowLinking</code> in
         the security configuration guide since that attribute has moved from the
