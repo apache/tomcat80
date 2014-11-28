@@ -57,9 +57,6 @@
         annotation scanning in some cases. (markt)
       </fix>
       <fix>
-        <bug>57187</bug>: Regression handling the special * URL. (remm)
-      </fix>
-      <fix>
         <bug>57208</bug>: Prevent NPE in JNDI Realm when no results are found
         in a directory context for a user with specified user name. Based on
         a patch provided by Jason McIntosh. (violetagg)
@@ -94,6 +91,9 @@
       <fix>
         Allow HTTP upgrade process to complete without data corruption when
         additional content is sent along with the upgrade header. (remm)
+      </fix>
+      <fix>
+        <bug>57187</bug>: Regression handling the special * URL. (remm)
       </fix>
       <fix>
         <bug>57234</bug>: Make SSL protocol filtering to remove insecure
