@@ -530,22 +530,6 @@ final class ApplicationFilterChain implements FilterChain, CometFilterChain {
 
 
     /**
-     * Release references to the filters and wrapper executed by this chain.
-     */
-    void release() {
-
-        for (int i = 0; i < n; i++) {
-            filters[i] = null;
-        }
-        n = 0;
-        pos = 0;
-        servlet = null;
-        support = null;
-
-    }
-
-
-    /**
      * Prepare for reuse of the filters and wrapper executed by this chain.
      */
     void reuse() {

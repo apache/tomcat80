@@ -270,15 +270,10 @@ final class StandardWrapperValve
             exception(request, response, e);
         }
 
-        // Release the filter chain (if any) for this request
-        if (filterChain != null) {
-            if (request.isComet()) {
-                // If this is a Comet request, then the same chain will be used for the
-                // processing of all subsequent events.
-                filterChain.reuse();
-            } else {
-                filterChain.release();
-            }
+        if (filterChain != null && request.isComet()) {
+            // If this is a Comet request, then the same chain will be used for the
+            // processing of all subsequent events.
+            filterChain.reuse();
         }
 
         // Deallocate the allocated servlet instance
