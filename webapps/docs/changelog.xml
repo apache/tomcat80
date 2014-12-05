@@ -140,6 +140,11 @@
         <bug>57247</bug>: Correct the default Java source and target versions in
         the JspC usage message to <code>1.7</code> for Java 7. (markt)
       </fix>
+      <fix>
+        <bug>57309</bug>: Ensure that the current EL Resolver is given an
+        opportunity to perform type coercion before applying the default EL
+        coercion rules. (markt)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="WebSocket">
