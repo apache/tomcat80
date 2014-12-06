@@ -192,6 +192,10 @@
         the security configuration guide since that attribute has moved from the
         Context element to the nested Resources element. (markt)
       </fix>
+      <fix>
+        Fix ambiguity of section links on Valves configuration reference page.
+        (kkolinko)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Other">
