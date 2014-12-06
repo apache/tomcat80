@@ -109,10 +109,6 @@
         without error when running under a SecurityManager. (markt)
       </fix>
       <fix>
-        <bug>57284</bug>: Enable startAsync() to be called from a Filter and
-        still be able to call the remainder of the FilterChain. (markt)
-      </fix>
-      <fix>
         <bug>57308</bug>: Remove unnecessary calls to
         <code>System.getProperty()</code> where more suitable API calls are
         available. (markt)

@@ -26,6 +26,10 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 
+import org.junit.Assert;
+import org.junit.Ignore;
+import org.junit.Test;
+
 import org.apache.catalina.Context;
 import org.apache.catalina.startup.Tomcat;
 import org.apache.catalina.startup.TomcatBaseTest;
@@ -34,11 +38,9 @@ import org.apache.tomcat.util.buf.ByteChunk;
 import org.apache.tomcat.util.descriptor.web.FilterDef;
 import org.apache.tomcat.util.descriptor.web.FilterMap;
 
-import org.junit.Assert;
-import org.junit.Test;
-
 public class TestApplicationFilterChain extends TomcatBaseTest {
 
+    @Ignore // Appears to contradict Servlet 6.2.3
     @Test
     public void testBug57284() throws Exception {
         Tomcat tomcat = getTomcatInstance();
