@@ -130,6 +130,15 @@
         on the application context. Configured using
         <code>invalidAuthenticationWhenDeny</code> attribute on valve. (rjung)
       </add>
+      <fix>
+        Remove the obsolete <code>jndi</code> protocol usage from the scanning
+        process performed by StandardJarScanner. (violetagg)
+      </fix>
+      <fix>
+        Improve the calculation of the resource's last-modified, performed by
+        JspCompilationContext, in a way to support URLs with protocol different
+        than <code>jar:file</code>. (violetagg)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Coyote">
