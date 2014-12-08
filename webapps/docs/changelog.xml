@@ -134,6 +134,10 @@
         Remove the obsolete <code>jndi</code> protocol usage from the scanning
         process performed by StandardJarScanner. (violetagg)
       </fix>
+      <fix>
+        Prevent file descriptors leak and ensure that files are closed after
+        retrieving the last modification time. (violetagg)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Coyote">
