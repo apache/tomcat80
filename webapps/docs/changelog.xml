@@ -134,11 +134,6 @@
         Remove the obsolete <code>jndi</code> protocol usage from the scanning
         process performed by StandardJarScanner. (violetagg)
       </fix>
-      <fix>
-        Improve the calculation of the resource's last-modified, performed by
-        JspCompilationContext, in a way to support URLs with protocol different
-        than <code>jar:file</code>. (violetagg)
-      </fix>
     </changelog>
   </subsection>
   <subsection name="Coyote">
@@ -170,6 +165,11 @@
         <bug>57309</bug>: Ensure that the current EL Resolver is given an
         opportunity to perform type coercion before applying the default EL
         coercion rules. (markt)
+      </fix>
+      <fix>
+        Improve the calculation of the resource's last-modified, performed by
+        JspCompilationContext, in a way to support URLs with protocol different
+        than <code>jar:file</code>. (violetagg)
       </fix>
     </changelog>
   </subsection>
