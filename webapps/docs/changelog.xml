@@ -243,6 +243,11 @@
         project that uses Java 7 compliance settings instead of workspace-wide
         defaults. (kkolinko)
       </fix>
+     <fix>
+        Update the package renamed copy of Apache Commons Pool 2 to revision
+        1643813 to pick up additional fixes since the 2.2 release including
+        one for a possible infinite loop. (markt)
+      </fix>
     </changelog>
   </subsection>
 </section>
