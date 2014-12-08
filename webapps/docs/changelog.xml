@@ -206,6 +206,11 @@
         (kkolinko)
       </fix>
       <fix>
+        <bug>57261</bug>: Fix vminfo and threaddump Manager commands to start
+        their output with an "OK" line. Document them. Based on a patch by
+        Oleg Trokhov. (kkolinko)
+      </fix>
+      <fix>
         <bug>57323</bug>: Correct display of outdated sessions in sessions
         count listing in Manager application. (kkolinko)
       </fix>
