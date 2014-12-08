@@ -138,6 +138,10 @@
         Prevent file descriptors leak and ensure that files are closed after
         retrieving the last modification time. (violetagg)
       </fix>
+      <update>
+        Make <code>o.a.catalina.webresources.StandardRoot</code> easier for
+        extending. (violetagg)
+      </update>
     </changelog>
   </subsection>
   <subsection name="Coyote">
