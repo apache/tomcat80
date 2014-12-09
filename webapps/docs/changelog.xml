@@ -142,6 +142,10 @@
         Make <code>o.a.catalina.webresources.StandardRoot</code> easier for
         extending. (violetagg)
       </update>
+      <fix>
+        <bug>57331</bug>: Allow ExpiresFilter to use "year" as synonym for
+        "years" in its configuration. (kkolinko)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Coyote">
