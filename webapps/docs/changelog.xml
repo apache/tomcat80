@@ -257,6 +257,10 @@
         1643813 to pick up additional fixes since the 2.2 release including
         one for a possible infinite loop. (markt)
       </fix>
+      <fix>
+        <bug>57285</bug>: Restore the manifest entry that marks the Windows
+        uninstaller application as requiring elevated privileges. (markt)
+      </fix>
     </changelog>
   </subsection>
 </section>
