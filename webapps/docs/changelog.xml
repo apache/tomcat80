@@ -213,6 +213,10 @@
         Improve Tomcat Manager documentation. Rearrange, add section on
         HTML GUI, document /expire command and Server Status page. (kkolinko)
       </update>
+      <update>
+        <bug>57238</bug>: Update information on SSL/TLS on Security and SSL
+        documentation pages. Patch by Glen Peterson. (kkolinko)
+      </update>
       <fix>
         <bug>57245</bug>: Correct the reference to <code>allowLinking</code> in
         the security configuration guide since that attribute has moved from the
