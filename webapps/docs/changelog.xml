@@ -170,6 +170,12 @@
   <subsection name="Jasper">
     <changelog>
       <fix>
+        <bug>57142</bug>: As per the clarification from the JSP specification
+        maintenance lead, classes and packages imported via the paeg directive
+        must be made available to the EL environment via the ImportHandler.
+        (markt) 
+      </fix>
+      <fix>
         <bug>57247</bug>: Correct the default Java source and target versions in
         the JspC usage message to <code>1.7</code> for Java 7. (markt)
       </fix>
