@@ -168,6 +168,9 @@ public abstract class WsRemoteEndpointImplBase implements RemoteEndpoint {
     @Override
     public void sendPing(ByteBuffer applicationData) throws IOException,
             IllegalArgumentException {
+        if (applicationData.remaining() > 125) {
+            throw new IllegalArgumentException(sm.getString("wsRemoteEndpoint.tooMuchData"));
+        }
         startMessageBlock(Constants.OPCODE_PING, applicationData, true);
     }
 
@@ -175,6 +178,9 @@ public abstract class WsRemoteEndpointImplBase implements RemoteEndpoint {
     @Override
     public void sendPong(ByteBuffer applicationData) throws IOException,
             IllegalArgumentException {
+        if (applicationData.remaining() > 125) {
+            throw new IllegalArgumentException(sm.getString("wsRemoteEndpoint.tooMuchData"));
+        }
         startMessageBlock(Constants.OPCODE_PONG, applicationData, true);
     }
 
@@ -544,13 +550,22 @@ public abstract class WsRemoteEndpointImplBase implements RemoteEndpoint {
             throw new IllegalArgumentException(sm.getString("wsRemoteEndpoint.nullHandler"));
         }
 
-        if (Util.isPrimitive(obj.getClass())) {
+        /*
+         * Note that the implementation will convert primitives and their object
+         * equivalents by default but that users are free to specify their own
+         * encoders and decoders for this if they wish.
+         */
+        Encoder encoder = findEncoder(obj);
+        if (encoder == null && Util.isPrimitive(obj.getClass())) {
             String msg = obj.toString();
             sendStringByCompletion(msg, completion);
             return;
         }
-
-        Encoder encoder = findEncoder(obj);
+        if (encoder == null && byte[].class.isAssignableFrom(obj.getClass())) {
+            ByteBuffer msg = ByteBuffer.wrap((byte[]) obj);
+            sendBytesByCompletion(msg, completion);
+            return;
+        }
 
         try {
             if (encoder instanceof Encoder.Text) {
@@ -573,7 +588,7 @@ public abstract class WsRemoteEndpointImplBase implements RemoteEndpoint {
                 throw new EncodeException(obj, sm.getString(
                         "wsRemoteEndpoint.noEncoder", obj.getClass()));
             }
-        } catch (EncodeException | IOException e) {
+        } catch (Exception e) {
             SendResult sr = new SendResult(e);
             completion.onResult(sr);
         }
@@ -860,12 +875,13 @@ public abstract class WsRemoteEndpointImplBase implements RemoteEndpoint {
     }
 
 
-    private class WsOutputStream extends OutputStream {
+    private static class WsOutputStream extends OutputStream {
 
         private final WsRemoteEndpointImplBase endpoint;
         private final ByteBuffer buffer = ByteBuffer.allocate(Constants.DEFAULT_BUFFER_SIZE);
         private final Object closeLock = new Object();
         private volatile boolean closed = false;
+        private volatile boolean used = false;
 
         public WsOutputStream(WsRemoteEndpointImplBase endpoint) {
             this.endpoint = endpoint;
@@ -898,6 +914,7 @@ public abstract class WsRemoteEndpointImplBase implements RemoteEndpoint {
                 throw new IndexOutOfBoundsException();
             }
 
+            used = true;
             if (buffer.remaining() == 0) {
                 flush();
             }
@@ -920,7 +937,11 @@ public abstract class WsRemoteEndpointImplBase implements RemoteEndpoint {
                         sm.getString("wsRemoteEndpoint.closedOutputStream"));
             }
 
-            doWrite(false);
+            // Optimisation. If there is no data to flush then do not send an
+            // empty message.
+            if (!Constants.STREAMS_DROP_EMPTY_MESSAGES || buffer.position() > 0) {
+                doWrite(false);
+            }
         }
 
         @Override
@@ -936,9 +957,11 @@ public abstract class WsRemoteEndpointImplBase implements RemoteEndpoint {
         }
 
         private void doWrite(boolean last) throws IOException {
-            buffer.flip();
-            endpoint.startMessageBlock(Constants.OPCODE_BINARY, buffer, last);
-            stateMachine.complete(last);
+            if (!Constants.STREAMS_DROP_EMPTY_MESSAGES || used) {
+                buffer.flip();
+                endpoint.startMessageBlock(Constants.OPCODE_BINARY, buffer, last);
+            }
+            endpoint.stateMachine.complete(last);
             buffer.clear();
         }
     }
@@ -950,6 +973,7 @@ public abstract class WsRemoteEndpointImplBase implements RemoteEndpoint {
         private final CharBuffer buffer = CharBuffer.allocate(Constants.DEFAULT_BUFFER_SIZE);
         private final Object closeLock = new Object();
         private volatile boolean closed = false;
+        private volatile boolean used = false;
 
         public WsWriter(WsRemoteEndpointImplBase endpoint) {
             this.endpoint = endpoint;
@@ -969,6 +993,7 @@ public abstract class WsRemoteEndpointImplBase implements RemoteEndpoint {
                 throw new IndexOutOfBoundsException();
             }
 
+            used = true;
             if (buffer.remaining() == 0) {
                 flush();
             }
@@ -991,7 +1016,9 @@ public abstract class WsRemoteEndpointImplBase implements RemoteEndpoint {
                         sm.getString("wsRemoteEndpoint.closedWriter"));
             }
 
-            doWrite(false);
+            if (!Constants.STREAMS_DROP_EMPTY_MESSAGES || buffer.position() > 0) {
+                doWrite(false);
+            }
         }
 
         @Override
@@ -1007,9 +1034,13 @@ public abstract class WsRemoteEndpointImplBase implements RemoteEndpoint {
         }
 
         private void doWrite(boolean last) throws IOException {
-            buffer.flip();
-            endpoint.sendPartialString(buffer, last);
-            buffer.clear();
+            if (!Constants.STREAMS_DROP_EMPTY_MESSAGES || used) {
+                buffer.flip();
+                endpoint.sendPartialString(buffer, last);
+                buffer.clear();
+            } else {
+                endpoint.stateMachine.complete(last);
+            }
         }
     }
 
