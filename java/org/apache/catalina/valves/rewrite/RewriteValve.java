@@ -41,12 +41,16 @@ import org.apache.catalina.Host;
 import org.apache.catalina.Lifecycle;
 import org.apache.catalina.LifecycleException;
 import org.apache.catalina.LifecycleListener;
+import org.apache.catalina.Pipeline;
+import org.apache.catalina.connector.Connector;
 import org.apache.catalina.connector.Request;
 import org.apache.catalina.connector.Response;
 import org.apache.catalina.util.LifecycleSupport;
+import org.apache.catalina.util.URLEncoder;
 import org.apache.catalina.valves.ValveBase;
 import org.apache.tomcat.util.buf.CharChunk;
 import org.apache.tomcat.util.buf.MessageBytes;
+import org.apache.tomcat.util.http.RequestUtil;
 import org.apache.tomcat.util.net.URL;
 
 public class RewriteValve extends ValveBase {
@@ -443,7 +447,7 @@ public class RewriteValve extends ValveBase {
                         queryString = urlString.substring(queryIndex+1);
                         urlString = urlString.substring(0, queryIndex);
                     }
-                    // Set the new URL
+                    // Set the new 'original' URI
                     String contextPath = null;
                     if (context) {
                         contextPath = request.getContextPath();
@@ -454,8 +458,17 @@ public class RewriteValve extends ValveBase {
                     if (context) {
                         chunk.append(contextPath);
                     }
-                    chunk.append(urlString);
+                    chunk.append(URLEncoder.DEFAULT.encode(urlString));
                     request.getCoyoteRequest().requestURI().toChars();
+                    // Decoded and normalized URI
+                    request.getCoyoteRequest().decodedURI().setString(null);
+                    chunk = request.getCoyoteRequest().decodedURI().getCharChunk();
+                    chunk.recycle();
+                    if (context) {
+                        chunk.append(contextPath);
+                    }
+                    chunk.append(RequestUtil.normalize(urlString));
+                    request.getCoyoteRequest().decodedURI().toChars();
                     // Set the new Query if there is one
                     if (queryString != null) {
                         request.getCoyoteRequest().queryString().setString(null);
@@ -475,8 +488,14 @@ public class RewriteValve extends ValveBase {
                     request.getMappingData().recycle();
                     // Reinvoke the whole request recursively
                     try {
-                        request.getConnector().getProtocolHandler().getAdapter().service
-                        (request.getCoyoteRequest(), response.getCoyoteResponse());
+                        Connector connector = request.getConnector();
+                        if (!connector.getProtocolHandler().getAdapter().prepare(
+                                request.getCoyoteRequest(), response.getCoyoteResponse())) {
+                            return;
+                        }
+                        Pipeline pipeline = connector.getService().getContainer().getPipeline();
+                        request.setAsyncSupported(pipeline.isAsyncSupported());
+                        pipeline.getFirst().invoke(request, response);
                     } catch (Exception e) {
                         // This doesn't actually happen in the Catalina adapter implementation
                     }
@@ -541,7 +560,9 @@ public class RewriteValve extends ValveBase {
      * Example:
      *  RewriteCond %{REMOTE_HOST}  ^host1.*  [OR]
      *
-     * @param line
+     * @param line A line from the rewrite configuration
+     *
+     * @return The condition, rule or map resulting from parsing the line
      */
     public static Object parse(String line) {
         StringTokenizer tokenizer = new StringTokenizer(line);

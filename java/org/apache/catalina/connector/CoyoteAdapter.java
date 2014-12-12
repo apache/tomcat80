@@ -24,6 +24,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.servlet.ReadListener;
 import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
 import javax.servlet.SessionTrackingMode;
 import javax.servlet.WriteListener;
 import javax.servlet.http.HttpServletResponse;
@@ -121,28 +122,6 @@ public class CoyoteAdapter implements Adapter {
      */
     protected static final StringManager sm =
         StringManager.getManager(Constants.Package);
-
-
-    /**
-     * Encoder for the Location URL in HTTP redirects.
-     */
-    protected static final URLEncoder urlEncoder;
-
-
-    // ----------------------------------------------------- Static Initializer
-
-
-    /**
-     * The safe character set.
-     */
-    static {
-        urlEncoder = new URLEncoder();
-        urlEncoder.addSafeCharacter('-');
-        urlEncoder.addSafeCharacter('_');
-        urlEncoder.addSafeCharacter('.');
-        urlEncoder.addSafeCharacter('*');
-        urlEncoder.addSafeCharacter('/');
-    }
 
 
     // -------------------------------------------------------- Adapter Methods
@@ -610,6 +589,15 @@ public class CoyoteAdapter implements Adapter {
     }
 
 
+    @Override
+    public boolean prepare(org.apache.coyote.Request req, org.apache.coyote.Response res)
+            throws IOException, ServletException {
+        Request request = (Request) req.getNote(ADAPTER_NOTES);
+        Response response = (Response) res.getNote(ADAPTER_NOTES);
+
+        return postParseRequest(req, request, res, response);
+    }
+
 
     @Override
     public void errorDispatch(org.apache.coyote.Request req,
@@ -741,19 +729,30 @@ public class CoyoteAdapter implements Adapter {
 
     // ------------------------------------------------------ Protected Methods
 
-
     /**
-     * Parse additional request parameters.
+     * Perform the necessary processing after the HTTP headers have been parsed
+     * to enable the request/response pair to be passed to the start of the
+     * container pipeline for processing.
+     *
+     * @param req      The coyote request object
+     * @param request  The catalina request object
+     * @param res      The coyote response object
+     * @param response The catalina response object
+     *
+     * @return <code>true</code> if the request should be passed on to the start
+     *         of the container pipeline, otherwise <code>false</code>
+     *
+     * @throws IOException If there is insufficient space in a buffer while
+     *                     processing headers
+     * @throws ServletException If the supported methods of the target servlet
+     *                          can not be determined
      */
-    protected boolean postParseRequest(org.apache.coyote.Request req,
-                                       Request request,
-                                       org.apache.coyote.Response res,
-                                       Response response)
-            throws Exception {
+    protected boolean postParseRequest(org.apache.coyote.Request req, Request request,
+            org.apache.coyote.Response res, Response response) throws IOException, ServletException {
 
-        // XXX the processor may have set a correct scheme and port prior to this point,
-        // in ajp13 protocols dont make sense to get the port from the connector...
-        // otherwise, use connector configuration
+        // If the processor has set the scheme (AJP will do this) use this to
+        // set the secure flag as well. If the processor hasn't set it, use the
+        // settings from the connector
         if (! req.scheme().isNull()) {
             // use processor specified scheme to determine secure state
             request.setSecure(req.scheme().equals("https"));
@@ -764,9 +763,6 @@ public class CoyoteAdapter implements Adapter {
             request.setSecure(connector.getSecure());
         }
 
-        // FIXME: the code below doesnt belongs to here,
-        // this is only have sense
-        // in Http11, not in ajp13..
         // At this point the Host header has been processed.
         // Override if the proxyPort/proxyHost are set
         String proxyName = connector.getProxyName();
@@ -778,8 +774,10 @@ public class CoyoteAdapter implements Adapter {
             req.serverName().setString(proxyName);
         }
 
+        MessageBytes undecodedURI = req.requestURI();
+
         // Check for ping OPTIONS * request
-        if (req.requestURI().equals("*")) {
+        if (undecodedURI.equals("*")) {
             if (req.method().equalsIgnoreCase("OPTIONS")) {
                 StringBuilder allow = new StringBuilder();
                 allow.append("GET, HEAD, POST, PUT, DELETE");
@@ -799,11 +797,12 @@ public class CoyoteAdapter implements Adapter {
             return false;
         }
 
-        // Copy the raw URI to the decodedURI
         MessageBytes decodedURI = req.decodedURI();
-        decodedURI.duplicate(req.requestURI());
 
-        if (decodedURI.getType() == MessageBytes.T_BYTES) {
+        if (undecodedURI.getType() == MessageBytes.T_BYTES) {
+            // Copy the raw URI to the decodedURI
+            decodedURI.duplicate(undecodedURI);
+
             // Parse the path parameters. This will:
             //   - strip out the path parameters
             //   - convert the decodedURI to bytes
@@ -839,9 +838,13 @@ public class CoyoteAdapter implements Adapter {
                 return false;
             }
         } else {
-            // The URL is chars or String, and has been sent using an in-memory
-            // protocol handler, we have to assume the URL has been properly
-            // decoded already
+            /* The URI is chars or String, and has been sent using an in-memory
+             * protocol handler. The following assumptions are made:
+             * - req.requestURI() has been set to the 'original' non-decoded,
+             *   non-normalized URI
+             * - req.decodedURI() has been set to the decoded, normalized form
+             *   of req.requestURI()
+             */
             decodedURI.toChars();
             // Remove all path parameters; any needed path parameter should be set
             // using the request object rather than passing it in the URL
@@ -875,11 +878,6 @@ public class CoyoteAdapter implements Adapter {
             }
         } else {
             serverName = req.serverName();
-        }
-        if (request.isAsyncStarted()) {
-            //TODO SERVLET3 - async
-            //reset mapping data, should prolly be done elsewhere
-            request.getMappingData().recycle();
         }
 
         // Version for the second mapping loop and
@@ -983,7 +981,7 @@ public class CoyoteAdapter implements Adapter {
         // Possible redirect
         MessageBytes redirectPathMB = request.getMappingData().redirectPath;
         if (!redirectPathMB.isNull()) {
-            String redirectPath = urlEncoder.encode(redirectPathMB.toString());
+            String redirectPath = URLEncoder.DEFAULT.encode(redirectPathMB.toString());
             String query = request.getQueryString();
             if (request.isRequestedSessionIdFromURL()) {
                 // This is not optimal, but as this is not very common, it
@@ -1146,9 +1144,6 @@ public class CoyoteAdapter implements Adapter {
                 SSL_ONLY.equals(request.getServletContext()
                         .getEffectiveSessionTrackingModes()) &&
                         request.connector.secure) {
-            // TODO Is there a better way to map SSL sessions to our sesison ID?
-            // TODO The request.getAttribute() will cause a number of other SSL
-            //      attribute to be populated. Is this a performance concern?
             request.setRequestedSessionId(
                     request.getAttribute(SSLSupport.SESSION_ID_KEY).toString());
             request.setRequestedSessionSSL(true);
@@ -1213,8 +1208,7 @@ public class CoyoteAdapter implements Adapter {
     /**
      * Character conversion of the URI.
      */
-    protected void convertURI(MessageBytes uri, Request request)
-        throws Exception {
+    protected void convertURI(MessageBytes uri, Request request) throws IOException {
 
         ByteChunk bc = uri.getByteChunk();
         int length = bc.getLength();
@@ -1288,13 +1282,13 @@ public class CoyoteAdapter implements Adapter {
 
 
     /**
-     * Normalize URI.
-     * <p>
-     * This method normalizes "\", "//", "/./" and "/../". This method will
-     * return false when trying to go above the root, or if the URI contains
-     * a null byte.
+     * This method normalizes "\", "//", "/./" and "/../".
      *
      * @param uriMB URI to be normalized
+     *
+     * @return <code>false</false> if normalizing this URI would require going
+     *         above the root, or if the URI contains a null byte, otherwise
+     *         <code>true</code>
      */
     public static boolean normalize(MessageBytes uriMB) {
 
@@ -1405,13 +1399,14 @@ public class CoyoteAdapter implements Adapter {
 
 
     /**
-     * Check that the URI is normalized following character decoding.
-     * <p>
-     * This method checks for "\", 0, "//", "/./" and "/../". This method will
-     * return false if sequences that are supposed to be normalized are still
-     * present in the URI.
+     * Check that the URI is normalized following character decoding. This
+     * method checks for "\", 0, "//", "/./" and "/../".
      *
      * @param uriMB URI to be checked (should be chars)
+     *
+     * @return <code>false</code> if sequences that are supposed to be
+     *         normalized are still present in the URI, otherwise
+     *         <code>true</code>
      */
     public static boolean checkNormalize(MessageBytes uriMB) {
 

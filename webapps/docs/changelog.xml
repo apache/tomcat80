@@ -151,6 +151,20 @@
         <bug>57331</bug>: Allow ExpiresFilter to use "year" as synonym for
         "years" in its configuration. (kkolinko)
       </fix>
+      <fix>
+        Ensure that if the RewriteValve rewrites a request that subsequent calls
+        to <code>HttpServletRequest.getRequestURI()</code> return the undecoded
+        URI. (markt)
+      </fix>
+      <fix>
+        Ensure that if the RewriteValve rewrites a request to a non-normalized
+        URI that the URI is normalized before the URI is mapped to ensure that
+        the correct mapping is applied. (markt)
+      </fix>
+      <fix>
+        Prevent NPEs being logged during post-processing for requests that have
+        been re-written by the RewriteValve. (markt)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Coyote">
