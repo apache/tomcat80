@@ -48,7 +48,7 @@
   <subsection name="Catalina">
     <changelog>
       <fix>
-        <bug>57172</bug>: Provide a better error message if an attempt is made
+        <bug>57172</bug>: Provide a better error message if something attempts to
         access a resource through a web application class loader that has been
         stopped. (markt/kkolinko)
       </fix>
@@ -171,9 +171,9 @@
     <changelog>
       <fix>
         <bug>57142</bug>: As per the clarification from the JSP specification
-        maintenance lead, classes and packages imported via the paeg directive
+        maintenance lead, classes and packages imported via the page directive
         must be made available to the EL environment via the ImportHandler.
-        (markt) 
+        (markt)
       </fix>
       <fix>
         <bug>57247</bug>: Correct the default Java source and target versions in
@@ -190,7 +190,7 @@
         than <code>jar:file</code>. (violetagg)
       </fix>
       <fix>
-        Fix potential issue with BeanELresolver when running under a security
+        Fix potential issue with BeanELResolver when running under a security
         manager. Some classes may not be accessible but may have accessible
         interfaces. (markt)
       </fix>
@@ -203,7 +203,7 @@
         lead to duplicate and/or corrupt messages. (markt)
       </fix>
       <fix>
-        Correctly implement headers case insensitivity. (markt, remm)
+        Correctly implement headers case insensitivity. (markt/remm)
       </fix>
       <fix>
         Allow optional use of user extensions. (remm)
