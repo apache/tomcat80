@@ -315,6 +315,11 @@
         <bug>57285</bug>: Restore the manifest entry that marks the Windows
         uninstaller application as requiring elevated privileges. (markt)
       </fix>
+      <add>
+        <bug>57344</bug>: Provide sha1 checksum files for Tomcat downloads.
+        Correct filename patterns for apache-tomcat-*-embed.tar.gz archive
+        to exclude an *.asc file. (kkolinko)
+      </add>
     </changelog>
   </subsection>
 </section>
