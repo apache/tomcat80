@@ -184,6 +184,10 @@
         <bug>57265</bug>: Fix some potential concurrency issues with sendFile
         and the NIO connector. (markt)
       </fix>
+      <fix>
+        <bug>57347</bug>: AJP response contains wrong status reason phrase
+        (rjung)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Jasper">

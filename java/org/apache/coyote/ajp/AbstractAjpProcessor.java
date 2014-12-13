@@ -1458,6 +1458,7 @@ public abstract class AbstractAjpProcessor<S> extends AbstractProcessor<S> {
 
         response.setCommitted(true);
 
+        tmpMB.recycle();
         responseMsgPos = -1;
         responseMessage.reset();
         responseMessage.appendByte(Constants.JK_AJP13_SEND_HEADERS);
