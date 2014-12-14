@@ -169,6 +169,11 @@
         Prevent NPEs being logged during post-processing for requests that have
         been re-written by the RewriteValve. (markt)
       </fix>
+      <fix>
+        Don&apos;t hard-code the domain of the StoreConfig MBean to
+        <code>Catalina</code> but use the domain name configured for the
+        associated server. (markt)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Coyote">
