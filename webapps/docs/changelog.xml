@@ -292,6 +292,10 @@
         Oleg Trokhov. (kkolinko)
       </fix>
       <fix>
+        <bug>57267</bug>: Document the <code>StoreConfigLifecycleListener</code>
+        and the <code>/save</code> command for the Manager application. (markt)
+      </fix>
+      <fix>
         <bug>57323</bug>: Correct display of outdated sessions in sessions
         count listing in Manager application. (kkolinko)
       </fix>
