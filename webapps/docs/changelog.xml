@@ -170,9 +170,10 @@
         been re-written by the RewriteValve. (markt)
       </fix>
       <fix>
-        Don&apos;t hard-code the domain of the StoreConfig MBean to
-        <code>Catalina</code> but use the domain name configured for the
-        associated server. (markt)
+        Various StoreConfig improvements including removing a dependency on the
+        <code>StandardServer</code> implementation, improve consistency of
+        behaviour when MBean is not registered and improve error messages when
+        accessed via the Manager application. (markt)
       </fix>
     </changelog>
   </subsection>

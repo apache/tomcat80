@@ -689,8 +689,18 @@ public final class StandardServer extends LifecycleMBeanBase implements Server {
      *              if an exception is reported by the persistence mechanism
      */
     public synchronized void storeConfig() throws Exception {
-        ObjectName sname = new ObjectName(getDomain() + ":type=StoreConfig");
-        mserver.invoke(sname, "storeConfig", null, null);
+        try {
+            // Note: Hard-coded domain used since this object is per Server/JVM
+            ObjectName sname = new ObjectName("Catalina:type=StoreConfig");
+            if (mserver.isRegistered(sname)) {
+                mserver.invoke(sname, "storeConfig", null, null);
+            } else {
+                log.error(sm.getString("standardServer.storeConfig.notAvailable", sname));
+            }
+        } catch (Throwable t) {
+            ExceptionUtils.handleThrowable(t);
+            log.error(t);
+        }
     }
 
 
@@ -706,21 +716,20 @@ public final class StandardServer extends LifecycleMBeanBase implements Server {
      *  by the persistence mechanism
      */
     public synchronized void storeContext(Context context) throws Exception {
-
-        ObjectName sname = null;
         try {
-           sname = new ObjectName(getDomain() + ":type=StoreConfig");
-           if(mserver.isRegistered(sname)) {
-               mserver.invoke(sname, "store",
-                   new Object[] {context},
-                   new String [] { "java.lang.String"});
-           } else
-               log.error("StoreConfig mbean not registered" + sname);
+            // Note: Hard-coded domain used since this object is per Server/JVM
+            ObjectName sname = new ObjectName("Catalina:type=StoreConfig");
+            if (mserver.isRegistered(sname)) {
+                mserver.invoke(sname, "store",
+                    new Object[] {context},
+                    new String [] { "java.lang.String"});
+            } else {
+                log.error(sm.getString("standardServer.storeConfig.notAvailable", sname));
+            }
         } catch (Throwable t) {
             ExceptionUtils.handleThrowable(t);
             log.error(t);
         }
-
     }
 
 
