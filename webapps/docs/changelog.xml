@@ -152,6 +152,11 @@
         extending. (violetagg)
       </update>
       <fix>
+        <bug>57326</bug>: Enable <code>AsyncListener</code> implementations to
+        re-register themselves during <code>AsyncListener.onStartAsync</code>.
+        (markt)
+      </fix>
+      <fix>
         <bug>57331</bug>: Allow ExpiresFilter to use "year" as synonym for
         "years" in its configuration. (kkolinko)
       </fix>
