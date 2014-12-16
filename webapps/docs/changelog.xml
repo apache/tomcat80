@@ -180,6 +180,9 @@
         behaviour when MBean is not registered and improve error messages when
         accessed via the Manager application. (markt)
       </fix>
+      <update>
+          Improve SnoopServlet in unit tests. (rjung)
+      </update>
     </changelog>
   </subsection>
   <subsection name="Coyote">
