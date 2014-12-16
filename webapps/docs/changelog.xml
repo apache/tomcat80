@@ -184,8 +184,8 @@
           Improve SnoopServlet in unit tests. (rjung)
       </update>
       <add>
-          Add RequestDescriptor class to unit tests. (rjung)
-          Adjust TestRewriteValve to use RequestDescriptor.
+          Add RequestDescriptor class to unit tests.
+          Adjust TestRewriteValve to use RequestDescriptor. (rjung)
       </add>
       <update>
           Add more AJP unit tests. (rjung)
