@@ -18,6 +18,7 @@
 package org.apache.tomcat.util.net;
 
 import java.io.IOException;
+import java.security.cert.X509Certificate;
 
 /**
  * Defines an interface to interact with SSL sessions.
@@ -85,7 +86,7 @@ public interface SSLSupport {
      *              request a client certificate if a client certificate has not
      *              already been requested.
      */
-    public Object[] getPeerCertificateChain(boolean force) throws IOException;
+    public X509Certificate[] getPeerCertificateChain(boolean force) throws IOException;
 
     /**
      * Get the keysize.
