@@ -61,7 +61,7 @@ public class AjpNioProcessor extends AbstractAjpProcessor<NioChannel> {
     protected void registerForEvent(boolean read, boolean write) {
         final NioChannel socket = socketWrapper.getSocket();
         final NioEndpoint.KeyAttachment attach =
-                (NioEndpoint.KeyAttachment) socket.getAttachment(false);
+                (NioEndpoint.KeyAttachment) socket.getAttachment();
         if (attach == null) {
             return;
         }
@@ -83,7 +83,7 @@ public class AjpNioProcessor extends AbstractAjpProcessor<NioChannel> {
         // poller. Therefore, it needs to be reset once asycn processing has
         // finished.
         final NioEndpoint.KeyAttachment attach =
-                (NioEndpoint.KeyAttachment)socketWrapper.getSocket().getAttachment(false);
+                (NioEndpoint.KeyAttachment)socketWrapper.getSocket().getAttachment();
         if (!getErrorState().isError() && attach != null &&
                 asyncStateMachine.isAsyncDispatching()) {
             long soTimeout = endpoint.getSoTimeout();
@@ -118,7 +118,7 @@ public class AjpNioProcessor extends AbstractAjpProcessor<NioChannel> {
             throws IOException {
 
         NioEndpoint.KeyAttachment att =
-                (NioEndpoint.KeyAttachment) socketWrapper.getSocket().getAttachment(false);
+                (NioEndpoint.KeyAttachment) socketWrapper.getSocket().getAttachment();
         if ( att == null ) throw new IOException("Key must be cancelled");
 
         ByteBuffer writeBuffer =
@@ -186,7 +186,7 @@ public class AjpNioProcessor extends AbstractAjpProcessor<NioChannel> {
             }
             try {
                 NioEndpoint.KeyAttachment att =
-                        (NioEndpoint.KeyAttachment) socketWrapper.getSocket().getAttachment(false);
+                        (NioEndpoint.KeyAttachment) socketWrapper.getSocket().getAttachment();
                 if ( att == null ) throw new IOException("Key must be cancelled.");
                 nRead = pool.read(readBuffer, socketWrapper.getSocket(),
                         selector, att.getTimeout());
