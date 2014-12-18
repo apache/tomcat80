@@ -950,15 +950,16 @@ public class NioEndpoint extends AbstractEndpoint<NioChannel> {
             addEvent(r);
         }
 
-        public void cancelledKey(SelectionKey key, SocketStatus status) {
+        public KeyAttachment cancelledKey(SelectionKey key, SocketStatus status) {
+            KeyAttachment ka = null;
             try {
-                if ( key == null ) return;//nothing to do
-                KeyAttachment ka = (KeyAttachment) key.attachment();
+                if ( key == null ) return null;//nothing to do
+                ka = (KeyAttachment) key.attachment();
                 if (ka != null && ka.isComet() && status != null) {
                     ka.setComet(false);//to avoid a loop
                     if (status == SocketStatus.TIMEOUT ) {
                         if (processSocket(ka, status, true)) {
-                            return; // don't close on comet timeout
+                            return null; // don't close on comet timeout
                         }
                     } else {
                         // Don't dispatch if the lines below are cancelling the key
@@ -1005,6 +1006,7 @@ public class NioEndpoint extends AbstractEndpoint<NioChannel> {
                 ExceptionUtils.handleThrowable(e);
                 if (log.isDebugEnabled()) log.error("",e);
             }
+            return ka;
         }
         /**
          * The background thread that listens for incoming TCP/IP connections and
@@ -1559,13 +1561,20 @@ public class NioEndpoint extends AbstractEndpoint<NioChannel> {
                         // Close socket and pool
                         try {
                             ka.setComet(false);
-                            socket.getPoller().cancelledKey(key, SocketStatus.ERROR);
-                            if (running && !paused) {
-                                nioChannels.push(socket);
-                            }
-                            socket = null;
-                            if (running && !paused) {
-                                keyCache.push(ka);
+                            if (socket.getPoller().cancelledKey(key, SocketStatus.ERROR) != null) {
+                                // SocketWrapper (attachment) was removed from the
+                                // key - recycle both. This can only happen once
+                                // per attempted closure so it is used to determine
+                                // whether or not to return socket and ka to
+                                // their respective caches. We do NOT want to do
+                                // this more than once - see BZ 57340.
+                                if (running && !paused) {
+                                    nioChannels.push(socket);
+                                }
+                                socket = null;
+                                if (running && !paused) {
+                                    keyCache.push(ka);
+                                }
                             }
                             ka = null;
                         } catch (Exception x) {
