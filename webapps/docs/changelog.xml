@@ -263,6 +263,11 @@
         <code>ClusterSingleSignOn</code> implements <code>ClusterValve</code>.
         (kfujino)
       </fix>
+      <fix>
+        <bug>57338</bug>: Improve the ability of the
+        <code>ClusterSingleSignOn</code> valve to handle nodes being added and
+        removed from the Cluser at run time. (markt)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="WebSocket">
