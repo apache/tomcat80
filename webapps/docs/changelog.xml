@@ -230,6 +230,11 @@
         <bug>57347</bug>: AJP response contains wrong status reason phrase
         (rjung)
       </fix>
+      <add>
+        <bug>57391</bug>: Allow TLS Session Tickets to be disabled when using
+        the APR/native HTTP connector. Patch provided by Josiah Purtlebaugh.
+        (markt)
+      </add>
     </changelog>
   </subsection>
   <subsection name="Jasper">
