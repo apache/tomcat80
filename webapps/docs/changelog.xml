@@ -363,7 +363,7 @@
         (<code>base.path</code>). (kkolinko)
       </update>
       <update>
-        Update optional Checkstyle library to 6.1.1. (kkolinko)
+        Update optional Checkstyle library to 6.2. (kkolinko)
       </update>
       <update>
         Simplify <code>setproxy</code> task in <code>build.xml</code>.
