@@ -375,9 +375,9 @@
         defaults. (kkolinko)
       </fix>
      <fix>
-        Update the package renamed copy of Apache Commons Pool 2 to revision
-        1643813 to pick up additional fixes since the 2.2 release including
-        one for a possible infinite loop. (markt)
+        Update the package renamed copy of Apache Commons Pool 2 to the 2.3
+        release to pick up various fixes since the 2.2 release including one for
+        a possible infinite loop. (markt)
       </fix>
       <fix>
         <bug>57285</bug>: Restore the manifest entry that marks the Windows
