@@ -33,7 +33,7 @@ import org.apache.tomcat.jni.Status;
 import org.apache.tomcat.util.buf.ByteChunk;
 import org.apache.tomcat.util.buf.MessageBytes;
 import org.apache.tomcat.util.net.AbstractEndpoint;
-import org.apache.tomcat.util.net.SocketWrapperBase;
+import org.apache.tomcat.util.net.SocketWrapper;
 
 /**
  * Implementation of InputBuffer which provides HTTP request header parsing as
@@ -91,7 +91,7 @@ public class InternalAprInputBuffer extends AbstractInputBuffer<Long> {
     private long socket;
 
 
-    private SocketWrapperBase<Long> wrapper;
+    private SocketWrapper<Long> wrapper;
 
 
     // --------------------------------------------------------- Public Methods
@@ -547,7 +547,7 @@ public class InternalAprInputBuffer extends AbstractInputBuffer<Long> {
     // ------------------------------------------------------ Protected Methods
 
     @Override
-    protected void init(SocketWrapperBase<Long> socketWrapper,
+    protected void init(SocketWrapper<Long> socketWrapper,
             AbstractEndpoint<Long> endpoint) throws IOException {
 
         socket = socketWrapper.getSocket().longValue();

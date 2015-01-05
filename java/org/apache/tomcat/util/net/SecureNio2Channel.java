@@ -41,8 +41,7 @@ import org.apache.tomcat.util.res.StringManager;
  */
 public class SecureNio2Channel extends Nio2Channel  {
 
-    protected static final StringManager sm = StringManager.getManager(
-            SecureNio2Channel.class.getPackage().getName());
+    protected static final StringManager sm = StringManager.getManager("org.apache.tomcat.util.net.res");
 
     protected ByteBuffer netInBuffer;
     protected ByteBuffer netOutBuffer;
@@ -58,8 +57,8 @@ public class SecureNio2Channel extends Nio2Channel  {
     protected volatile boolean readPending;
     protected volatile boolean writePending;
 
-    private CompletionHandler<Integer, SocketWrapperBase<Nio2Channel>> handshakeReadCompletionHandler;
-    private CompletionHandler<Integer, SocketWrapperBase<Nio2Channel>> handshakeWriteCompletionHandler;
+    private CompletionHandler<Integer, SocketWrapper<Nio2Channel>> handshakeReadCompletionHandler;
+    private CompletionHandler<Integer, SocketWrapper<Nio2Channel>> handshakeWriteCompletionHandler;
 
     public SecureNio2Channel(SSLEngine engine, ApplicationBufferHandler bufHandler,
             Nio2Endpoint endpoint0) {
@@ -74,9 +73,9 @@ public class SecureNio2Channel extends Nio2Channel  {
             netInBuffer = ByteBuffer.allocate(netBufSize);
             netOutBuffer = ByteBuffer.allocate(netBufSize);
         }
-        handshakeReadCompletionHandler = new CompletionHandler<Integer, SocketWrapperBase<Nio2Channel>>() {
+        handshakeReadCompletionHandler = new CompletionHandler<Integer, SocketWrapper<Nio2Channel>>() {
             @Override
-            public void completed(Integer result, SocketWrapperBase<Nio2Channel> attachment) {
+            public void completed(Integer result, SocketWrapper<Nio2Channel> attachment) {
                 if (result.intValue() < 0) {
                     failed(new EOFException(), attachment);
                     return;
@@ -84,13 +83,13 @@ public class SecureNio2Channel extends Nio2Channel  {
                 endpoint.processSocket(attachment, SocketStatus.OPEN_READ, false);
             }
             @Override
-            public void failed(Throwable exc, SocketWrapperBase<Nio2Channel> attachment) {
-                endpoint.closeSocket(attachment);
+            public void failed(Throwable exc, SocketWrapper<Nio2Channel> attachment) {
+                endpoint.closeSocket(attachment, SocketStatus.ERROR);
             }
         };
-        handshakeWriteCompletionHandler = new CompletionHandler<Integer, SocketWrapperBase<Nio2Channel>>() {
+        handshakeWriteCompletionHandler = new CompletionHandler<Integer, SocketWrapper<Nio2Channel>>() {
             @Override
-            public void completed(Integer result, SocketWrapperBase<Nio2Channel> attachment) {
+            public void completed(Integer result, SocketWrapper<Nio2Channel> attachment) {
                 if (result.intValue() < 0) {
                     failed(new EOFException(), attachment);
                     return;
@@ -98,8 +97,8 @@ public class SecureNio2Channel extends Nio2Channel  {
                 endpoint.processSocket(attachment, SocketStatus.OPEN_WRITE, false);
             }
             @Override
-            public void failed(Throwable exc, SocketWrapperBase<Nio2Channel> attachment) {
-                endpoint.closeSocket(attachment);
+            public void failed(Throwable exc, SocketWrapper<Nio2Channel> attachment) {
+                endpoint.closeSocket(attachment, SocketStatus.ERROR);
             }
         };
     }
@@ -109,7 +108,7 @@ public class SecureNio2Channel extends Nio2Channel  {
     }
 
     @Override
-    public void reset(AsynchronousSocketChannel channel, SocketWrapperBase<Nio2Channel> socket)
+    public void reset(AsynchronousSocketChannel channel, SocketWrapper<Nio2Channel> socket)
             throws IOException {
         super.reset(channel, socket);
         netOutBuffer.position(0);

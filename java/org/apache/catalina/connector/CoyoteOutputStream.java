@@ -31,7 +31,8 @@ import org.apache.tomcat.util.res.StringManager;
  */
 public class CoyoteOutputStream extends ServletOutputStream {
 
-    protected static final StringManager sm = StringManager.getManager(CoyoteOutputStream.class);
+    protected static final StringManager sm =
+            StringManager.getManager(Constants.Package);
 
 
     // ----------------------------------------------------- Instance Variables

@@ -196,10 +196,6 @@ public class SecureNioChannel extends NioChannel  {
                     } else if ( handshake.getStatus() == Status.BUFFER_UNDERFLOW ){
                         //read more data, reregister for OP_READ
                         return SelectionKey.OP_READ;
-                    } else if (handshake.getStatus() == Status.BUFFER_OVERFLOW) {
-                        // TODO AJP and HTTPS have different expectations for the state of
-                        // the buffer at the start of a read. These need to be reconciled.
-                        bufHandler.getReadBuffer().compact();
                     } else {
                         throw new IOException(sm.getString("channel.nio.ssl.unexpectedStatusDuringWrap", handshakeStatus));
                     }//switch
@@ -247,7 +243,12 @@ public class SecureNioChannel extends NioChannel  {
                     default : {
                         long now = System.currentTimeMillis();
                         if (selector==null) {
-                            selector = Selector.open();
+                            synchronized (Selector.class) {
+                                // Selector.open() isn't thread safe
+                                // http://bugs.sun.com/view_bug.do?bug_id=6427854
+                                // Affects 1.6.0_29, fixed in 1.7.0_01
+                                selector = Selector.open();
+                            }
                             key = getIOChannel().register(selector, hsStatus);
                         } else {
                             key.interestOps(hsStatus); // null warning supressed

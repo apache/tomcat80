@@ -28,9 +28,6 @@ import javax.naming.NameParser;
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
 
-import org.apache.juli.logging.Log;
-import org.apache.juli.logging.LogFactory;
-
 /**
  * Catalina JNDI Context implementation.
  *
@@ -60,7 +57,8 @@ public class SelectorContext implements Context {
     public static final String IC_PREFIX = "IC_";
 
 
-    private static final Log log = LogFactory.getLog(SelectorContext.class);
+    private static final org.apache.juli.logging.Log log =
+        org.apache.juli.logging.LogFactory.getLog(SelectorContext.class);
 
     // ----------------------------------------------------------- Constructors
 

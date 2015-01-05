@@ -158,15 +158,17 @@
     <attribute name="protocol" required="false">
       <p>Sets the protocol to handle incoming traffic. The default value is
         <code>HTTP/1.1</code> which uses an auto-switching mechanism to select
-        either a Java NIO based connector or an APR/native based connector.
+        either a non blocking Java NIO based connector or an APR/native based connector.
         If the <code>PATH</code> (Windows) or <code>LD_LIBRARY_PATH</code> (on
         most unix systems) environment variables contain the Tomcat native
         library, the APR/native connector will be used. If the native library
-        cannot be found, the Java NIO based connector will be used. Note
+        cannot be found, the non blocking Java based connector will be used. Note
         that the APR/native connector has different settings for HTTPS than the
         Java connectors.<br/>
         To use an explicit protocol rather than rely on the auto-switching
         mechanism described above, the following values may be used:<br/>
+        <code>org.apache.coyote.http11.Http11Protocol</code> -
+              blocking Java connector<br/>
         <code>org.apache.coyote.http11.Http11NioProtocol</code> -
               non blocking Java NIO connector<br/>
         <code>org.apache.coyote.http11.Http11Nio2Protocol</code> -
@@ -259,9 +261,9 @@
 
   <subsection name="Standard Implementation">
 
-  <p>The standard HTTP connectors (NIO, NIO2 and APR/native) all support the
-  following attributes in addition to the common Connector attributes listed
-  above.</p>
+  <p>The standard HTTP connectors (BIO, NIO, NIO2 and APR/native) all support
+  the following attributes in addition to the common Connector attributes
+  listed above.</p>
 
   <attributes>
 
@@ -380,8 +382,9 @@
     <attribute name="executorTerminationTimeoutMillis" required="false">
       <p>The time that the private internal executor will wait for request
       processing threads to terminate before continuing with the process of
-      stopping the connector. If not set, the default is  <code>5000</code> (5
-      seconds).</p>
+      stopping the connector. If not set, the default is <code>0</code> (zero)
+      for the BIO connector and <code>5000</code> (5 seconds) for the NIO,
+      NIO2 and APR/native connectors.</p>
     </attribute>
 
     <attribute name="keepAliveTimeout" required="false">
@@ -401,7 +404,10 @@
       start accepting and processing new connections again. Note that once the
       limit has been reached, the operating system may still accept connections
       based on the <code>acceptCount</code> setting. The default value varies by
-      connector type. For NIO and NIO2 the default is <code>10000</code>.
+      connector type. For BIO the default is the value of
+      <strong>maxThreads</strong> unless an <a href="executor.html">Executor</a>
+      is used in which case the default will be the value of maxThreads from the
+      executor. For NIO and NIO2 the default is <code>10000</code>.
       For APR/native, the default is <code>8192</code>.</p>
       <p>Note that for APR/native on Windows, the configured value will be
       reduced to the highest multiple of 1024 that is less than or equal to
@@ -498,6 +504,12 @@
       </p>
     </attribute>
 
+    <attribute name="socketBuffer" required="false">
+      <p>The size (in bytes) of the buffer to be provided for socket
+      output buffering. -1 can be specified to disable the use of a buffer.
+      By default, a buffers of 9000 bytes will be used.</p>
+    </attribute>
+
     <attribute name="SSLEnabled" required="false">
       <p>Use this attribute to enable SSL traffic on a connector.
       To turn on SSL handshake/encryption/decryption on a connector
@@ -540,7 +552,7 @@
 
   <subsection name="Java TCP socket attributes">
 
-    <p>The NIO and NIO2 implementation support the following Java TCP
+    <p>The BIO, NIO and NIO2 implementation support the following Java TCP
     socket attributes in addition to the common Connector and HTTP attributes
     listed above.</p>
 
@@ -614,6 +626,24 @@
     </attributes>
   </subsection>
 
+  <subsection name="BIO specific configuration">
+
+    <p>The following attributes are specific to the BIO connector.</p>
+
+    <attributes>
+
+      <attribute name="disableKeepAlivePercentage" required="false">
+        <p>The percentage of processing threads that have to be in use before
+        HTTP keep-alives are disabled to improve scalability. Values less than
+        <code>0</code> will be changed to <code>0</code> and values greater than
+        <code>100</code> will be changed to <code>100</code>. If not specified,
+        the default value is <code>75</code>.</p>
+      </attribute>
+
+    </attributes>
+
+  </subsection>
+
   <subsection name="NIO specific configuration">
 
     <p>The following attributes are specific to the NIO connector.</p>
@@ -645,6 +675,11 @@
         poller. This value is important, since connection clean up is done on
         the same thread, so do not set this value to an extremely high one. The
         default value is <code>1000</code> milliseconds.</p>
+      </attribute>
+
+      <attribute name="useComet" required="false">
+        <p>(bool)Whether to allow comet servlets or not. Default value is
+        <code>true</code>.</p>
       </attribute>
 
       <attribute name="useSendfile" required="false">
@@ -775,6 +810,11 @@
         <p>(bool)Use this attribute to enable or disable object caching to
         reduce the amount of GC objects produced.
         The default value is <code>false</code>.</p>
+      </attribute>
+
+      <attribute name="useComet" required="false">
+        <p>(bool)Whether to allow comet servlets or not. Default value is
+        <code>true</code>.</p>
       </attribute>
 
       <attribute name="useSendfile" required="false">
@@ -924,6 +964,11 @@
         this priority means.</p>
       </attribute>
 
+      <attribute name="useComet" required="false">
+        <p>(bool)Whether to allow comet servlets or not. Default value is
+        <code>true</code>.</p>
+      </attribute>
+
       <attribute name="useSendfile" required="false">
         <p>(bool)Use this attribute to enable or disable sendfile capability.
         The default value is <code>true</code>. Note that the use of sendfile
@@ -996,7 +1041,7 @@
   attributes to the values <code>https</code> and <code>true</code>
   respectively, to pass correct information to the servlets.</p>
 
-  <p>The NIO and NIO2 connectors use the JSSE SSL whereas the APR/native
+  <p>The BIO, NIO and NIO2 connectors use the JSSE SSL whereas the APR/native
   connector uses OpenSSL. Therefore, in addition to using different attributes
   to configure SSL, the APR/native connector also requires keys and certificates
   to be provided in a different format.</p>
@@ -1004,9 +1049,9 @@
   <p>For more information, see the
   <a href="../ssl-howto.html">SSL Configuration HOW-TO</a>.</p>
 
-  <subsection name="SSL Support - NIO and NIO2">
+  <subsection name="SSL Support - BIO, NIO and NIO2">
 
-  <p>The NIO and NIO2 connectors use the following attributes to configure SSL:
+  <p>The BIO, NIO and NIO2 connectors use the following attributes to configure SSL:
   </p>
 
   <attributes>
@@ -1359,54 +1404,63 @@
     <table class="defaultTable" style="text-align: center;">
       <tr>
         <th />
+        <th>Java Blocking Connector<br />BIO</th>
         <th>Java Nio Connector<br />NIO</th>
         <th>Java Nio2 Connector<br />NIO2</th>
         <th>APR/native Connector<br />APR</th>
       </tr>
       <tr>
         <th style="text-align: left;">Classname</th>
+        <td><code class="noHighlight">Http11Protocol</code></td>
         <td><code class="noHighlight">Http11NioProtocol</code></td>
         <td><code class="noHighlight">Http11Nio2Protocol</code></td>
         <td><code class="noHighlight">Http11AprProtocol</code></td>
       </tr>
       <tr>
         <th style="text-align: left;">Tomcat Version</th>
+        <td>3.x onwards</td>
         <td>6.x onwards</td>
         <td>8.x onwards</td>
         <td>5.5.x onwards</td>
       </tr>
       <tr>
         <th style="text-align: left;">Support Polling</th>
+        <td>NO</td>
         <td>YES</td>
         <td>YES</td>
         <td>YES</td>
       </tr>
       <tr>
         <th style="text-align: left;">Polling Size</th>
+        <td>N/A</td>
         <td><code class="noHighlight">maxConnections</code></td>
         <td><code class="noHighlight">maxConnections</code></td>
         <td><code class="noHighlight">maxConnections</code></td>
       </tr>
       <tr>
         <th style="text-align: left;">Read HTTP Request</th>
+        <td>Blocking</td>
         <td>Non Blocking</td>
         <td>Non Blocking</td>
         <td>Blocking</td>
       </tr>
       <tr>
         <th style="text-align: left;">Read HTTP Body</th>
+        <td>Blocking</td>
         <td>Sim Blocking</td>
         <td>Blocking</td>
         <td>Blocking</td>
       </tr>
       <tr>
         <th style="text-align: left;">Write HTTP Response</th>
+        <td>Blocking</td>
         <td>Sim Blocking</td>
         <td>Blocking</td>
         <td>Blocking</td>
       </tr>
       <tr>
         <th style="text-align: left;">Wait for next Request</th>
+        <td>Blocking</td>
         <td>Non Blocking</td>
         <td>Non Blocking</td>
         <td>Non Blocking</td>
@@ -1415,16 +1469,19 @@
         <th style="text-align: left;">SSL Support</th>
         <td>Java SSL</td>
         <td>Java SSL</td>
+        <td>Java SSL</td>
         <td>OpenSSL</td>
       </tr>
       <tr>
         <th style="text-align: left;">SSL Handshake</th>
+        <td>Blocking</td>
         <td>Non blocking</td>
         <td>Non blocking</td>
         <td>Blocking</td>
       </tr>
       <tr>
         <th style="text-align: left;">Max Connections</th>
+        <td><code class="noHighlight">maxConnections</code></td>
         <td><code class="noHighlight">maxConnections</code></td>
         <td><code class="noHighlight">maxConnections</code></td>
         <td><code class="noHighlight">maxConnections</code></td>

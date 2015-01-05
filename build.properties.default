@@ -23,15 +23,16 @@
 # -----------------------------------------------------------------------------
 
 # ----- Version Control Flags -----
-version.major=9
+version.major=8
 version.minor=0
-version.build=0
+version.build=16
 version.patch=0
 version.suffix=
 
 # ----- Build control flags -----
 # Note enabling validation uses Checkstyle which is LGPL licensed
 execute.validate=false
+execute.test.bio=true
 execute.test.nio=true
 execute.test.nio2=true
 # Still requires APR/native library to be present
@@ -65,8 +66,8 @@ base.path=/usr/share/java
 #base.path=C:/path/to/the/repository
 #base.path=/usr/local
 
-compile.source=1.8
-compile.target=1.8
+compile.source=1.7
+compile.target=1.7
 compile.debug=true
 
 # Do not pass -deprecation (-Xlint:deprecation) flag to javac
@@ -85,9 +86,6 @@ base-maven.loc=http://repo.maven.apache.org/maven2
 
 # Mirror, was used when there were problems with the main SF downloads site
 # base-sf.loc=http://sunet.dl.sourceforge.net
-
-# Can be removed once we no longer require a Cobertura snapshot
-base-sonatype-snapshots=https://oss.sonatype.org/content/repositories/snapshots
 
 # ----- Commons Logging, version 1.1 or later -----
 # If this version is updated, check the versions required for the dependencies below
@@ -220,12 +218,22 @@ checkstyle.home=${base.path}/checkstyle-${checkstyle.version}
 checkstyle.loc=${base-sf.loc}/checkstyle/checkstyle/${checkstyle.version}/checkstyle-${checkstyle.version}-all.jar
 checkstyle.jar=${checkstyle.home}/checkstyle-${checkstyle.version}-all.jar
 
+# ----- JSON Libraries (for bayeux module) -----
+json-lib.home=${base.path}/json-20080701
+json-lib.lib=http://repo1.maven.org/maven2/org/json/json/20080701/json-20080701.jar
+json-lib.jar=json.jar
+
+# ----- Dojo Toolkit (for bayeux module) -----
+dojo-js.home=${base.path}/dojo-release-1.1.1
+dojo-js.loc=http://download.dojotoolkit.org/release-1.1.1/dojo-release-1.1.1.tar.gz
+dojo-js.jar=${dojo-js.home}/dojo/dojo.js
+
 # ----- Cobertura code coverage tool -----
-cobertura.version=2.1.0-SNAPSHOT
+cobertura.version=2.0.3
 cobertura.home=${base.path}/cobertura-${cobertura.version}
 cobertura.jar=${cobertura.home}/cobertura-${cobertura.version}.jar
 cobertura.lib=${cobertura.home}/lib
-cobertura.loc=${base-sonatype-snapshots}/net/sourceforge/cobertura/cobertura/${cobertura.version}/cobertura-2.1.0-20141121.083251-1-bin.tar.gz
+cobertura.loc=${base-sf.loc}/cobertura/cobertura-2.0.3-bin.tar.gz
 
 # ----- JVM settings for unit tests
 java.net.preferIPv4Stack=false

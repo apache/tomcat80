@@ -23,8 +23,6 @@ import java.io.Reader;
 import java.io.UTFDataFormatException;
 
 import org.apache.jasper.compiler.Localizer;
-import org.apache.juli.logging.Log;
-import org.apache.juli.logging.LogFactory;
 
 /**
  * @author Andy Clark, IBM
@@ -32,7 +30,8 @@ import org.apache.juli.logging.LogFactory;
 public class UTF8Reader
     extends Reader {
 
-    private final Log log = LogFactory.getLog(UTF8Reader.class);
+    private final org.apache.juli.logging.Log log=
+        org.apache.juli.logging.LogFactory.getLog( UTF8Reader.class );
 
     // debugging
 

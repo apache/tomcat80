@@ -54,7 +54,7 @@ import org.apache.tomcat.util.net.AbstractEndpoint;
 import org.apache.tomcat.util.net.AbstractEndpoint.Handler.SocketState;
 import org.apache.tomcat.util.net.DispatchType;
 import org.apache.tomcat.util.net.SocketStatus;
-import org.apache.tomcat.util.net.SocketWrapperBase;
+import org.apache.tomcat.util.net.SocketWrapper;
 import org.apache.tomcat.util.res.StringManager;
 
 public abstract class AbstractHttp11Processor<S> extends AbstractProcessor<S> {
@@ -72,7 +72,7 @@ public abstract class AbstractHttp11Processor<S> extends AbstractProcessor<S> {
     /**
      * Input.
      */
-    protected AbstractInputBuffer<S> inputBuffer;
+    protected AbstractInputBuffer<S> inputBuffer ;
 
 
     /**
@@ -147,6 +147,12 @@ public abstract class AbstractHttp11Processor<S> extends AbstractProcessor<S> {
      * Is there an expectation ?
      */
     protected boolean expectation = false;
+
+
+    /**
+     * Comet used.
+     */
+    protected boolean comet = false;
 
 
     /**
@@ -457,6 +463,20 @@ public abstract class AbstractHttp11Processor<S> extends AbstractProcessor<S> {
     }
 
     /**
+     * Set the socket buffer flag.
+     */
+    public void setSocketBuffer(int socketBuffer) {
+        outputBuffer.setSocketBuffer(socketBuffer);
+    }
+
+    /**
+     * Get the socket buffer flag.
+     */
+    public int getSocketBuffer() {
+        return outputBuffer.getSocketBuffer();
+    }
+
+    /**
      * Set the upload timeout.
      */
     public void setConnectionUploadTimeout(int timeout) {
@@ -615,18 +635,14 @@ public abstract class AbstractHttp11Processor<S> extends AbstractProcessor<S> {
      * Exposes input buffer to super class to allow better code re-use.
      * @return  The input buffer used by the processor.
      */
-    protected AbstractInputBuffer<S> getInputBuffer() {
-        return inputBuffer;
-    }
+    protected abstract AbstractInputBuffer<S> getInputBuffer();
 
 
     /**
      * Exposes output buffer to super class to allow better code re-use.
      * @return  The output buffer used by the processor.
      */
-    protected AbstractOutputBuffer<S> getOutputBuffer() {
-        return outputBuffer;
-    }
+    protected abstract AbstractOutputBuffer<S> getOutputBuffer();
 
 
     /**
@@ -782,6 +798,8 @@ public abstract class AbstractHttp11Processor<S> extends AbstractProcessor<S> {
         }
         case ASYNC_START: {
             asyncStateMachine.asyncStart((AsyncContextCallback) param);
+            // Async time out is based on SocketWrapper access time
+            getSocketWrapper().access();
             break;
         }
         case ASYNC_DISPATCHED: {
@@ -836,8 +854,9 @@ public abstract class AbstractHttp11Processor<S> extends AbstractProcessor<S> {
             if (param == null || socketWrapper == null) {
                 return;
             }
-            long timeout = ((Long) param).longValue();
-            socketWrapper.setAsyncTimeout(timeout);
+            long timeout = ((Long)param).longValue();
+            // If we are not piggy backing on a worker thread, set the timeout
+            socketWrapper.setTimeout(timeout);
             break;
         }
         case ASYNC_DISPATCH: {
@@ -853,7 +872,7 @@ public abstract class AbstractHttp11Processor<S> extends AbstractProcessor<S> {
             break;
         }
         case AVAILABLE: {
-            request.setAvailable(getInputBuffer().available());
+            request.setAvailable(inputBuffer.available());
             break;
         }
         case NB_WRITE_INTEREST: {
@@ -884,7 +903,7 @@ public abstract class AbstractHttp11Processor<S> extends AbstractProcessor<S> {
             break;
         }
         case DISPATCH_EXECUTE: {
-            SocketWrapperBase<S> wrapper = socketWrapper;
+            SocketWrapper<S> wrapper = socketWrapper;
             if (wrapper != null) {
                 getEndpoint().executeNonBlockingDispatches(wrapper);
             }
@@ -904,6 +923,20 @@ public abstract class AbstractHttp11Processor<S> extends AbstractProcessor<S> {
     }
 
     abstract void actionInternal(ActionCode actionCode, Object param);
+
+
+    /**
+     * Processors (currently only HTTP BIO) may elect to disable HTTP keep-alive
+     * in some circumstances. This method allows the processor implementation to
+     * determine if keep-alive should be disabled or not.
+     */
+    protected abstract boolean disableKeepAlive();
+
+
+    /**
+     * Configures the timeout to be used for reading the request line.
+     */
+    protected abstract void setRequestLineReadTimeout() throws IOException;
 
 
     /**
@@ -931,7 +964,7 @@ public abstract class AbstractHttp11Processor<S> extends AbstractProcessor<S> {
      * @throws IOException error during an I/O operation
      */
     @Override
-    public SocketState process(SocketWrapperBase<S> socketWrapper)
+    public SocketState process(SocketWrapper<S> socketWrapper)
         throws IOException {
         RequestInfo rp = request.getRequestProcessor();
         rp.setStage(org.apache.coyote.Constants.STAGE_PARSE);
@@ -943,16 +976,27 @@ public abstract class AbstractHttp11Processor<S> extends AbstractProcessor<S> {
 
         // Flags
         keepAlive = true;
+        comet = false;
         openSocket = false;
         sendfileInProgress = false;
         readComplete = true;
-        keptAlive = false;
+        if (endpoint.getUsePolling()) {
+            keptAlive = false;
+        } else {
+            keptAlive = socketWrapper.isKeptAlive();
+        }
 
-        while (!getErrorState().isError() && keepAlive && !isAsync() &&
+        if (disableKeepAlive()) {
+            socketWrapper.setKeepAliveLeft(0);
+        }
+
+        while (!getErrorState().isError() && keepAlive && !comet && !isAsync() &&
                 httpUpgradeHandler == null && !endpoint.isPaused()) {
 
             // Parsing the request header
             try {
+                setRequestLineReadTimeout();
+
                 if (!getInputBuffer().parseRequestLine(keptAlive)) {
                     if (handleIncompleteRequestLineRead()) {
                         break;
@@ -1051,6 +1095,7 @@ public abstract class AbstractHttp11Processor<S> extends AbstractProcessor<S> {
                                     statusDropsConnection(response.getStatus())))) {
                         setErrorState(ErrorState.CLOSE_CLEAN, null);
                     }
+                    setCometTimeouts(socketWrapper);
                 } catch (InterruptedIOException e) {
                     setErrorState(ErrorState.CLOSE_NOW, e);
                 } catch (HeadersTooLargeException e) {
@@ -1078,7 +1123,7 @@ public abstract class AbstractHttp11Processor<S> extends AbstractProcessor<S> {
             // Finish the handling of the request
             rp.setStage(org.apache.coyote.Constants.STAGE_ENDINPUT);
 
-            if (!isAsync()) {
+            if (!isAsync() && !comet) {
                 if (getErrorState().isError()) {
                     // If we know we are closing the connection, don't drain
                     // input. This way uploading a 100GB file doesn't tie up the
@@ -1102,7 +1147,7 @@ public abstract class AbstractHttp11Processor<S> extends AbstractProcessor<S> {
             }
             request.updateCounters();
 
-            if (!isAsync() || getErrorState().isError()) {
+            if (!isAsync() && !comet || getErrorState().isError()) {
                 if (getErrorState().isIoAllowed()) {
                     getInputBuffer().nextRequest();
                     getOutputBuffer().nextRequest();
@@ -1128,7 +1173,7 @@ public abstract class AbstractHttp11Processor<S> extends AbstractProcessor<S> {
 
         if (getErrorState().isError() || endpoint.isPaused()) {
             return SocketState.CLOSED;
-        } else if (isAsync()) {
+        } else if (isAsync() || comet) {
             return SocketState.LONG;
         } else if (isUpgrade()) {
             return SocketState.UPGRADING;
@@ -1632,7 +1677,7 @@ public abstract class AbstractHttp11Processor<S> extends AbstractProcessor<S> {
         } else if (status == SocketStatus.OPEN_READ &&
                 request.getReadListener() != null) {
             try {
-                if (getInputBuffer().available() > 0) {
+                if (inputBuffer.available() > 0) {
                     asyncStateMachine.asyncOperation();
                 }
             } catch (IllegalStateException x) {
@@ -1679,6 +1724,12 @@ public abstract class AbstractHttp11Processor<S> extends AbstractProcessor<S> {
 
 
     @Override
+    public boolean isComet() {
+        return comet;
+    }
+
+
+    @Override
     public boolean isUpgrade() {
         return httpUpgradeHandler != null;
     }
@@ -1706,6 +1757,12 @@ public abstract class AbstractHttp11Processor<S> extends AbstractProcessor<S> {
      */
     protected abstract void resetTimeouts();
 
+
+    /**
+     * Provides a mechanism for those connectors (currently only NIO) that need
+     * that need to set comet timeouts.
+     */
+    protected abstract void setCometTimeouts(SocketWrapper<S> socketWrapper);
 
     public void endRequest() {
 
@@ -1746,7 +1803,7 @@ public abstract class AbstractHttp11Processor<S> extends AbstractProcessor<S> {
      * @return true if the keep-alive loop should be broken
      */
     protected abstract boolean breakKeepAliveLoop(
-            SocketWrapperBase<S> socketWrapper);
+            SocketWrapper<S> socketWrapper);
 
 
     @Override
@@ -1763,8 +1820,8 @@ public abstract class AbstractHttp11Processor<S> extends AbstractProcessor<S> {
             asyncStateMachine.recycle();
         }
         httpUpgradeHandler = null;
+        comet = false;
         resetErrorState();
-        socketWrapper = null;
         recycleInternal();
     }
 
@@ -1773,7 +1830,7 @@ public abstract class AbstractHttp11Processor<S> extends AbstractProcessor<S> {
 
     @Override
     public ByteBuffer getLeftoverInput() {
-        return getInputBuffer().getLeftover();
+        return inputBuffer.getLeftover();
     }
 
 }

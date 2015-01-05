@@ -98,7 +98,8 @@ public class Response
     /**
      * The string manager for this package.
      */
-    protected static final StringManager sm = StringManager.getManager(Response.class);
+    protected static final StringManager sm =
+        StringManager.getManager(Constants.Package);
 
 
     // ----------------------------------------------------- Instance Variables
@@ -288,7 +289,7 @@ public class Response
 
 
     /**
-     * Clear cached encoders (to save memory for async requests).
+     * Clear cached encoders (to save memory for Comet requests).
      */
     public void clearEncoders() {
         outputBuffer.clearEncoders();

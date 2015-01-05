@@ -25,7 +25,7 @@ import org.apache.juli.logging.Log;
 import org.apache.tomcat.util.net.AbstractEndpoint;
 import org.apache.tomcat.util.net.AbstractEndpoint.Handler.SocketState;
 import org.apache.tomcat.util.net.SocketStatus;
-import org.apache.tomcat.util.net.SocketWrapperBase;
+import org.apache.tomcat.util.net.SocketWrapper;
 import org.apache.tomcat.util.res.StringManager;
 
 /**
@@ -41,7 +41,7 @@ public abstract class AbstractProcessor<S> implements ActionHook, Processor<S> {
     protected final AbstractEndpoint<S> endpoint;
     protected final Request request;
     protected final Response response;
-    protected SocketWrapperBase<S> socketWrapper = null;
+    protected SocketWrapper<S> socketWrapper = null;
 
     /**
      * Error state for the request/response currently being processed.
@@ -140,7 +140,7 @@ public abstract class AbstractProcessor<S> implements ActionHook, Processor<S> {
     /**
      * Set the socket wrapper being used.
      */
-    protected final void setSocketWrapper(SocketWrapperBase<S> socketWrapper) {
+    protected final void setSocketWrapper(SocketWrapper<S> socketWrapper) {
         this.socketWrapper = socketWrapper;
     }
 
@@ -148,7 +148,7 @@ public abstract class AbstractProcessor<S> implements ActionHook, Processor<S> {
     /**
      * Get the socket wrapper being used.
      */
-    protected final SocketWrapperBase<S> getSocketWrapper() {
+    protected final SocketWrapper<S> getSocketWrapper() {
         return socketWrapper;
     }
 
@@ -179,6 +179,9 @@ public abstract class AbstractProcessor<S> implements ActionHook, Processor<S> {
     }
 
     @Override
+    public abstract boolean isComet();
+
+    @Override
     public abstract boolean isUpgrade();
 
     /**
@@ -186,7 +189,13 @@ public abstract class AbstractProcessor<S> implements ActionHook, Processor<S> {
      * with although they may change type during processing.
      */
     @Override
-    public abstract SocketState process(SocketWrapperBase<S> socket) throws IOException;
+    public abstract SocketState process(SocketWrapper<S> socket) throws IOException;
+
+    /**
+     * Process in-progress Comet requests. These will start as HTTP requests.
+     */
+    @Override
+    public abstract SocketState event(SocketStatus status) throws IOException;
 
     /**
      * Process in-progress Servlet 3.0 Async requests. These will start as HTTP

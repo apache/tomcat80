@@ -62,35 +62,25 @@ public class TestWsRemoteEndpoint extends TomcatBaseTest {
 
     @Test
     public void testWriterAnnotation() throws Exception {
-        doTestWriter(TesterAnnotatedEndpoint.class, true, TEST_MESSAGE_5K);
+        doTestWriter(TesterAnnotatedEndpoint.class, true);
     }
 
     @Test
     public void testWriterProgrammatic() throws Exception {
-        doTestWriter(TesterProgrammaticEndpoint.class, true, TEST_MESSAGE_5K);
-    }
-
-    @Test
-    public void testWriterZeroLengthAnnotation() throws Exception {
-        doTestWriter(TesterAnnotatedEndpoint.class, true, "");
-    }
-
-    @Test
-    public void testWriterZeroLengthProgrammatic() throws Exception {
-        doTestWriter(TesterProgrammaticEndpoint.class, true, "");
+        doTestWriter(TesterProgrammaticEndpoint.class, true);
     }
 
     @Test
     public void testStreamAnnotation() throws Exception {
-        doTestWriter(TesterAnnotatedEndpoint.class, false, TEST_MESSAGE_5K);
+        doTestWriter(TesterAnnotatedEndpoint.class, false);
     }
 
     @Test
     public void testStreamProgrammatic() throws Exception {
-        doTestWriter(TesterProgrammaticEndpoint.class, false, TEST_MESSAGE_5K);
+        doTestWriter(TesterProgrammaticEndpoint.class, false);
     }
 
-    private void doTestWriter(Class<?> clazz, boolean useWriter, String testMessage) throws Exception {
+    private void doTestWriter(Class<?> clazz, boolean useWriter) throws Exception {
         Tomcat tomcat = getTomcatInstance();
         // No file system docBase required
         Context ctx = tomcat.addContext("", null);
@@ -133,7 +123,7 @@ public class TestWsRemoteEndpoint extends TomcatBaseTest {
             Writer w = wsSession.getBasicRemote().getSendWriter();
 
             for (int i = 0; i < 8; i++) {
-                w.write(testMessage);
+                w.write(TEST_MESSAGE_5K);
             }
 
             w.close();
@@ -141,7 +131,7 @@ public class TestWsRemoteEndpoint extends TomcatBaseTest {
             OutputStream s = wsSession.getBasicRemote().getSendStream();
 
             for (int i = 0; i < 8; i++) {
-                s.write(testMessage.getBytes(StandardCharsets.UTF_8));
+                s.write(TEST_MESSAGE_5K.getBytes(StandardCharsets.UTF_8));
             }
 
             s.close();
@@ -172,77 +162,20 @@ public class TestWsRemoteEndpoint extends TomcatBaseTest {
         int offset = 0;
         int i = 0;
         for (String result : results) {
-            if (testMessage.length() == 0) {
-                Assert.assertEquals(0, result.length());
-            } else {
-                // First may be a fragment
-                Assert.assertEquals(SEQUENCE.substring(offset, S_LEN),
-                        result.substring(0, S_LEN - offset));
-                i = S_LEN - offset;
-                while (i + S_LEN < result.length()) {
-                    if (!SEQUENCE.equals(result.substring(i, i + S_LEN))) {
-                        Assert.fail();
-                    }
-                    i += S_LEN;
-                }
-                offset = result.length() - i;
-                if (!SEQUENCE.substring(0, offset).equals(result.substring(i))) {
+            // First may be a fragment
+            Assert.assertEquals(SEQUENCE.substring(offset, S_LEN),
+                    result.substring(0, S_LEN - offset));
+            i = S_LEN - offset;
+            while (i + S_LEN < result.length()) {
+                if (!SEQUENCE.equals(result.substring(i, i + S_LEN))) {
                     Assert.fail();
                 }
+                i += S_LEN;
+            }
+            offset = result.length() - i;
+            if (!SEQUENCE.substring(0, offset).equals(result.substring(i))) {
+                Assert.fail();
             }
         }
-    }
-
-    @Test
-    public void testWriterErrorAnnotation() throws Exception {
-        doTestWriterError(TesterAnnotatedEndpoint.class);
-    }
-
-    @Test
-    public void testWriterErrorProgrammatic() throws Exception {
-        doTestWriterError(TesterProgrammaticEndpoint.class);
-    }
-
-    private void doTestWriterError(Class<?> clazz) throws Exception {
-        Tomcat tomcat = getTomcatInstance();
-        // No file system docBase required
-        Context ctx = tomcat.addContext("", null);
-        ctx.addApplicationListener(TesterEchoServer.Config.class.getName());
-        Tomcat.addServlet(ctx, "default", new DefaultServlet());
-        ctx.addServletMapping("/", "default");
-
-        WebSocketContainer wsContainer = ContainerProvider.getWebSocketContainer();
-
-        tomcat.start();
-
-        Session wsSession;
-        URI uri = new URI("ws://localhost:" + getPort() + TesterEchoServer.Config.PATH_WRITER_ERROR);
-        if (Endpoint.class.isAssignableFrom(clazz)) {
-            @SuppressWarnings("unchecked")
-            Class<? extends Endpoint> endpointClazz = (Class<? extends Endpoint>) clazz;
-            wsSession = wsContainer.connectToServer(endpointClazz, Builder.create().build(), uri);
-        } else {
-            wsSession = wsContainer.connectToServer(clazz, uri);
-        }
-
-        CountDownLatch latch = new CountDownLatch(1);
-        TesterEndpoint tep = (TesterEndpoint) wsSession.getUserProperties().get("endpoint");
-        tep.setLatch(latch);
-        AsyncHandler<?> handler;
-        handler = new AsyncText(latch);
-
-        wsSession.addMessageHandler(handler);
-
-        // This should trigger the error
-        wsSession.getBasicRemote().sendText("Start");
-
-        boolean latchResult = handler.getLatch().await(10, TimeUnit.SECONDS);
-
-        Assert.assertTrue(latchResult);
-
-        @SuppressWarnings("unchecked")
-        List<String> messages = (List<String>) handler.getMessages();
-
-        Assert.assertEquals(0, messages.size());
     }
 }

@@ -30,8 +30,6 @@ import org.apache.catalina.Host;
 import org.apache.catalina.WebResource;
 import org.apache.catalina.WebResourceRoot;
 import org.apache.catalina.Wrapper;
-import org.apache.juli.logging.Log;
-import org.apache.juli.logging.LogFactory;
 import org.apache.tomcat.util.buf.Ascii;
 import org.apache.tomcat.util.buf.CharChunk;
 import org.apache.tomcat.util.buf.MessageBytes;
@@ -46,9 +44,11 @@ import org.apache.tomcat.util.res.StringManager;
 public final class Mapper {
 
 
-    private static final Log log = LogFactory.getLog(Mapper.class);
+    private static final org.apache.juli.logging.Log log =
+        org.apache.juli.logging.LogFactory.getLog(Mapper.class);
 
-    protected static final StringManager sm = StringManager.getManager(Mapper.class);
+    protected static final StringManager sm =
+        StringManager.getManager(Mapper.class.getPackage().getName());
 
     // ----------------------------------------------------- Instance Variables
 

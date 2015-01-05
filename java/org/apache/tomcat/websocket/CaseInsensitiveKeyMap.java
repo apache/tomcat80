@@ -40,7 +40,7 @@ import org.apache.tomcat.util.res.StringManager;
 public class CaseInsensitiveKeyMap<V> extends AbstractMap<String,V> {
 
     private static final StringManager sm =
-            StringManager.getManager(CaseInsensitiveKeyMap.class);
+            StringManager.getManager(Constants.PACKAGE_NAME);
 
     private final Map<Key,V> map = new HashMap<>();
 

@@ -44,9 +44,6 @@ public final class Constants {
     public static final int STAGE_KEEPALIVE = 6;
     public static final int STAGE_ENDED = 7;
 
-    // Default protocol settings
-    public static final int DEFAULT_CONNECTION_LINGER = -1;
-    public static final boolean DEFAULT_TCP_NO_DELAY = true;
 
     /**
      * Has security been turned on?
@@ -62,6 +59,36 @@ public final class Constants {
         Boolean.valueOf(System.getProperty(
                 "org.apache.coyote.USE_CUSTOM_STATUS_MSG_IN_HEADER",
                 "false")).booleanValue();
+
+    /**
+     * The request attribute that is set to the value of {@code Boolean.TRUE}
+     * if connector processing this request supports Comet API.
+     */
+    public static final String COMET_SUPPORTED_ATTR =
+        "org.apache.tomcat.comet.support";
+
+
+    /**
+     * The request attribute that is set to the value of {@code Boolean.TRUE}
+     * if connector processing this request supports setting
+     * per-connection request timeout through Comet API.
+     *
+     * @see org.apache.catalina.comet.CometEvent#setTimeout(int)
+     */
+    public static final String COMET_TIMEOUT_SUPPORTED_ATTR =
+        "org.apache.tomcat.comet.timeout.support";
+
+
+    /**
+     * The request attribute that can be set to a value of type
+     * {@code java.lang.Integer} to specify per-connection request
+     * timeout for Comet API. The value is in milliseconds.
+     *
+     * @see org.apache.catalina.comet.CometEvent#setTimeout(int)
+     */
+    public static final String COMET_TIMEOUT_ATTR =
+        "org.apache.tomcat.comet.timeout";
+
 
     /**
      * The request attribute that is set to the value of {@code Boolean.TRUE}

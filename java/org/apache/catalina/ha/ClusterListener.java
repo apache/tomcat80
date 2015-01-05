@@ -21,8 +21,6 @@ import java.io.Serializable;
 
 import org.apache.catalina.tribes.ChannelListener;
 import org.apache.catalina.tribes.Member;
-import org.apache.juli.logging.Log;
-import org.apache.juli.logging.LogFactory;
 
 
 /**
@@ -33,7 +31,8 @@ import org.apache.juli.logging.LogFactory;
  */
 public abstract class ClusterListener implements ChannelListener {
 
-    private static final Log log = LogFactory.getLog(ClusterListener.class);
+    private static final org.apache.juli.logging.Log log =
+        org.apache.juli.logging.LogFactory.getLog(ClusterListener.class);
 
     //--Instance Variables--------------------------------------
 

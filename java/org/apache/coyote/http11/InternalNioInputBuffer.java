@@ -30,7 +30,7 @@ import org.apache.tomcat.util.net.AbstractEndpoint;
 import org.apache.tomcat.util.net.NioChannel;
 import org.apache.tomcat.util.net.NioEndpoint;
 import org.apache.tomcat.util.net.NioSelectorPool;
-import org.apache.tomcat.util.net.SocketWrapperBase;
+import org.apache.tomcat.util.net.SocketWrapper;
 
 /**
  * Implementation of InputBuffer which provides HTTP request header parsing as
@@ -84,7 +84,7 @@ public class InternalNioInputBuffer extends AbstractNioInputBuffer<NioChannel> {
     // ------------------------------------------------------ Protected Methods
 
     @Override
-    protected void init(SocketWrapperBase<NioChannel> socketWrapper,
+    protected void init(SocketWrapper<NioChannel> socketWrapper,
             AbstractEndpoint<NioChannel> endpoint) throws IOException {
 
         socket = socketWrapper.getSocket();
@@ -125,8 +125,8 @@ public class InternalNioInputBuffer extends AbstractNioInputBuffer<NioChannel> {
                 // Ignore
             }
             try {
-                NioEndpoint.NioSocketWrapper att =
-                        (NioEndpoint.NioSocketWrapper) socket.getAttachment();
+                NioEndpoint.KeyAttachment att =
+                        (NioEndpoint.KeyAttachment) socket.getAttachment();
                 if (att == null) {
                     throw new IOException("Key must be cancelled.");
                 }

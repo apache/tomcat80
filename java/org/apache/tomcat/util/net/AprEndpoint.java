@@ -16,9 +16,6 @@
  */
 package org.apache.tomcat.util.net;
 
-import java.io.EOFException;
-import java.io.IOException;
-import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -26,8 +23,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executor;
 import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantReadWriteLock.WriteLock;
 
 import org.apache.juli.logging.Log;
 import org.apache.juli.logging.LogFactory;
@@ -130,9 +125,9 @@ public class AprEndpoint extends AbstractEndpoint<Long> {
     /**
      * Handling of accepted sockets.
      */
-    protected Handler<Long> handler = null;
-    public void setHandler(Handler<Long> handler ) { this.handler = handler; }
-    public Handler<Long> getHandler() { return handler; }
+    protected Handler handler = null;
+    public void setHandler(Handler handler ) { this.handler = handler; }
+    public Handler getHandler() { return handler; }
 
 
     /**
@@ -144,6 +139,10 @@ public class AprEndpoint extends AbstractEndpoint<Long> {
     public void setPollTime(int pollTime) { if (pollTime > 0) { this.pollTime = pollTime; } }
 
 
+    /**
+     * Use sendfile for sending static files.
+     */
+    protected boolean useSendfile = false;
     /*
      * When the endpoint is created and configured, the APR library will not
      * have been initialised. This flag is used to determine if the default
@@ -152,17 +151,25 @@ public class AprEndpoint extends AbstractEndpoint<Long> {
      * by configuration, that configuration will always take priority.
      */
     private boolean useSendFileSet = false;
-    @Override
     public void setUseSendfile(boolean useSendfile) {
         useSendFileSet = true;
-        super.setUseSendfile(useSendfile);
+        this.useSendfile = useSendfile;
     }
-    /*
-     * For internal use to avoid setting the useSendFileSet flag
+    @Override
+    public boolean getUseSendfile() { return useSendfile; }
+
+
+    /**
+     * Allow comet request handling.
      */
-    private void setUseSendfileInternal(boolean useSendfile) {
-        super.setUseSendfile(useSendfile);
-    }
+    protected boolean useComet = true;
+    public void setUseComet(boolean useComet) { this.useComet = useComet; }
+    @Override
+    public boolean getUseComet() { return useComet; }
+    @Override
+    public boolean getUseCometTimeout() { return false; } // Not supported
+    @Override
+    public boolean getUsePolling() { return true; } // Always supported
 
 
     /**
@@ -464,9 +471,9 @@ public class AprEndpoint extends AbstractEndpoint<Long> {
         // Enable Sendfile by default if it has not been configured but usage on
         // systems which don't support it cause major problems
         if (!useSendFileSet) {
-            setUseSendfileInternal(Library.APR_HAS_SENDFILE);
-        } else if (getUseSendfile() && !Library.APR_HAS_SENDFILE) {
-            setUseSendfileInternal(false);
+            useSendfile = Library.APR_HAS_SENDFILE;
+        } else if (useSendfile && !Library.APR_HAS_SENDFILE) {
+            useSendfile = false;
         }
 
         // Initialize thread count default for acceptor
@@ -621,8 +628,8 @@ public class AprEndpoint extends AbstractEndpoint<Long> {
             }
             SSLContext.setVerify(sslContext, value, SSLVerifyDepth);
             // For now, sendfile is not supported with SSL
-            if (getUseSendfile()) {
-                setUseSendfileInternal(false);
+            if (useSendfile) {
+                useSendfile = false;
                 if (useSendFileSet) {
                     log.warn(sm.getString("endpoint.apr.noSendfileWithSSL"));
                 }
@@ -660,7 +667,7 @@ public class AprEndpoint extends AbstractEndpoint<Long> {
             pollerThread.start();
 
             // Start sendfile thread
-            if (getUseSendfile()) {
+            if (useSendfile) {
                 sendfile = new Sendfile();
                 sendfile.init();
                 Thread sendfileThread =
@@ -726,7 +733,7 @@ public class AprEndpoint extends AbstractEndpoint<Long> {
             }
             poller = null;
             connections.clear();
-            if (getUseSendfile()) {
+            if (useSendfile) {
                 try {
                     sendfile.destroy();
                 } catch (Exception e) {
@@ -853,7 +860,7 @@ public class AprEndpoint extends AbstractEndpoint<Long> {
                             Long.valueOf(socket)));
                 }
                 AprSocketWrapper wrapper =
-                        new AprSocketWrapper(Long.valueOf(socket), this);
+                        new AprSocketWrapper(Long.valueOf(socket));
                 wrapper.setKeepAliveLeft(getMaxKeepAliveRequests());
                 wrapper.setSecure(isSSLEnabled());
                 connections.put(Long.valueOf(socket), wrapper);
@@ -874,7 +881,8 @@ public class AprEndpoint extends AbstractEndpoint<Long> {
 
 
     /**
-     * Process given socket. Typically keep alive or upgraded protocol.
+     * Process given socket. Called in non-comet mode, typically keep alive
+     * or upgraded protocol.
      */
     public boolean processSocket(long socket, SocketStatus status) {
         try {
@@ -883,7 +891,7 @@ public class AprEndpoint extends AbstractEndpoint<Long> {
                 log.warn(sm.getString("endpoint.warn.noExector",
                         Long.valueOf(socket), null));
             } else {
-                SocketWrapperBase<Long> wrapper =
+                SocketWrapper<Long> wrapper =
                         connections.get(Long.valueOf(socket));
                 // Make sure connection hasn't been closed
                 if (wrapper != null) {
@@ -905,7 +913,7 @@ public class AprEndpoint extends AbstractEndpoint<Long> {
 
 
     @Override
-    public void processSocket(SocketWrapperBase<Long> socket, SocketStatus status,
+    public void processSocket(SocketWrapper<Long> socket, SocketStatus status,
             boolean dispatch) {
         try {
             // Synchronisation is required here as this code may be called as a
@@ -1421,9 +1429,14 @@ public class AprEndpoint extends AbstractEndpoint<Long> {
             // Close all sockets in the add queue
             SocketInfo info = addList.get();
             while (info != null) {
-                // Poller isn't running at this point so use destroySocket()
-                // directly
-                destroySocket(info.socket);
+                boolean comet =
+                        connections.get(Long.valueOf(info.socket)).isComet();
+                if (!comet || (comet && !processSocket(
+                        info.socket, SocketStatus.STOP))) {
+                    // Poller isn't running at this point so use destroySocket()
+                    // directly
+                    destroySocket(info.socket);
+                }
                 info = addList.get();
             }
             addList.clear();
@@ -1432,7 +1445,12 @@ public class AprEndpoint extends AbstractEndpoint<Long> {
                 int rv = Poll.pollset(pollers[i], desc);
                 if (rv > 0) {
                     for (int n = 0; n < rv; n++) {
-                        destroySocket(desc[n*2+1]);
+                        boolean comet = connections.get(
+                                Long.valueOf(desc[n*2+1])).isComet();
+                        if (!comet || (comet && !processSocket(
+                                desc[n*2+1], SocketStatus.STOP))) {
+                            destroySocket(desc[n*2+1]);
+                        }
                     }
                 }
             }
@@ -1489,7 +1507,12 @@ public class AprEndpoint extends AbstractEndpoint<Long> {
             }
             if (!ok) {
                 // Can't do anything: close the socket right away
-                closeSocket(socket);
+                boolean comet = connections.get(
+                        Long.valueOf(socket)).isComet();
+                if (!comet || (comet && !processSocket(
+                        socket, SocketStatus.ERROR))) {
+                    closeSocket(socket);
+                }
             }
         }
 
@@ -1577,7 +1600,12 @@ public class AprEndpoint extends AbstractEndpoint<Long> {
                             Long.valueOf(socket)));
                 }
                 removeFromPoller(socket);
-                destroySocket(socket);
+                boolean comet = connections.get(
+                        Long.valueOf(socket)).isComet();
+                if (!comet || (comet && !processSocket(
+                        socket, SocketStatus.TIMEOUT))) {
+                    destroySocket(socket);
+                }
                 socket = timeouts.check(date);
             }
 
@@ -1699,11 +1727,20 @@ public class AprEndpoint extends AbstractEndpoint<Long> {
                                 continue;
                             }
                             if (info.read() || info.write()) {
+                                boolean comet = wrapper.isComet();
+                                if (comet || wrapper.pollerFlags != 0) {
+                                    removeFromPoller(info.socket);
+                                }
                                 wrapper.pollerFlags = wrapper.pollerFlags |
                                         (info.read() ? Poll.APR_POLLIN : 0) |
                                         (info.write() ? Poll.APR_POLLOUT : 0);
                                 if (!addToPoller(info.socket, wrapper.pollerFlags)) {
-                                    closeSocket(info.socket);
+                                    // Can't do anything: close the socket right
+                                    // away
+                                    if (!comet || (comet && !processSocket(
+                                            info.socket, SocketStatus.ERROR))) {
+                                        closeSocket(info.socket);
+                                    }
                                 } else {
                                     timeouts.add(info.socket,
                                             System.currentTimeMillis() +
@@ -1757,7 +1794,42 @@ public class AprEndpoint extends AbstractEndpoint<Long> {
                                 }
                                 wrapper.pollerFlags = wrapper.pollerFlags & ~((int) desc[n*2]);
                                 // Check for failed sockets and hand this socket off to a worker
-                                if (((desc[n*2] & Poll.APR_POLLHUP) == Poll.APR_POLLHUP)
+                                if (wrapper.isComet()) {
+                                    // Event processes either a read or a write depending on what the poller returns
+                                    if (((desc[n*2] & Poll.APR_POLLHUP) == Poll.APR_POLLHUP)
+                                            || ((desc[n*2] & Poll.APR_POLLERR) == Poll.APR_POLLERR)
+                                            || ((desc[n*2] & Poll.APR_POLLNVAL) == Poll.APR_POLLNVAL)) {
+                                        if (!processSocket(desc[n*2+1], SocketStatus.ERROR)) {
+                                            // Close socket and clear pool
+                                            closeSocket(desc[n*2+1]);
+                                        }
+                                    } else if ((desc[n*2] & Poll.APR_POLLIN) == Poll.APR_POLLIN) {
+                                        if (wrapper.pollerFlags != 0) {
+                                            add(desc[n*2+1], 1, wrapper.pollerFlags);
+                                        }
+                                        if (!processSocket(desc[n*2+1], SocketStatus.OPEN_READ)) {
+                                            // Close socket and clear pool
+                                            closeSocket(desc[n*2+1]);
+                                        }
+                                    } else if ((desc[n*2] & Poll.APR_POLLOUT) == Poll.APR_POLLOUT) {
+                                        if (wrapper.pollerFlags != 0) {
+                                            add(desc[n*2+1], 1, wrapper.pollerFlags);
+                                        }
+                                        if (!processSocket(desc[n*2+1], SocketStatus.OPEN_WRITE)) {
+                                            // Close socket and clear pool
+                                            closeSocket(desc[n*2+1]);
+                                        }
+                                    } else {
+                                        // Unknown event
+                                        getLog().warn(sm.getString(
+                                                "endpoint.apr.pollUnknownEvent",
+                                                Long.valueOf(desc[n*2])));
+                                        if (!processSocket(desc[n*2+1], SocketStatus.ERROR)) {
+                                            // Close socket and clear pool
+                                            closeSocket(desc[n*2+1]);
+                                        }
+                                    }
+                                } else if (((desc[n*2] & Poll.APR_POLLHUP) == Poll.APR_POLLHUP)
                                         || ((desc[n*2] & Poll.APR_POLLERR) == Poll.APR_POLLERR)
                                         || ((desc[n*2] & Poll.APR_POLLNVAL) == Poll.APR_POLLNVAL)) {
                                     if (wrapper.isAsync() || wrapper.isUpgraded()) {
@@ -2239,6 +2311,19 @@ public class AprEndpoint extends AbstractEndpoint<Long> {
 
     }
 
+    // ------------------------------------------------ Handler Inner Interface
+
+
+    /**
+     * Bare bones interface used for socket processing. Per thread data is to be
+     * stored in the ThreadWithAttributes extra folders, or alternately in
+     * thread local fields.
+     */
+    public interface Handler extends AbstractEndpoint.Handler {
+        public SocketState process(SocketWrapper<Long> socket,
+                SocketStatus status);
+    }
+
 
     // --------------------------------- SocketWithOptionsProcessor Inner Class
 
@@ -2251,10 +2336,10 @@ public class AprEndpoint extends AbstractEndpoint<Long> {
      */
     protected class SocketWithOptionsProcessor implements Runnable {
 
-        protected SocketWrapperBase<Long> socket = null;
+        protected SocketWrapper<Long> socket = null;
 
 
-        public SocketWithOptionsProcessor(SocketWrapperBase<Long> socket) {
+        public SocketWithOptionsProcessor(SocketWrapper<Long> socket) {
             this.socket = socket;
         }
 
@@ -2287,6 +2372,7 @@ public class AprEndpoint extends AbstractEndpoint<Long> {
                         closeSocket(socket.getSocket().longValue());
                         socket = null;
                     } else if (state == Handler.SocketState.LONG) {
+                        socket.access();
                         if (socket.isAsync()) {
                             waitingRequests.add(socket);
                         }
@@ -2306,10 +2392,10 @@ public class AprEndpoint extends AbstractEndpoint<Long> {
      */
     protected class SocketProcessor implements Runnable {
 
-        private final SocketWrapperBase<Long> socket;
+        private final SocketWrapper<Long> socket;
         private final SocketStatus status;
 
-        public SocketProcessor(SocketWrapperBase<Long> socket,
+        public SocketProcessor(SocketWrapper<Long> socket,
                 SocketStatus status) {
             this.socket = socket;
             if (status == null) {
@@ -2348,10 +2434,12 @@ public class AprEndpoint extends AbstractEndpoint<Long> {
                 closeSocket(socket.getSocket().longValue());
                 socket.reset(null, 1);
             } else if (state == Handler.SocketState.LONG) {
+                socket.access();
                 if (socket.isAsync()) {
                     waitingRequests.add(socket);
                 }
             } else if (state == Handler.SocketState.ASYNC_END) {
+                socket.access();
                 SocketProcessor proc = new SocketProcessor(socket,
                         SocketStatus.OPEN_READ);
                 getExecutor().execute(proc);
@@ -2360,261 +2448,13 @@ public class AprEndpoint extends AbstractEndpoint<Long> {
     }
 
 
-    public static class AprSocketWrapper extends SocketWrapperBase<Long> {
-
-        private static final int SSL_OUTPUT_BUFFER_SIZE = 8192;
-
-        private final ByteBuffer sslOutputBuffer;
-
-        private volatile ByteBuffer returnedInput;
-        private volatile boolean eagain = false;
-        private volatile boolean closed = false;
+    private static class AprSocketWrapper extends SocketWrapper<Long> {
 
         // This field should only be used by Poller#run()
         private int pollerFlags = 0;
 
-
-        public AprSocketWrapper(Long socket, AprEndpoint endpoint) {
-            super(socket, endpoint);
-
-            if (endpoint.isSSLEnabled()) {
-                sslOutputBuffer = ByteBuffer.allocateDirect(SSL_OUTPUT_BUFFER_SIZE);
-                sslOutputBuffer.position(SSL_OUTPUT_BUFFER_SIZE);
-            } else {
-                sslOutputBuffer = null;
-            }
-        }
-
-
-        // TODO Can this be removed once all reads and writes are handled within
-        // this class?
-        @Override
-        public void setTimeout(long timeout) {
-            super.setTimeout(timeout);
-            Socket.timeoutSet(getSocket().longValue(), timeout * 1000);
-        }
-
-
-
-        @Override
-        public int read(boolean block, byte[] b, int off, int len) throws IOException {
-
-            if (closed) {
-                throw new IOException(sm.getString("socket.apr.closed", getSocket()));
-            }
-
-            if (returnedInput != null) {
-                if (returnedInput.remaining() < len) {
-                    len = returnedInput.remaining();
-                }
-                returnedInput.get(b, off, len);
-                if (returnedInput.remaining() == 0) {
-                    returnedInput = null;
-                }
-                return len;
-            }
-
-            Lock readLock = getBlockingStatusReadLock();
-            WriteLock writeLock = getBlockingStatusWriteLock();
-
-            boolean readDone = false;
-            int result = 0;
-            readLock.lock();
-            try {
-                if (getBlockingStatus() == block) {
-                    result = Socket.recv(getSocket().longValue(), b, off, len);
-                    readDone = true;
-                }
-            } finally {
-                readLock.unlock();
-            }
-
-            if (!readDone) {
-                writeLock.lock();
-                try {
-                    setBlockingStatus(block);
-                    // Set the current settings for this socket
-                    Socket.optSet(getSocket().longValue(), Socket.APR_SO_NONBLOCK, (block ? 0 : 1));
-                    // Downgrade the lock
-                    readLock.lock();
-                    try {
-                        writeLock.unlock();
-                        result = Socket.recv(getSocket().longValue(), b, off, len);
-                    } finally {
-                        readLock.unlock();
-                    }
-                } finally {
-                    // Should have been released above but may not have been on some
-                    // exception paths
-                    if (writeLock.isHeldByCurrentThread()) {
-                        writeLock.unlock();
-                    }
-                }
-            }
-
-            if (result > 0) {
-                eagain = false;
-                return result;
-            } else if (-result == Status.EAGAIN) {
-                eagain = true;
-                return 0;
-            } else if (-result == Status.APR_EGENERAL && isSecure()) {
-                // Not entirely sure why this is necessary. Testing to date has not
-                // identified any issues with this but log it so it can be tracked
-                // if it is suspected of causing issues in the future.
-                if (log.isDebugEnabled()) {
-                    log.debug(sm.getString("socket.apr.read.sslGeneralError", getSocket(), this));
-                }
-                eagain = true;
-                return 0;
-            } else if (-result == Status.APR_EOF) {
-                throw new EOFException(sm.getString("socket.apr.clientAbort"));
-            } else if ((OS.IS_WIN32 || OS.IS_WIN64) &&
-                    (-result == Status.APR_OS_START_SYSERR + 10053)) {
-                // 10053 on Windows is connection aborted
-                throw new EOFException(sm.getString("socket.apr.clientAbort"));
-            } else {
-                throw new IOException(sm.getString("socket.apr.read.error",
-                        Integer.valueOf(-result), getSocket(), this));
-            }
-        }
-
-
-        @Override
-        public boolean isReady() {
-            return !eagain;
-        }
-
-
-
-        @Override
-        public void unRead(ByteBuffer input) {
-            if (returnedInput != null) {
-                this.returnedInput = ByteBuffer.allocate(returnedInput.remaining());
-                this.returnedInput.put(returnedInput);
-            }
-        }
-
-
-        @Override
-        public void close() {
-            closed = true;
-            // AbstractProcessor needs to trigger the close as multiple closes for
-            // APR/native sockets will cause problems.
-        }
-
-
-        @Override
-        public int write(boolean block, byte[] b, int off, int len) throws IOException {
-
-            if (closed) {
-                throw new IOException(sm.getString("apr.closed", getSocket()));
-            }
-
-            Lock readLock = getBlockingStatusReadLock();
-            WriteLock writeLock = getBlockingStatusWriteLock();
-
-            readLock.lock();
-            try {
-                if (getBlockingStatus() == block) {
-                    return doWriteInternal(b, off, len);
-                }
-            } finally {
-                readLock.unlock();
-            }
-
-            writeLock.lock();
-            try {
-                // Set the current settings for this socket
-                setBlockingStatus(block);
-                if (block) {
-                    Socket.timeoutSet(getSocket().longValue(), getEndpoint().getSoTimeout() * 1000);
-                } else {
-                    Socket.timeoutSet(getSocket().longValue(), 0);
-                }
-
-                // Downgrade the lock
-                readLock.lock();
-                try {
-                    writeLock.unlock();
-                    return doWriteInternal(b, off, len);
-                } finally {
-                    readLock.unlock();
-                }
-            } finally {
-                // Should have been released above but may not have been on some
-                // exception paths
-                if (writeLock.isHeldByCurrentThread()) {
-                    writeLock.unlock();
-                }
-            }
-        }
-
-
-        private int doWriteInternal(byte[] b, int off, int len) throws IOException {
-
-            int start = off;
-            int left = len;
-            int written;
-
-            do {
-                if (getEndpoint().isSSLEnabled()) {
-                    if (sslOutputBuffer.remaining() == 0) {
-                        // Buffer was fully written last time around
-                        sslOutputBuffer.clear();
-                        if (left < SSL_OUTPUT_BUFFER_SIZE) {
-                            sslOutputBuffer.put(b, start, left);
-                        } else {
-                            sslOutputBuffer.put(b, start, SSL_OUTPUT_BUFFER_SIZE);
-                        }
-                        sslOutputBuffer.flip();
-                    } else {
-                        // Buffer still has data from previous attempt to write
-                        // APR + SSL requires that exactly the same parameters are
-                        // passed when re-attempting the write
-                    }
-                    written = Socket.sendb(getSocket().longValue(), sslOutputBuffer,
-                            sslOutputBuffer.position(), sslOutputBuffer.limit());
-                    if (written > 0) {
-                        sslOutputBuffer.position(
-                                sslOutputBuffer.position() + written);
-                    }
-                } else {
-                    written = Socket.send(getSocket().longValue(), b, start, left);
-                }
-                if (Status.APR_STATUS_IS_EAGAIN(-written)) {
-                    written = 0;
-                } else if (-written == Status.APR_EOF) {
-                    throw new EOFException(sm.getString("apr.clientAbort"));
-                } else if ((OS.IS_WIN32 || OS.IS_WIN64) &&
-                        (-written == Status.APR_OS_START_SYSERR + 10053)) {
-                    // 10053 on Windows is connection aborted
-                    throw new EOFException(sm.getString("apr.clientAbort"));
-                } else if (written < 0) {
-                    throw new IOException(sm.getString("apr.write.error",
-                            Integer.valueOf(-written), getSocket(), this));
-                }
-                start += written;
-                left -= written;
-            } while (written > 0 && left > 0);
-
-            if (left > 0) {
-                ((AprEndpoint) getEndpoint()).getPoller().add(getSocket().longValue(), -1, false, true);
-            }
-            return len - left;
-        }
-
-
-        @Override
-        public void flush() {
-            // NO-OP
-        }
-
-
-        @Override
-        public void regsiterForEvent(boolean read, boolean write) {
-            ((AprEndpoint) getEndpoint()).getPoller().add(
-                    getSocket().longValue(), -1, read, write);
+        public AprSocketWrapper(Long socket) {
+            super(socket);
         }
     }
 }

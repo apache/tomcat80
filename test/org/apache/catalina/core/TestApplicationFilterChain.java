@@ -84,10 +84,10 @@ public class TestApplicationFilterChain extends TomcatBaseTest {
         }
 
         @Override
-        public void doFilter(ServletRequest request, ServletResponse response,
-                FilterChain chain) throws IOException, ServletException {
+        public void doFilter(final ServletRequest request, final ServletResponse response,
+                final FilterChain chain) throws IOException, ServletException {
 
-            AsyncContext ac = request.startAsync();
+            final AsyncContext ac = request.startAsync();
             ac.start(new Runnable() {
 
                 @Override

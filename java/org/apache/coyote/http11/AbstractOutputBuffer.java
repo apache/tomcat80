@@ -17,7 +17,6 @@
 package org.apache.coyote.http11;
 
 import java.io.IOException;
-import java.nio.ByteBuffer;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.Iterator;
@@ -28,13 +27,11 @@ import org.apache.coyote.ByteBufferHolder;
 import org.apache.coyote.OutputBuffer;
 import org.apache.coyote.Response;
 import org.apache.coyote.http11.filters.GzipOutputFilter;
-import org.apache.juli.logging.Log;
-import org.apache.juli.logging.LogFactory;
 import org.apache.tomcat.util.buf.ByteChunk;
 import org.apache.tomcat.util.buf.MessageBytes;
 import org.apache.tomcat.util.http.HttpMessages;
 import org.apache.tomcat.util.net.AbstractEndpoint;
-import org.apache.tomcat.util.net.SocketWrapperBase;
+import org.apache.tomcat.util.net.SocketWrapper;
 import org.apache.tomcat.util.res.StringManager;
 
 public abstract class AbstractOutputBuffer<S> implements OutputBuffer {
@@ -100,8 +97,10 @@ public abstract class AbstractOutputBuffer<S> implements OutputBuffer {
      */
     protected long byteCount = 0;
 
-    protected ByteBuffer socketWriteBuffer;
-    protected volatile boolean writeBufferFlipped;
+    /**
+     * Socket buffering.
+     */
+    protected int socketBuffer = -1;
 
     /**
      * For "non-blocking" writes use an external set of buffers. Although the
@@ -131,8 +130,6 @@ public abstract class AbstractOutputBuffer<S> implements OutputBuffer {
         committed = false;
         finished = false;
 
-        outputStreamOutputBuffer = new SocketOutputBuffer();
-
         // Cause loading of HttpMessages
         HttpMessages.getInstance(response.getLocale()).getMessage(200);
     }
@@ -149,7 +146,8 @@ public abstract class AbstractOutputBuffer<S> implements OutputBuffer {
     /**
      * Logger.
      */
-    private static final Log log = LogFactory.getLog(AbstractOutputBuffer.class);
+    private static final org.apache.juli.logging.Log log
+        = org.apache.juli.logging.LogFactory.getLog(AbstractOutputBuffer.class);
 
     // ------------------------------------------------------------- Properties
 
@@ -201,6 +199,22 @@ public abstract class AbstractOutputBuffer<S> implements OutputBuffer {
 
         filter.setResponse(response);
 
+    }
+
+
+    /**
+     * Set the socket buffer flag.
+     */
+    public void setSocketBuffer(int socketBuffer) {
+        this.socketBuffer = socketBuffer;
+    }
+
+
+    /**
+     * Get the socket buffer flag.
+     */
+    public int getSocketBuffer() {
+        return socketBuffer;
     }
 
 
@@ -317,7 +331,6 @@ public abstract class AbstractOutputBuffer<S> implements OutputBuffer {
         // Sub-classes may wish to do more than this.
         nextRequest();
         bufferedWrites.clear();
-        writeBufferFlipped = false;
     }
 
     /**
@@ -368,26 +381,12 @@ public abstract class AbstractOutputBuffer<S> implements OutputBuffer {
     }
 
 
-    public abstract void init(SocketWrapperBase<S> socketWrapper,
+    public abstract void init(SocketWrapper<S> socketWrapper,
             AbstractEndpoint<S> endpoint) throws IOException;
 
     public abstract void sendAck() throws IOException;
 
-    /**
-     * Commit the response.
-     *
-     * @throws IOException an underlying I/O error occurred
-     */
-    protected void commit() throws IOException {
-        // The response is now committed
-        committed = true;
-        response.setCommitted(true);
-
-        if (pos > 0) {
-            // Sending the response header buffer
-            addToBB(headerBuffer, 0, pos);
-        }
-    }
+    protected abstract void commit() throws IOException;
 
 
     /**
@@ -602,18 +601,10 @@ public abstract class AbstractOutputBuffer<S> implements OutputBuffer {
     }
 
 
-    protected abstract void addToBB(byte[] buf, int offset, int length) throws IOException;
-
-
     //------------------------------------------------------ Non-blocking writes
 
+    protected abstract boolean hasMoreDataToFlush();
     protected abstract void registerWriteInterest() throws IOException;
-
-
-    protected boolean hasMoreDataToFlush() {
-        return (writeBufferFlipped && socketWriteBuffer.remaining() > 0) ||
-        (!writeBufferFlipped && socketWriteBuffer.position() > 0);
-    }
 
 
     /**
@@ -658,51 +649,5 @@ public abstract class AbstractOutputBuffer<S> implements OutputBuffer {
             }
         }
         return result;
-    }
-
-
-    // --------------------------------------------------------- Utility methods
-
-    protected static int transfer(byte[] from, int offset, int length, ByteBuffer to) {
-        int max = Math.min(length, to.remaining());
-        to.put(from, offset, max);
-        return max;
-    }
-
-
-    protected static void transfer(ByteBuffer from, ByteBuffer to) {
-        int max = Math.min(from.remaining(), to.remaining());
-        int fromLimit = from.limit();
-        from.limit(from.position() + max);
-        to.put(from);
-        from.limit(fromLimit);
-    }
-
-
-
-    // ------------------------------------------ SocketOutputBuffer Inner Class
-
-    /**
-     * This class is an output buffer which will write data to an output stream.
-     */
-    protected class SocketOutputBuffer implements OutputBuffer {
-
-        /**
-         * Write chunk.
-         */
-        @Override
-        public int doWrite(ByteChunk chunk, Response res) throws IOException {
-            int len = chunk.getLength();
-            int start = chunk.getStart();
-            byte[] b = chunk.getBuffer();
-            addToBB(b, start, len);
-            byteCount += len;
-            return len;
-        }
-
-        @Override
-        public long getBytesWritten() {
-            return byteCount;
-        }
     }
 }

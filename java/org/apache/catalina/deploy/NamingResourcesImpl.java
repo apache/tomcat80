@@ -70,7 +70,8 @@ public class NamingResourcesImpl extends LifecycleMBeanBase
 
     private static final Log log = LogFactory.getLog(NamingResourcesImpl.class);
 
-    private static final StringManager sm = StringManager.getManager(NamingResourcesImpl.class);
+    private static final StringManager sm =
+        StringManager.getManager(Constants.Package);
 
     private volatile boolean resourceRequireExplicitRegistration = false;
 

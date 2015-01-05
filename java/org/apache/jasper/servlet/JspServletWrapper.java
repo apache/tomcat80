@@ -286,7 +286,7 @@ public class JspServletWrapper {
             } else {
                 target = getServlet();
             }
-            if (target instanceof JspSourceDependent) {
+            if (target != null && target instanceof JspSourceDependent) {
                 return ((JspSourceDependent) target).getDependants();
             }
         } catch (AbstractMethodError ame) {

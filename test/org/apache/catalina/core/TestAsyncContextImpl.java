@@ -541,8 +541,8 @@ public class TestAsyncContextImpl extends TomcatBaseTest {
             long timeoutDelay = TimeoutServlet.ASYNC_TIMEOUT;
             if (asyncDispatch != null && asyncDispatch.booleanValue() &&
                     !completeOnTimeout.booleanValue()) {
-                // The async dispatch includes a sleep
-                timeoutDelay += AsyncStartRunnable.THREAD_SLEEP_TIME;
+                // Extra timeout in this case
+                timeoutDelay += TimeoutServlet.ASYNC_TIMEOUT;
             }
             alvGlobal.validateAccessLog(1, 200, timeoutDelay,
                     timeoutDelay + TIMEOUT_MARGIN + REQUEST_TIME);
@@ -557,7 +557,7 @@ public class TestAsyncContextImpl extends TomcatBaseTest {
         private final Boolean completeOnTimeout;
         private final String dispatchUrl;
 
-        public static final long ASYNC_TIMEOUT = 100;
+        public static final long ASYNC_TIMEOUT = 3000;
 
         public TimeoutServlet(Boolean completeOnTimeout, String dispatchUrl) {
             this.completeOnTimeout = completeOnTimeout;
@@ -1371,7 +1371,7 @@ public class TestAsyncContextImpl extends TomcatBaseTest {
         protected void doGet(HttpServletRequest req, final HttpServletResponse resp)
                 throws ServletException, IOException {
 
-            AsyncContext actxt = req.startAsync();
+            final AsyncContext actxt = req.startAsync();
             actxt.setTimeout(TIMEOUT);
             if (threaded) {
                 actxt.start(new Runnable() {

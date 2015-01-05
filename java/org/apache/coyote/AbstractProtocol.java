@@ -42,7 +42,7 @@ import org.apache.tomcat.util.net.AbstractEndpoint;
 import org.apache.tomcat.util.net.AbstractEndpoint.Handler;
 import org.apache.tomcat.util.net.DispatchType;
 import org.apache.tomcat.util.net.SocketStatus;
-import org.apache.tomcat.util.net.SocketWrapperBase;
+import org.apache.tomcat.util.net.SocketWrapper;
 import org.apache.tomcat.util.res.StringManager;
 
 public abstract class AbstractProtocol<S> implements ProtocolHandler,
@@ -84,19 +84,10 @@ public abstract class AbstractProtocol<S> implements ProtocolHandler,
 
     /**
      * Endpoint that provides low-level network I/O - must be matched to the
-     * ProtocolHandler implementation (ProtocolHandler using NIO, requires NIO
+     * ProtocolHandler implementation (ProtocolHandler using BIO, requires BIO
      * Endpoint etc.).
      */
-    private final AbstractEndpoint<S> endpoint;
-
-    private Handler<S> handler;
-
-
-    public AbstractProtocol(AbstractEndpoint<S> endpoint) {
-        this.endpoint = endpoint;
-        setSoLinger(Constants.DEFAULT_CONNECTION_LINGER);
-        setTcpNoDelay(Constants.DEFAULT_TCP_NO_DELAY);
-    }
+    protected AbstractEndpoint<S> endpoint = null;
 
 
     // ----------------------------------------------- Generic property handling
@@ -166,6 +157,18 @@ public abstract class AbstractProtocol<S> implements ProtocolHandler,
     @Override
     public boolean isAprRequired() {
         return false;
+    }
+
+
+    @Override
+    public boolean isCometSupported() {
+        return endpoint.getUseComet();
+    }
+
+
+    @Override
+    public boolean isCometTimeoutSupported() {
+        return endpoint.getUseCometTimeout();
     }
 
 
@@ -315,22 +318,6 @@ public abstract class AbstractProtocol<S> implements ProtocolHandler,
     }
 
 
-    // ----------------------------------------------- Accessors for sub-classes
-
-    protected AbstractEndpoint<S> getEndpoint() {
-        return endpoint;
-    }
-
-
-    protected Handler<S> getHandler() {
-        return handler;
-    }
-
-    protected void setHandler(Handler<S> handler) {
-        this.handler = handler;
-    }
-
-
     // -------------------------------------------------------- Abstract methods
 
     /**
@@ -351,6 +338,12 @@ public abstract class AbstractProtocol<S> implements ProtocolHandler,
      * Obtain the name of the protocol, (Http, Ajp, etc.). Used with JMX.
      */
     protected abstract String getProtocolName();
+
+
+    /**
+     * Obtain the handler associated with the underlying Endpoint
+     */
+    protected abstract Handler getHandler();
 
 
     // ----------------------------------------------------- JMX related methods
@@ -568,7 +561,7 @@ public abstract class AbstractProtocol<S> implements ProtocolHandler,
     // ------------------------------------------- Connection handler base class
 
     protected abstract static class AbstractConnectionHandler<S,P extends Processor<S>>
-            implements AbstractEndpoint.Handler<S> {
+            implements AbstractEndpoint.Handler {
 
         protected abstract Log getLog();
 
@@ -596,8 +589,7 @@ public abstract class AbstractProtocol<S> implements ProtocolHandler,
         }
 
 
-        @Override
-        public SocketState process(SocketWrapperBase<S> wrapper,
+        public SocketState process(SocketWrapper<S> wrapper,
                 SocketStatus status) {
             if (wrapper == null) {
                 // Nothing to do. Socket has been closed.
@@ -648,11 +640,16 @@ public abstract class AbstractProtocol<S> implements ProtocolHandler,
                             state = processor.asyncDispatch(
                                     nextDispatch.getSocketStatus());
                         }
-                    } else if (status == SocketStatus.DISCONNECT) {
+                    } else if (status == SocketStatus.DISCONNECT &&
+                            !processor.isComet()) {
                         // Do nothing here, just wait for it to get recycled
+                        // Don't do this for Comet we need to generate an end
+                        // event (see BZ 54022)
                     } else if (processor.isAsync() ||
                             state == SocketState.ASYNC_END) {
                         state = processor.asyncDispatch(status);
+                    } else if (processor.isComet()) {
+                        state = processor.event(status);
                     } else if (processor.isUpgrade()) {
                         state = processor.upgradeDispatch(status);
                     } else if (status == SocketStatus.OPEN_WRITE) {
@@ -774,15 +771,15 @@ public abstract class AbstractProtocol<S> implements ProtocolHandler,
         }
 
         protected abstract P createProcessor();
-        protected abstract void initSsl(SocketWrapperBase<S> socket,
+        protected abstract void initSsl(SocketWrapper<S> socket,
                 Processor<S> processor);
-        protected abstract void longPoll(SocketWrapperBase<S> socket,
+        protected abstract void longPoll(SocketWrapper<S> socket,
                 Processor<S> processor);
-        protected abstract void release(SocketWrapperBase<S> socket,
+        protected abstract void release(SocketWrapper<S> socket,
                 Processor<S> processor, boolean socketClosing,
                 boolean addToPoller);
         protected abstract Processor<S> createUpgradeProcessor(
-                SocketWrapperBase<S> socket, ByteBuffer leftoverInput,
+                SocketWrapper<S> socket, ByteBuffer leftoverInput,
                 HttpUpgradeHandler httpUpgradeProcessor) throws IOException;
 
         protected void register(AbstractProcessor<S> processor) {

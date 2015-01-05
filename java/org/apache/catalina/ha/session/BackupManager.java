@@ -44,7 +44,7 @@ public class BackupManager extends ClusterManagerBase
     /**
      * The string manager for this package.
      */
-    protected static final StringManager sm = StringManager.getManager(BackupManager.class);
+    protected static final StringManager sm = StringManager.getManager(Constants.Package);
 
     protected static final long DEFAULT_REPL_TIMEOUT = 15000;//15 seconds
 
@@ -100,7 +100,7 @@ public class BackupManager extends ClusterManagerBase
 //=========================================================================
     @Override
     public void objectMadePrimary(Object key, Object value) {
-        if (value instanceof DeltaSession) {
+        if (value!=null && value instanceof DeltaSession) {
             DeltaSession session = (DeltaSession)value;
             synchronized (session) {
                 session.access();

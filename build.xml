@@ -77,9 +77,9 @@
   <!-- build output directory for jdbc-pool -->
   <property name="tomcat.pool"           value="${tomcat.output}/jdbc-pool"/>
 
-  <!-- Servlet 4.0 spec requires 1.8+ -->
-  <property name="compile.source" value="1.8"/>
-  <property name="compile.target" value="1.8"/>
+  <!-- Servlet 3.1 spec requires 1.7+ -->
+  <property name="compile.source" value="1.7"/>
+  <property name="compile.target" value="1.7"/>
 
   <!-- Locations to create the JAR artifacts -->
   <!-- Standard JARs -->
@@ -1339,9 +1339,15 @@
   <property name="junit.formatter.extension" value=".txt" />
 
   <target name="test" description="Runs the JUnit test cases"
-          depends="test-nio,test-nio2,test-apr,cobertura-report" >
+          depends="test-bio,test-nio,test-nio2,test-apr,cobertura-report" >
     <fail if="test.result.error" message='Some tests completed with an Error. See ${tomcat.build}/logs for details, search for "FAILED".' />
     <fail if="test.result.failure" message='Some tests completed with a Failure. See ${tomcat.build}/logs for details, search for "FAILED".' />
+  </target>
+
+  <target name="test-bio" description="Runs the JUnit test cases for BIO. Does not stop on errors."
+          depends="test-compile,deploy,cobertura-instrument,test-openssl-exists" if="${execute.test.bio}">
+    <runtests protocol="org.apache.coyote.http11.Http11Protocol"
+              extension=".BIO" />
   </target>
 
   <target name="test-nio" description="Runs the JUnit test cases for NIO. Does not stop on errors."
@@ -1461,7 +1467,6 @@
         <exclude name="lib/**/jetty*.jar" />
         <exclude name="lib/**/servlet-api*.jar" />
       </fileset>
-      <pathelement path="res/cobertura"/>
     </path>
 
     <taskdef classpathref="cobertura.classpath" resource="tasks.properties" />
@@ -1495,7 +1500,7 @@
   </target>
 
   <target name="cobertura-report" if="${test.cobertura}"
-          depends="test-nio,test-nio2,test-apr"
+          depends="test-bio,test-nio,test-nio2,test-apr"
           description="Creates report from gathered Cobertura results">
 
     <cobertura-report srcdir="${basedir}/java" destdir="${cobertura.out}"

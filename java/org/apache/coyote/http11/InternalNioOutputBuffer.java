@@ -24,12 +24,14 @@ import java.nio.channels.Selector;
 import java.util.Iterator;
 
 import org.apache.coyote.ByteBufferHolder;
+import org.apache.coyote.OutputBuffer;
 import org.apache.coyote.Response;
+import org.apache.tomcat.util.buf.ByteChunk;
 import org.apache.tomcat.util.net.AbstractEndpoint;
 import org.apache.tomcat.util.net.NioChannel;
 import org.apache.tomcat.util.net.NioEndpoint;
 import org.apache.tomcat.util.net.NioSelectorPool;
-import org.apache.tomcat.util.net.SocketWrapperBase;
+import org.apache.tomcat.util.net.SocketWrapper;
 
 /**
  * Output buffer.
@@ -44,7 +46,10 @@ public class InternalNioOutputBuffer extends AbstractOutputBuffer<NioChannel> {
      * Default constructor.
      */
     public InternalNioOutputBuffer(Response response, int headerBufferSize) {
+
         super(response, headerBufferSize);
+
+        outputStreamOutputBuffer = new SocketOutputBuffer();
     }
 
 
@@ -58,16 +63,20 @@ public class InternalNioOutputBuffer extends AbstractOutputBuffer<NioChannel> {
      */
     private NioSelectorPool pool;
 
+    /**
+     * Track if the byte buffer is flipped
+     */
+    protected volatile boolean flipped = false;
+
 
     // --------------------------------------------------------- Public Methods
 
     @Override
-    public void init(SocketWrapperBase<NioChannel> socketWrapper,
+    public void init(SocketWrapper<NioChannel> socketWrapper,
             AbstractEndpoint<NioChannel> endpoint) throws IOException {
 
         socket = socketWrapper.getSocket();
         pool = ((NioEndpoint)endpoint).getSelectorPool();
-        socketWriteBuffer = socket.getBufHandler().getWriteBuffer();
     }
 
 
@@ -78,8 +87,11 @@ public class InternalNioOutputBuffer extends AbstractOutputBuffer<NioChannel> {
     @Override
     public void recycle() {
         super.recycle();
-        socketWriteBuffer.clear();
-        socket = null;
+        if (socket != null) {
+            socket.getBufHandler().getWriteBuffer().clear();
+            socket = null;
+        }
+        flipped = false;
     }
 
 
@@ -91,8 +103,9 @@ public class InternalNioOutputBuffer extends AbstractOutputBuffer<NioChannel> {
     @Override
     public void sendAck() throws IOException {
         if (!committed) {
-            socketWriteBuffer.put(Constants.ACK_BYTES, 0, Constants.ACK_BYTES.length);
-            int result = writeToSocket(socketWriteBuffer, true, true);
+            socket.getBufHandler().getWriteBuffer().put(
+                    Constants.ACK_BYTES, 0, Constants.ACK_BYTES.length);
+            int result = writeToSocket(socket.getBufHandler().getWriteBuffer(), true, true);
             if (result < 0) {
                 throw new IOException(sm.getString("iob.failedwrite.ack"));
             }
@@ -109,11 +122,11 @@ public class InternalNioOutputBuffer extends AbstractOutputBuffer<NioChannel> {
     private synchronized int writeToSocket(ByteBuffer bytebuffer, boolean block, boolean flip) throws IOException {
         if ( flip ) {
             bytebuffer.flip();
-            writeBufferFlipped = true;
+            flipped = true;
         }
 
         int written = 0;
-        NioEndpoint.NioSocketWrapper att = (NioEndpoint.NioSocketWrapper)socket.getAttachment();
+        NioEndpoint.KeyAttachment att = (NioEndpoint.KeyAttachment)socket.getAttachment();
         if ( att == null ) throw new IOException("Key must be cancelled");
         long writeTimeout = att.getWriteTimeout();
         Selector selector = null;
@@ -135,7 +148,7 @@ public class InternalNioOutputBuffer extends AbstractOutputBuffer<NioChannel> {
             //blocking writes must empty the buffer
             //and if remaining==0 then we did empty it
             bytebuffer.clear();
-            writeBufferFlipped = false;
+            flipped = false;
         }
         // If there is data left in the buffer the socket will be registered for
         // write further up the stack. This is to ensure the socket is only
@@ -147,8 +160,27 @@ public class InternalNioOutputBuffer extends AbstractOutputBuffer<NioChannel> {
 
     // ------------------------------------------------------ Protected Methods
 
+    /**
+     * Commit the response.
+     *
+     * @throws IOException an underlying I/O error occurred
+     */
     @Override
-    protected synchronized void addToBB(byte[] buf, int offset, int length)
+    protected void commit() throws IOException {
+
+        // The response is now committed
+        committed = true;
+        response.setCommitted(true);
+
+        if (pos > 0) {
+            // Sending the response header buffer
+            addToBB(headerBuffer, 0, pos);
+        }
+
+    }
+
+
+    private synchronized void addToBB(byte[] buf, int offset, int length)
             throws IOException {
 
         if (length == 0) return;
@@ -159,10 +191,11 @@ public class InternalNioOutputBuffer extends AbstractOutputBuffer<NioChannel> {
         // Keep writing until all the data is written or a non-blocking write
         // leaves data in the buffer
         while (!dataLeft && length > 0) {
-            int thisTime = transfer(buf,offset,length,socketWriteBuffer);
+            int thisTime = transfer(buf,offset,length,socket.getBufHandler().getWriteBuffer());
             length = length - thisTime;
             offset = offset + thisTime;
-            int written = writeToSocket(socketWriteBuffer, isBlocking(), true);
+            int written = writeToSocket(socket.getBufHandler().getWriteBuffer(),
+                    isBlocking(), true);
             if (written == 0) {
                 dataLeft = true;
             } else {
@@ -170,7 +203,7 @@ public class InternalNioOutputBuffer extends AbstractOutputBuffer<NioChannel> {
             }
         }
 
-        NioEndpoint.NioSocketWrapper ka = (NioEndpoint.NioSocketWrapper)socket.getAttachment();
+        NioEndpoint.KeyAttachment ka = (NioEndpoint.KeyAttachment)socket.getAttachment();
         if (ka != null) ka.access();//prevent timeouts for just doing client writes
 
         if (!isBlocking() && length > 0) {
@@ -200,7 +233,7 @@ public class InternalNioOutputBuffer extends AbstractOutputBuffer<NioChannel> {
         //prevent timeout for async,
         SelectionKey key = socket.getIOChannel().keyFor(socket.getPoller().getSelector());
         if (key != null) {
-            NioEndpoint.NioSocketWrapper attach = (NioEndpoint.NioSocketWrapper) key.attachment();
+            NioEndpoint.KeyAttachment attach = (NioEndpoint.KeyAttachment) key.attachment();
             attach.access();
         }
 
@@ -208,7 +241,7 @@ public class InternalNioOutputBuffer extends AbstractOutputBuffer<NioChannel> {
 
         //write to the socket, if there is anything to write
         if (dataLeft) {
-            writeToSocket(socketWriteBuffer, block, !writeBufferFlipped);
+            writeToSocket(socket.getBufHandler().getWriteBuffer(),block, !flipped);
         }
 
         dataLeft = hasMoreDataToFlush();
@@ -219,11 +252,11 @@ public class InternalNioOutputBuffer extends AbstractOutputBuffer<NioChannel> {
                 ByteBufferHolder buffer = bufIter.next();
                 buffer.flip();
                 while (!hasMoreDataToFlush() && buffer.getBuf().remaining()>0) {
-                    transfer(buffer.getBuf(), socketWriteBuffer);
+                    transfer(buffer.getBuf(), socket.getBufHandler().getWriteBuffer());
                     if (buffer.getBuf().remaining() == 0) {
                         bufIter.remove();
                     }
-                    writeToSocket(socketWriteBuffer, block, true);
+                    writeToSocket(socket.getBufHandler().getWriteBuffer(),block, true);
                     //here we must break if we didn't finish the write
                 }
             }
@@ -234,11 +267,64 @@ public class InternalNioOutputBuffer extends AbstractOutputBuffer<NioChannel> {
 
 
     @Override
+    protected boolean hasMoreDataToFlush() {
+        return (flipped && socket.getBufHandler().getWriteBuffer().remaining()>0) ||
+        (!flipped && socket.getBufHandler().getWriteBuffer().position() > 0);
+    }
+
+
+    @Override
     protected void registerWriteInterest() throws IOException {
-        NioEndpoint.NioSocketWrapper att = (NioEndpoint.NioSocketWrapper)socket.getAttachment();
+        NioEndpoint.KeyAttachment att = (NioEndpoint.KeyAttachment)socket.getAttachment();
         if (att == null) {
             throw new IOException("Key must be cancelled");
         }
         att.getPoller().add(socket, SelectionKey.OP_WRITE);
+    }
+
+
+    private int transfer(byte[] from, int offset, int length, ByteBuffer to) {
+        int max = Math.min(length, to.remaining());
+        to.put(from, offset, max);
+        return max;
+    }
+
+
+    private void transfer(ByteBuffer from, ByteBuffer to) {
+        int max = Math.min(from.remaining(), to.remaining());
+        ByteBuffer tmp = from.duplicate ();
+        tmp.limit (tmp.position() + max);
+        to.put (tmp);
+        from.position(from.position() + max);
+    }
+
+
+    // ----------------------------------- OutputStreamOutputBuffer Inner Class
+
+    /**
+     * This class is an output buffer which will write data to an output
+     * stream.
+     */
+    protected class SocketOutputBuffer implements OutputBuffer {
+
+
+        /**
+         * Write chunk.
+         */
+        @Override
+        public int doWrite(ByteChunk chunk, Response res) throws IOException {
+
+            int len = chunk.getLength();
+            int start = chunk.getStart();
+            byte[] b = chunk.getBuffer();
+            addToBB(b, start, len);
+            byteCount += chunk.getLength();
+            return chunk.getLength();
+        }
+
+        @Override
+        public long getBytesWritten() {
+            return byteCount;
+        }
     }
 }

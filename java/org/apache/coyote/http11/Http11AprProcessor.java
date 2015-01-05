@@ -17,11 +17,14 @@
 package org.apache.coyote.http11;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InterruptedIOException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 
 import org.apache.coyote.ActionCode;
 import org.apache.coyote.ErrorState;
+import org.apache.coyote.RequestInfo;
 import org.apache.coyote.http11.filters.BufferedInputFilter;
 import org.apache.juli.logging.Log;
 import org.apache.juli.logging.LogFactory;
@@ -30,9 +33,12 @@ import org.apache.tomcat.jni.SSL;
 import org.apache.tomcat.jni.SSLSocket;
 import org.apache.tomcat.jni.Sockaddr;
 import org.apache.tomcat.jni.Socket;
+import org.apache.tomcat.util.ExceptionUtils;
+import org.apache.tomcat.util.net.AbstractEndpoint.Handler.SocketState;
 import org.apache.tomcat.util.net.AprEndpoint;
 import org.apache.tomcat.util.net.SSLSupport;
-import org.apache.tomcat.util.net.SocketWrapperBase;
+import org.apache.tomcat.util.net.SocketStatus;
+import org.apache.tomcat.util.net.SocketWrapper;
 
 
 /**
@@ -58,10 +64,10 @@ public class Http11AprProcessor extends AbstractHttp11Processor<Long> {
         super(endpoint);
 
         inputBuffer = new InternalAprInputBuffer(request, headerBufferSize);
-        request.setInputBuffer(getInputBuffer());
+        request.setInputBuffer(inputBuffer);
 
         outputBuffer = new InternalAprOutputBuffer(response, headerBufferSize);
-        response.setOutputBuffer(getOutputBuffer());
+        response.setOutputBuffer(outputBuffer);
 
         initializeFilters(maxTrailerSize, maxExtensionSize, maxSwallowSize);
     }
@@ -92,6 +98,77 @@ public class Http11AprProcessor extends AbstractHttp11Processor<Long> {
     // --------------------------------------------------------- Public Methods
 
 
+    /**
+     * Process pipelined HTTP requests using the specified input and output
+     * streams.
+     *
+     * @throws IOException error during an I/O operation
+     */
+    @Override
+    public SocketState event(SocketStatus status)
+        throws IOException {
+
+        RequestInfo rp = request.getRequestProcessor();
+
+        try {
+            rp.setStage(org.apache.coyote.Constants.STAGE_SERVICE);
+            if (!getAdapter().event(request, response, status)) {
+                setErrorState(ErrorState.CLOSE_NOW, null);
+            }
+        } catch (InterruptedIOException e) {
+            setErrorState(ErrorState.CLOSE_NOW, e);
+        } catch (Throwable t) {
+            ExceptionUtils.handleThrowable(t);
+            // 500 - Internal Server Error
+            response.setStatus(500);
+            setErrorState(ErrorState.CLOSE_NOW, t);
+            getAdapter().log(request, response, 0);
+            log.error(sm.getString("http11processor.request.process"), t);
+        }
+
+        rp.setStage(org.apache.coyote.Constants.STAGE_ENDED);
+
+        if (getErrorState().isError() || status==SocketStatus.STOP) {
+            return SocketState.CLOSED;
+        } else if (!comet) {
+            inputBuffer.nextRequest();
+            outputBuffer.nextRequest();
+            return SocketState.OPEN;
+        } else {
+            return SocketState.LONG;
+        }
+    }
+
+    @Override
+    protected boolean disableKeepAlive() {
+        return false;
+    }
+
+
+    @Override
+    protected void setRequestLineReadTimeout() throws IOException {
+        // Timeouts while in the poller are handled entirely by the poller
+        // Only need to be concerned with socket timeouts
+
+        // APR uses simulated blocking so if some request line data is present
+        // then it must all be presented (with the normal socket timeout).
+
+        // When entering the processing loop for the first time there will
+        // always be some data to read so the keep-alive timeout is not required
+
+        // For the second and subsequent executions of the processing loop, if
+        // there is no request line data present then no further data will be
+        // read from the socket. If there is request line data present then it
+        // must all be presented (with the normal socket timeout)
+
+        // When the socket is created it is given the correct timeout.
+        // sendfile may change the timeout but will restore it
+        // This processor may change the timeout for uploads but will restore it
+
+        // NO-OP
+    }
+
+
     @Override
     protected boolean handleIncompleteRequestLineRead() {
         // This means that no data is available right now
@@ -109,7 +186,13 @@ public class Http11AprProcessor extends AbstractHttp11Processor<Long> {
 
 
     @Override
-    protected boolean breakKeepAliveLoop(SocketWrapperBase<Long> socketWrapper) {
+    protected void setCometTimeouts(SocketWrapper<Long> socketWrapper) {
+        // NO-OP for APR/native
+    }
+
+
+    @Override
+    protected boolean breakKeepAliveLoop(SocketWrapper<Long> socketWrapper) {
         openSocket = keepAlive;
         // Do sendfile as needed: add socket to sendfile and end
         if (sendfileData != null && !getErrorState().isError()) {
@@ -152,6 +235,7 @@ public class Http11AprProcessor extends AbstractHttp11Processor<Long> {
 
     @Override
     public void recycleInternal() {
+        socketWrapper = null;
         sendfileData = null;
     }
 
@@ -337,9 +421,9 @@ public class Http11AprProcessor extends AbstractHttp11Processor<Long> {
             if (endpoint.isSSLEnabled() && (socketRef != 0)) {
                 // Consume and buffer the request body, so that it does not
                 // interfere with the client's handshake messages
-                InputFilter[] inputFilters = getInputBuffer().getFilters();
+                InputFilter[] inputFilters = inputBuffer.getFilters();
                 ((BufferedInputFilter) inputFilters[Constants.BUFFERED_FILTER]).setLimit(maxSavePostSize);
-                getInputBuffer().addActiveFilter(inputFilters[Constants.BUFFERED_FILTER]);
+                inputBuffer.addActiveFilter(inputFilters[Constants.BUFFERED_FILTER]);
                 try {
                     // Configure connection to require a certificate
                     SSLSocket.setVerify(socketRef, SSL.SSL_CVERIFY_REQUIRE,
@@ -371,6 +455,23 @@ public class Http11AprProcessor extends AbstractHttp11Processor<Long> {
             }
             break;
         }
+        case COMET_BEGIN: {
+            comet = true;
+            break;
+        }
+        case COMET_END: {
+            comet = false;
+            break;
+        }
+        case COMET_CLOSE: {
+            ((AprEndpoint)endpoint).processSocket(this.socketWrapper,
+                    SocketStatus.OPEN_READ, true);
+            break;
+        }
+        case COMET_SETTIMEOUT: {
+            //no op
+            break;
+        }
         }
     }
 
@@ -389,7 +490,7 @@ public class Http11AprProcessor extends AbstractHttp11Processor<Long> {
                 org.apache.coyote.Constants.SENDFILE_FILENAME_ATTR);
         if (fileName != null) {
             // No entity body sent here
-            getOutputBuffer().addActiveFilter(outputFilters[Constants.VOID_FILTER]);
+            outputBuffer.addActiveFilter(outputFilters[Constants.VOID_FILTER]);
             contentDelimitation = true;
             sendfileData = new AprEndpoint.SendfileData();
             sendfileData.fileName = fileName;
@@ -400,5 +501,15 @@ public class Http11AprProcessor extends AbstractHttp11Processor<Long> {
             return true;
         }
         return false;
+    }
+
+    @Override
+    protected AbstractInputBuffer<Long> getInputBuffer() {
+        return inputBuffer;
+    }
+
+    @Override
+    protected AbstractOutputBuffer<Long> getOutputBuffer() {
+        return outputBuffer;
     }
 }

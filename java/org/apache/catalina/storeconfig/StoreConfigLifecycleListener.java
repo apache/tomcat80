@@ -38,7 +38,8 @@ import org.apache.tomcat.util.res.StringManager;
 public class StoreConfigLifecycleListener implements LifecycleListener {
 
     private static Log log = LogFactory.getLog(StoreConfigLifecycleListener.class);
-    private static StringManager sm = StringManager.getManager(StoreConfigLifecycleListener.class);
+    private static StringManager sm =
+            StringManager.getManager(StoreConfigLifecycleListener.class.getName());
 
     /**
      * The configuration information registry for our managed beans.

@@ -665,7 +665,7 @@ public class StandardWrapper extends ContainerBase
         if (!getState().isAvailable())
             return;
 
-        if (getServlet() instanceof PeriodicEventListener) {
+        if (getServlet() != null && (getServlet() instanceof PeriodicEventListener)) {
             ((PeriodicEventListener) getServlet()).periodicEvent();
         }
     }

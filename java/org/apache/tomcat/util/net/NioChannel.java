@@ -37,8 +37,8 @@ import org.apache.tomcat.util.res.StringManager;
  */
 public class NioChannel implements ByteChannel {
 
-    protected static final StringManager sm = StringManager.getManager(
-            NioChannel.class.getPackage().getName());
+    protected static final StringManager sm =
+            StringManager.getManager("org.apache.tomcat.util.net.res");
 
     protected static ByteBuffer emptyBuf = ByteBuffer.allocate(0);
 
@@ -62,9 +62,6 @@ public class NioChannel implements ByteChannel {
      */
     public void reset() throws IOException {
         bufHandler.getReadBuffer().clear();
-        // TODO AJP and HTTPS have different expectations for the state of
-        // the buffer at the start of a read. These need to be reconciled.
-        bufHandler.getReadBuffer().limit(0);
         bufHandler.getWriteBuffer().clear();
         this.sendFile = false;
     }

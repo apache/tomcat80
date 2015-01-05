@@ -52,11 +52,9 @@ public abstract class AbstractEndpoint<S> {
 
     protected static final String DEFAULT_CIPHERS = "HIGH:!aNULL:!eNULL:!EXPORT:!DES:!RC4:!MD5";
 
-    protected static final StringManager sm = StringManager.getManager(
-            AbstractEndpoint.class.getPackage().getName());
+    protected static final StringManager sm = StringManager.getManager("org.apache.tomcat.util.net.res");
 
-    public static interface Handler<S> {
-
+    public static interface Handler {
         /**
          * Different types of socket states to react upon.
          */
@@ -65,18 +63,6 @@ public abstract class AbstractEndpoint<S> {
             //      ASYNC_END (if possible)
             OPEN, CLOSED, LONG, ASYNC_END, SENDFILE, UPGRADING, UPGRADED
         }
-
-
-        /**
-         * Process the provided socket with the given current status.
-         *
-         * @param socket The socket to process
-         * @param status The current socket status
-         *
-         * @return The state of the socket after processing
-         */
-        public SocketState process(SocketWrapperBase<S> socket,
-                SocketStatus status);
 
 
         /**
@@ -141,13 +127,10 @@ public abstract class AbstractEndpoint<S> {
                     // Ignore
                 }
                 long now = System.currentTimeMillis();
-                for (SocketWrapperBase<S> socket : waitingRequests) {
-                    long asyncTimeout = socket.getAsyncTimeout();
-                    if (asyncTimeout > 0) {
-                        long asyncStart = socket.getLastAsyncStart();
-                        if ((now - asyncStart) > asyncTimeout) {
-                            processSocket(socket, SocketStatus.TIMEOUT, true);
-                        }
+                for (SocketWrapper<S> socket : waitingRequests) {
+                    long access = socket.getLastAccess();
+                    if (socket.getTimeout() > 0 && (now - access) > socket.getTimeout()) {
+                        processSocket(socket, SocketStatus.TIMEOUT, true);
                     }
                 }
 
@@ -210,20 +193,6 @@ public abstract class AbstractEndpoint<S> {
 
 
     // ----------------------------------------------------------------- Properties
-
-    /**
-     * Has the user requested that send file be used where possible?
-     */
-    private boolean useSendfile = true;
-    public boolean getUseSendfile() {
-        return useSendfile;
-    }
-    public void setUseSendfile(boolean useSendfile) {
-        this.useSendfile = useSendfile;
-    }
-
-
-
 
     /**
      * Time to wait for the internal executor (if used) to terminate when the
@@ -709,11 +678,11 @@ public abstract class AbstractEndpoint<S> {
      * @param dispatch      Should the processing be performed on a new
      *                          container thread
      */
-    public abstract void processSocket(SocketWrapperBase<S> socketWrapper,
+    public abstract void processSocket(SocketWrapper<S> socketWrapper,
             SocketStatus socketStatus, boolean dispatch);
 
 
-    public void executeNonBlockingDispatches(SocketWrapperBase<S> socketWrapper) {
+    public void executeNonBlockingDispatches(SocketWrapper<S> socketWrapper) {
         /*
          * This method is called when non-blocking IO is initiated by defining
          * a read and/or write listener in a non-container thread. It is called
@@ -721,7 +690,7 @@ public abstract class AbstractEndpoint<S> {
          * onWritePossible() and/or onDataAvailable() as appropriate are made by
          * the container.
          *
-         * Processing the dispatches requires (for APR/native at least)
+         * Processing the dispatches requires (for BIO and APR/native at least)
          * that the socket has been added to the waitingRequests queue. This may
          * not have occurred by the time that the non-container thread completes
          * triggering the call to this method. Therefore, the coded syncs on the
@@ -848,6 +817,13 @@ public abstract class AbstractEndpoint<S> {
     }
 
     protected abstract Log getLog();
+    // Flags to indicate optional feature support
+    // Some of these are always hard-coded, some are hard-coded to false (i.e.
+    // the endpoint does not support them) and some are configurable.
+    public abstract boolean getUseSendfile();
+    public abstract boolean getUseComet();
+    public abstract boolean getUseCometTimeout();
+    public abstract boolean getUsePolling();
 
     protected LimitLatch initializeConnectionLatch() {
         if (maxConnections==-1) return null;
@@ -1054,8 +1030,8 @@ public abstract class AbstractEndpoint<S> {
     }
 
 
-    protected final Set<SocketWrapperBase<S>> waitingRequests = Collections
-            .newSetFromMap(new ConcurrentHashMap<SocketWrapperBase<S>, Boolean>());
+    protected final Set<SocketWrapper<S>> waitingRequests = Collections
+            .newSetFromMap(new ConcurrentHashMap<SocketWrapper<S>, Boolean>());
 
 
     /**

@@ -83,7 +83,7 @@ public class ManagerSF extends StoreFactoryBase {
             StoreDescription parentDesc) throws Exception {
         if (aManager instanceof Manager) {
             Manager manager = (Manager) aManager;
-            // Store nested <SessionIdGenerator> element;
+            // Store nested <SessionIdGenerator> element
             SessionIdGenerator sessionIdGenerator = manager.getSessionIdGenerator();
             if (sessionIdGenerator != null) {
                 storeElement(aWriter, indent, sessionIdGenerator);

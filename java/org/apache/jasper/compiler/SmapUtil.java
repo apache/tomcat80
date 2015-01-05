@@ -32,8 +32,6 @@ import java.util.Map;
 
 import org.apache.jasper.JasperException;
 import org.apache.jasper.JspCompilationContext;
-import org.apache.juli.logging.Log;
-import org.apache.juli.logging.LogFactory;
 
 /**
  * Contains static utilities for generating SMAP data based on the
@@ -182,7 +180,8 @@ public class SmapUtil {
     // Installation logic (from Robert Field, JSR-045 spec lead)
     private static class SDEInstaller {
 
-        private final Log log = LogFactory.getLog(SDEInstaller.class);
+        private final org.apache.juli.logging.Log log=
+            org.apache.juli.logging.LogFactory.getLog( SDEInstaller.class );
 
         static final String nameSDE = "SourceDebugExtension";
 

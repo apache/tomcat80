@@ -24,12 +24,14 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantReadWriteLock.WriteLock;
 
 import org.apache.coyote.ByteBufferHolder;
+import org.apache.coyote.OutputBuffer;
 import org.apache.coyote.Response;
 import org.apache.tomcat.jni.Socket;
 import org.apache.tomcat.jni.Status;
+import org.apache.tomcat.util.buf.ByteChunk;
 import org.apache.tomcat.util.net.AbstractEndpoint;
 import org.apache.tomcat.util.net.AprEndpoint;
-import org.apache.tomcat.util.net.SocketWrapperBase;
+import org.apache.tomcat.util.net.SocketWrapper;
 
 /**
  * Output buffer.
@@ -48,10 +50,12 @@ public class InternalAprOutputBuffer extends AbstractOutputBuffer<Long> {
         super(response, headerBufferSize);
 
         if (headerBufferSize < (8 * 1024)) {
-            socketWriteBuffer = ByteBuffer.allocateDirect(6 * 1500);
+            bbuf = ByteBuffer.allocateDirect(6 * 1500);
         } else {
-            socketWriteBuffer = ByteBuffer.allocateDirect((headerBufferSize / 1500 + 1) * 1500);
+            bbuf = ByteBuffer.allocateDirect((headerBufferSize / 1500 + 1) * 1500);
         }
+
+        outputStreamOutputBuffer = new SocketOutputBuffer();
     }
 
 
@@ -64,7 +68,20 @@ public class InternalAprOutputBuffer extends AbstractOutputBuffer<Long> {
     private long socket;
 
 
-    private SocketWrapperBase<Long> wrapper;
+    private SocketWrapper<Long> wrapper;
+
+
+    /**
+     * Direct byte buffer used for writing.
+     */
+    private final ByteBuffer bbuf;
+
+
+    /**
+     * <code>false</code> if bbuf is ready to be written to and
+     * <code>true</code> is ready to be read from.
+     */
+    private volatile boolean flipped = false;
 
 
     private AbstractEndpoint<Long> endpoint;
@@ -73,14 +90,14 @@ public class InternalAprOutputBuffer extends AbstractOutputBuffer<Long> {
     // --------------------------------------------------------- Public Methods
 
     @Override
-    public void init(SocketWrapperBase<Long> socketWrapper,
+    public void init(SocketWrapper<Long> socketWrapper,
             AbstractEndpoint<Long> endpoint) throws IOException {
 
         wrapper = socketWrapper;
         socket = socketWrapper.getSocket().longValue();
         this.endpoint = endpoint;
 
-        Socket.setsbb(this.socket, socketWriteBuffer);
+        Socket.setsbb(this.socket, bbuf);
     }
 
 
@@ -90,8 +107,12 @@ public class InternalAprOutputBuffer extends AbstractOutputBuffer<Long> {
      */
     @Override
     public void recycle() {
+
         super.recycle();
-        socketWriteBuffer.clear();
+
+        bbuf.clear();
+        flipped = false;
+
         socket = 0;
         wrapper = null;
     }
@@ -113,15 +134,35 @@ public class InternalAprOutputBuffer extends AbstractOutputBuffer<Long> {
 
     // ------------------------------------------------------ Protected Methods
 
+
+    /**
+     * Commit the response.
+     *
+     * @throws IOException an underlying I/O error occurred
+     */
     @Override
-    protected synchronized void addToBB(byte[] buf, int offset, int length)
+    protected void commit() throws IOException {
+
+        // The response is now committed
+        committed = true;
+        response.setCommitted(true);
+
+        if (pos > 0) {
+            // Sending the response header buffer
+            bbuf.put(headerBuffer, 0, pos);
+        }
+
+    }
+
+
+    private synchronized void addToBB(byte[] buf, int offset, int length)
             throws IOException {
 
         if (length == 0) return;
 
         // If bbuf is currently being used for writes, add this data to the
         // write buffer
-        if (writeBufferFlipped) {
+        if (flipped) {
             addToBuffers(buf, offset, length);
             return;
         }
@@ -130,18 +171,20 @@ public class InternalAprOutputBuffer extends AbstractOutputBuffer<Long> {
         // leaves data in the buffer
         while (length > 0) {
             int thisTime = length;
-            if (socketWriteBuffer.position() == socketWriteBuffer.capacity()) {
+            if (bbuf.position() == bbuf.capacity()) {
                 if (flushBuffer(isBlocking())) {
                     break;
                 }
             }
-            if (thisTime > socketWriteBuffer.capacity() - socketWriteBuffer.position()) {
-                thisTime = socketWriteBuffer.capacity() - socketWriteBuffer.position();
+            if (thisTime > bbuf.capacity() - bbuf.position()) {
+                thisTime = bbuf.capacity() - bbuf.position();
             }
-            socketWriteBuffer.put(buf, offset, thisTime);
+            bbuf.put(buf, offset, thisTime);
             length = length - thisTime;
             offset = offset + thisTime;
         }
+
+        wrapper.access();
 
         if (!isBlocking() && length>0) {
             // Buffer the remaining data
@@ -165,6 +208,8 @@ public class InternalAprOutputBuffer extends AbstractOutputBuffer<Long> {
     protected synchronized boolean flushBuffer(boolean block)
             throws IOException {
 
+        wrapper.access();
+
         if (hasMoreDataToFlush()) {
             writeToSocket(block);
         }
@@ -175,7 +220,7 @@ public class InternalAprOutputBuffer extends AbstractOutputBuffer<Long> {
                 ByteBufferHolder buffer = bufIter.next();
                 buffer.flip();
                 while (!hasMoreDataToFlush() && buffer.getBuf().remaining()>0) {
-                    transfer(buffer.getBuf(), socketWriteBuffer);
+                    transfer(buffer.getBuf(), bbuf);
                     if (buffer.getBuf().remaining() == 0) {
                         bufIter.remove();
                     }
@@ -232,26 +277,26 @@ public class InternalAprOutputBuffer extends AbstractOutputBuffer<Long> {
     }
 
     private synchronized void writeToSocket() throws IOException {
-        if (!writeBufferFlipped) {
-            writeBufferFlipped = true;
-            socketWriteBuffer.flip();
+        if (!flipped) {
+            flipped = true;
+            bbuf.flip();
         }
 
         int written;
 
         do {
-            written = Socket.sendbb(socket, socketWriteBuffer.position(), socketWriteBuffer.remaining());
+            written = Socket.sendbb(socket, bbuf.position(), bbuf.remaining());
             if (Status.APR_STATUS_IS_EAGAIN(-written)) {
                 written = 0;
             } else if (written < 0) {
                 throw new IOException("APR error: " + written);
             }
-            socketWriteBuffer.position(socketWriteBuffer.position() + written);
-        } while (written > 0 && socketWriteBuffer.hasRemaining());
+            bbuf.position(bbuf.position() + written);
+        } while (written > 0 && bbuf.hasRemaining());
 
-        if (socketWriteBuffer.remaining() == 0) {
-            socketWriteBuffer.clear();
-            writeBufferFlipped = false;
+        if (bbuf.remaining() == 0) {
+            bbuf.clear();
+            flipped = false;
         }
         // If there is data left in the buffer the socket will be registered for
         // write further up the stack. This is to ensure the socket is only
@@ -260,16 +305,56 @@ public class InternalAprOutputBuffer extends AbstractOutputBuffer<Long> {
     }
 
 
+    private void transfer(ByteBuffer from, ByteBuffer to) {
+        int max = Math.min(from.remaining(), to.remaining());
+        int fromLimit = from.limit();
+        from.limit(from.position() + max);
+        to.put(from);
+        from.limit(fromLimit);
+    }
+
+
     //-------------------------------------------------- Non-blocking IO methods
 
     @Override
     protected synchronized boolean hasMoreDataToFlush() {
-        return super.hasMoreDataToFlush();
+        return (flipped && bbuf.remaining() > 0) ||
+                (!flipped && bbuf.position() > 0);
     }
 
 
     @Override
     protected void registerWriteInterest() {
         ((AprEndpoint) endpoint).getPoller().add(socket, -1, false, true);
+    }
+
+
+    // ----------------------------------- OutputStreamOutputBuffer Inner Class
+
+    /**
+     * This class is an output buffer which will write data to an output
+     * stream.
+     */
+    protected class SocketOutputBuffer implements OutputBuffer {
+
+
+        /**
+         * Write chunk.
+         */
+        @Override
+        public int doWrite(ByteChunk chunk, Response res) throws IOException {
+
+            int len = chunk.getLength();
+            int start = chunk.getStart();
+            byte[] b = chunk.getBuffer();
+            addToBB(b, start, len);
+            byteCount += chunk.getLength();
+            return chunk.getLength();
+        }
+
+        @Override
+        public long getBytesWritten() {
+            return byteCount;
+        }
     }
 }

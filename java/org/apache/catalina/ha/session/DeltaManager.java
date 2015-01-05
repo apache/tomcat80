@@ -36,8 +36,6 @@ import org.apache.catalina.ha.ClusterMessage;
 import org.apache.catalina.session.ManagerBase;
 import org.apache.catalina.tribes.Member;
 import org.apache.catalina.tribes.io.ReplicationStream;
-import org.apache.juli.logging.Log;
-import org.apache.juli.logging.LogFactory;
 import org.apache.tomcat.util.ExceptionUtils;
 import org.apache.tomcat.util.res.StringManager;
 
@@ -59,12 +57,13 @@ import org.apache.tomcat.util.res.StringManager;
 public class DeltaManager extends ClusterManagerBase{
 
     // ---------------------------------------------------- Security Classes
-    public final Log log = LogFactory.getLog(DeltaManager.class);
+    public final org.apache.juli.logging.Log log =
+            org.apache.juli.logging.LogFactory.getLog(DeltaManager.class);
 
     /**
      * The string manager for this package.
      */
-    protected static final StringManager sm = StringManager.getManager(DeltaManager.class);
+    protected static final StringManager sm = StringManager.getManager(Constants.Package);
 
     // ----------------------------------------------------- Instance Variables
 
@@ -925,7 +924,7 @@ public class DeltaManager extends ClusterManagerBase{
      */
     @Override
     public void messageDataReceived(ClusterMessage cmsg) {
-        if (cmsg instanceof SessionMessage) {
+        if (cmsg != null && cmsg instanceof SessionMessage) {
             SessionMessage msg = (SessionMessage) cmsg;
             switch (msg.getEventType()) {
                 case SessionMessage.EVT_GET_ALL_SESSIONS:

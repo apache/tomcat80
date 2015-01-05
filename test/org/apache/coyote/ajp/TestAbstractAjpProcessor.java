@@ -49,15 +49,17 @@ public class TestAbstractAjpProcessor extends TomcatBaseTest {
         // Has a protocol been specified
         String protocol = System.getProperty("tomcat.test.protocol");
 
-        // Use NIO by default
+        // Use BIO by default
         if (protocol == null) {
-            protocol = "org.apache.coyote.ajp.AjpNioProtocol";
+            protocol = "org.apache.coyote.ajp.AjpProtocol";
         } else if (protocol.contains("Nio2")) {
             protocol = "org.apache.coyote.ajp.AjpNio2Protocol";
+        } else if (protocol.contains("Nio")) {
+            protocol = "org.apache.coyote.ajp.AjpNioProtocol";
         } else if (protocol.contains("Apr")) {
             protocol = "org.apache.coyote.ajp.AjpAprProtocol";
         } else {
-            protocol = "org.apache.coyote.ajp.AjpNioProtocol";
+            protocol = "org.apache.coyote.ajp.AjpProtocol";
         }
 
         return protocol;
@@ -844,8 +846,8 @@ public class TestAbstractAjpProcessor extends TomcatBaseTest {
 
         public ReadBodyServlet(boolean callAvailable) {
             this.callAvailable = callAvailable;
-            this.availableList = callAvailable ? new ArrayList<>() : null;
-            this.readList = callAvailable ? new ArrayList<>() : null;
+            this.availableList = callAvailable ? new ArrayList<Integer>() : null;
+            this.readList = callAvailable ? new ArrayList<Integer>() : null;
         }
 
         @Override

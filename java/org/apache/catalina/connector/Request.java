@@ -161,7 +161,8 @@ public class Request
     /**
      * The string manager for this package.
      */
-    protected static final StringManager sm = StringManager.getManager(Request.class);
+    protected static final StringManager sm =
+        StringManager.getManager(Constants.Package);
 
 
     /**
@@ -220,6 +221,18 @@ public class Request
      * Authentication type.
      */
     protected String authType = null;
+
+
+    /**
+     * Associated event.
+     */
+    protected CometEventImpl event = null;
+
+
+    /**
+     * Comet state
+     */
+    protected boolean comet = false;
 
 
     /**
@@ -434,6 +447,12 @@ public class Request
         internalDispatcherType = null;
         requestDispatcherPath = null;
 
+        comet = false;
+        if (event != null) {
+            event.clear();
+            event = null;
+        }
+
         authType = null;
         inputBuffer.recycle();
         usingInputStream = false;
@@ -516,14 +535,24 @@ public class Request
     }
 
     /**
-     * Clear cached encoders (to save memory for async requests).
+     * Clear cached encoders (to save memory for Comet requests).
      */
     public void clearEncoders() {
         inputBuffer.clearEncoders();
     }
 
 
+    /**
+     * Clear cached encoders (to save memory for Comet requests).
+     */
+    public boolean read()
+        throws IOException {
+        return (inputBuffer.realReadBytes(null, 0, 0) > 0);
+    }
+
+
     // -------------------------------------------------------- Request Methods
+
 
     /**
      * Associated Catalina connector.
@@ -921,6 +950,8 @@ public class Request
      * have names starting with "org.apache.tomcat" and include:
      * <ul>
      * <li>{@link Globals#SENDFILE_SUPPORTED_ATTR}</li>
+     * <li>{@link Globals#COMET_SUPPORTED_ATTR}</li>
+     * <li>{@link Globals#COMET_TIMEOUT_SUPPORTED_ATTR}</li>
      * </ul>
      * Connector implementations may return some, all or none of these
      * attributes and may also support additional attributes.
@@ -2481,6 +2512,33 @@ public class Request
 
 
     /**
+     * Get the event associated with the request.
+     * @return the event
+     */
+    public CometEventImpl getEvent() {
+        if (event == null) {
+            event = new CometEventImpl(this, response);
+        }
+        return event;
+    }
+
+
+    /**
+     * Return true if the current request is handling Comet traffic.
+     */
+    public boolean isComet() {
+        return comet;
+    }
+
+
+    /**
+     * Set comet state.
+     */
+    public void setComet(boolean comet) {
+        this.comet = comet;
+    }
+
+    /**
      * return true if we have parsed parameters
      */
     public boolean isParametersParsed() {
@@ -2512,6 +2570,15 @@ public class Request
         if (context != null && !context.getSwallowAbortedUploads()) {
             coyoteRequest.action(ActionCode.DISABLE_SWALLOW_INPUT, null);
         }
+    }
+
+    public void cometClose() {
+        coyoteRequest.action(ActionCode.COMET_CLOSE,getEvent());
+        setComet(false);
+    }
+
+    public void setCometTimeout(long timeout) {
+        coyoteRequest.action(ActionCode.COMET_SETTIMEOUT, Long.valueOf(timeout));
     }
 
     /**
@@ -3177,6 +3244,17 @@ public class Request
     }
 
 
+    protected static final boolean isAlpha(String value) {
+        for (int i = 0; i < value.length(); i++) {
+            char c = value.charAt(i);
+            if (!((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z'))) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+
     // ----------------------------------------------------- Special attributes handling
 
     private static interface SpecialAttributeAdapter {
@@ -3260,6 +3338,32 @@ public class Request
                         return null;
                     }
 
+                    @Override
+                    public void set(Request request, String name, Object value) {
+                        // NO-OP
+                    }
+                });
+        specialAttributes.put(Globals.COMET_SUPPORTED_ATTR,
+                new SpecialAttributeAdapter() {
+                    @Override
+                    public Object get(Request request, String name) {
+                        return Boolean.valueOf(
+                                request.getConnector().getProtocolHandler(
+                                        ).isCometSupported());
+                    }
+                    @Override
+                    public void set(Request request, String name, Object value) {
+                        // NO-OP
+                    }
+                });
+        specialAttributes.put(Globals.COMET_TIMEOUT_SUPPORTED_ATTR,
+                new SpecialAttributeAdapter() {
+                    @Override
+                    public Object get(Request request, String name) {
+                        return Boolean.valueOf(
+                                request.getConnector().getProtocolHandler(
+                                        ).isCometTimeoutSupported());
+                    }
                     @Override
                     public void set(Request request, String name, Object value) {
                         // NO-OP

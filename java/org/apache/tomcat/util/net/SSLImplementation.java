@@ -17,10 +17,9 @@
 
 package org.apache.tomcat.util.net;
 
-import javax.net.ssl.SSLSession;
+import java.net.Socket;
 
-import org.apache.juli.logging.Log;
-import org.apache.juli.logging.LogFactory;
+import javax.net.ssl.SSLSession;
 
 /* SSLImplementation:
 
@@ -29,7 +28,8 @@ import org.apache.juli.logging.LogFactory;
  @author EKR
  */
 public abstract class SSLImplementation {
-    private static final Log logger = LogFactory.getLog(SSLImplementation.class);
+    private static final org.apache.juli.logging.Log logger = org.apache.juli.logging.LogFactory
+            .getLog(SSLImplementation.class);
 
     // The default implementations in our search path
     private static final String JSSEImplementationClass =
@@ -79,6 +79,11 @@ public abstract class SSLImplementation {
     }
 
     public abstract String getImplementationName();
+
+    public abstract ServerSocketFactory getServerSocketFactory(
+            AbstractEndpoint<?> endpoint);
+
+    public abstract SSLSupport getSSLSupport(Socket sock);
 
     public abstract SSLSupport getSSLSupport(SSLSession session);
 

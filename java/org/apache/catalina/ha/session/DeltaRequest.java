@@ -33,19 +33,19 @@ import java.util.LinkedList;
 
 import org.apache.catalina.SessionListener;
 import org.apache.catalina.realm.GenericPrincipal;
-import org.apache.juli.logging.Log;
-import org.apache.juli.logging.LogFactory;
 import org.apache.tomcat.util.res.StringManager;
 
 
 public class DeltaRequest implements Externalizable {
 
-    public static final Log log = LogFactory.getLog(DeltaRequest.class);
+    public static final org.apache.juli.logging.Log log =
+        org.apache.juli.logging.LogFactory.getLog( DeltaRequest.class );
 
     /**
      * The string manager for this package.
      */
-    protected static final StringManager sm = StringManager.getManager(DeltaRequest.class);
+    protected static final StringManager sm = StringManager
+            .getManager(Constants.Package);
 
     public static final int TYPE_ATTRIBUTE = 0;
     public static final int TYPE_PRINCIPAL = 1;

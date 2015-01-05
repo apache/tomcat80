@@ -45,7 +45,8 @@ import org.apache.tomcat.util.res.StringManager;
 public class OutputBuffer extends Writer
     implements ByteChunk.ByteOutputChannel, CharChunk.CharOutputChannel {
 
-    private static final StringManager sm = StringManager.getManager(OutputBuffer.class);
+    private static final StringManager sm =
+            StringManager.getManager(Constants.Package);
 
     // -------------------------------------------------------------- Constants
 
@@ -248,7 +249,7 @@ public class OutputBuffer extends Writer
 
 
     /**
-     * Clear cached encoders (to save memory for async requests).
+     * Clear cached encoders (to save memory for Comet requests).
      */
     public void clearEncoders() {
         encoders.clear();

@@ -75,8 +75,6 @@ import org.apache.catalina.WebResource;
 import org.apache.catalina.WebResourceRoot;
 import org.apache.catalina.webresources.TomcatURLStreamHandlerFactory;
 import org.apache.juli.WebappProperties;
-import org.apache.juli.logging.Log;
-import org.apache.juli.logging.LogFactory;
 import org.apache.tomcat.InstrumentableClassLoader;
 import org.apache.tomcat.util.ExceptionUtils;
 import org.apache.tomcat.util.IntrospectionUtils;
@@ -129,7 +127,8 @@ import org.apache.tomcat.util.res.StringManager;
 public abstract class WebappClassLoaderBase extends URLClassLoader
         implements Lifecycle, InstrumentableClassLoader, WebappProperties {
 
-    private static final Log log = LogFactory.getLog(WebappClassLoaderBase.class);
+    private static final org.apache.juli.logging.Log log =
+        org.apache.juli.logging.LogFactory.getLog(WebappClassLoaderBase.class);
 
     /**
      * List of ThreadGroup names to ignore when scanning for web application

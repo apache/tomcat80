@@ -299,6 +299,10 @@ loaded or not, use one of the following:</p>
 
 <!-- Define a HTTP/1.1 Connector on port 8443, JSSE NIO2 implementation -->
 <Connector protocol="org.apache.coyote.http11.Http11Nio2Protocol"
+           port="8443" .../>
+
+<!-- Define a HTTP/1.1 Connector on port 8443, JSSE BIO implementation -->
+<Connector protocol="org.apache.coyote.http11.Http11Protocol"
            port="8443" .../>]]></source>
 <p>Alternatively, to specify an APR connector (the APR library must be available) use:</p>
 <source><![CDATA[<!-- Define a HTTP/1.1 Connector on port 8443, APR implementation -->
@@ -355,7 +359,7 @@ this:</p>
 are mandatory, are documented in the SSL Support section of the
 <a href="config/http.html#SSL_Support">HTTP connector</a> configuration
 reference. Make sure that you use the correct attributes for the connector you
-are using. The NIO and NIO2 connectors use JSSE whereas the APR/native connector
+are using. The BIO, NIO and NIO2 connectors use JSSE whereas the APR/native connector
 uses APR.</p>
 
 <p>The <code>port</code> attribute is the TCP/IP
@@ -542,7 +546,7 @@ public class SessionTrackingModeListener implements ServletContextListener {
 
 }]]></source>
 
-  <p>Note: SSL session tracking is implemented for the NIO and NIO2 connectors.
+  <p>Note: SSL session tracking is implemented for the BIO, NIO and NIO2 connectors.
      It is not yet implemented for the APR connector.</p>
 
 </section>
@@ -572,8 +576,8 @@ mgr.invalidateSession();
 response.setHeader("Connection", "close");]]></source>
   <p>
     Note that this code is Tomcat specific due to the use of the
-    SSLSessionManager class. This is currently only available for the NIO and
-    NIO2 connectors, not the APR/native connector.
+    SSLSessionManager class. This is currently only available for the BIO, NIO
+    and NIO2 connectors, not the APR/native connector.
   </p>
 </section>
 

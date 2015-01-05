@@ -22,8 +22,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.apache.catalina.tribes.ChannelMessage;
 import org.apache.catalina.tribes.Member;
 import org.apache.catalina.tribes.group.InterceptorPayload;
-import org.apache.juli.logging.Log;
-import org.apache.juli.logging.LogFactory;
 
 
 
@@ -36,7 +34,7 @@ import org.apache.juli.logging.LogFactory;
  */
 public class FastQueue {
 
-    private static final Log log = LogFactory.getLog(FastQueue.class);
+    private static final org.apache.juli.logging.Log log = org.apache.juli.logging.LogFactory.getLog(FastQueue.class);
 
     /**
      * This is the actual queue

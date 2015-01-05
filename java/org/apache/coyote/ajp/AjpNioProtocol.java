@@ -21,19 +21,25 @@ import java.util.Iterator;
 
 import javax.net.ssl.SSLEngine;
 
+import org.apache.coyote.AbstractProtocol;
 import org.apache.coyote.Processor;
 import org.apache.juli.logging.Log;
 import org.apache.juli.logging.LogFactory;
+import org.apache.tomcat.util.net.AbstractEndpoint;
 import org.apache.tomcat.util.net.NioChannel;
 import org.apache.tomcat.util.net.NioEndpoint;
 import org.apache.tomcat.util.net.NioEndpoint.Handler;
 import org.apache.tomcat.util.net.SSLImplementation;
-import org.apache.tomcat.util.net.SocketWrapperBase;
+import org.apache.tomcat.util.net.SocketWrapper;
+
 
 /**
- * This the NIO based protocol handler implementation for AJP.
+ * Abstract the protocol implementation, including threading, etc.
+ * Processor is single threaded and specific to stream-based protocols,
+ * will not fit Jk protocols like JNI.
  */
 public class AjpNioProtocol extends AbstractAjpProtocol<NioChannel> {
+
 
     private static final Log log = LogFactory.getLog(AjpNioProtocol.class);
 
@@ -41,14 +47,34 @@ public class AjpNioProtocol extends AbstractAjpProtocol<NioChannel> {
     protected Log getLog() { return log; }
 
 
+    @Override
+    protected AbstractEndpoint.Handler getHandler() {
+        return cHandler;
+    }
+
+
     // ------------------------------------------------------------ Constructor
 
+
     public AjpNioProtocol() {
-        super(new NioEndpoint());
-        AjpConnectionHandler cHandler = new AjpConnectionHandler(this);
-        setHandler(cHandler);
-        ((NioEndpoint) getEndpoint()).setHandler(cHandler);
+        endpoint = new NioEndpoint();
+        cHandler = new AjpConnectionHandler(this);
+        ((NioEndpoint) endpoint).setHandler(cHandler);
+        setSoLinger(Constants.DEFAULT_CONNECTION_LINGER);
+        setSoTimeout(Constants.DEFAULT_CONNECTION_TIMEOUT);
+        setTcpNoDelay(Constants.DEFAULT_TCP_NO_DELAY);
+        // AJP does not use Send File
+        ((NioEndpoint) endpoint).setUseSendfile(false);
     }
+
+
+    // ----------------------------------------------------- Instance Variables
+
+
+    /**
+     * Connection handler for AJP.
+     */
+    private final AjpConnectionHandler cHandler;
 
 
     // ----------------------------------------------------- JMX related methods
@@ -61,12 +87,20 @@ public class AjpNioProtocol extends AbstractAjpProtocol<NioChannel> {
 
     // --------------------------------------  AjpConnectionHandler Inner Class
 
+
     protected static class AjpConnectionHandler
-            extends AbstractAjpConnectionHandler<NioChannel>
+            extends AbstractAjpConnectionHandler<NioChannel, AjpNioProcessor>
             implements Handler {
 
+        protected final AjpNioProtocol proto;
+
         public AjpConnectionHandler(AjpNioProtocol proto) {
-            super(proto);
+            this.proto = proto;
+        }
+
+        @Override
+        protected AbstractProtocol<NioChannel> getProtocol() {
+            return proto;
         }
 
         @Override
@@ -111,7 +145,7 @@ public class AjpNioProtocol extends AbstractAjpProtocol<NioChannel> {
          * close, errors etc.
          */
         @Override
-        public void release(SocketWrapperBase<NioChannel> socket) {
+        public void release(SocketWrapper<NioChannel> socket) {
             Processor<NioChannel> processor =
                     connections.remove(socket.getSocket());
             if (processor != null) {
@@ -125,7 +159,7 @@ public class AjpNioProtocol extends AbstractAjpProtocol<NioChannel> {
          * required.
          */
         @Override
-        public void release(SocketWrapperBase<NioChannel> socket,
+        public void release(SocketWrapper<NioChannel> socket,
                 Processor<NioChannel> processor, boolean isSocketClosing,
                 boolean addToPoller) {
             processor.recycle(isSocketClosing);
@@ -135,6 +169,14 @@ public class AjpNioProtocol extends AbstractAjpProtocol<NioChannel> {
             }
         }
 
+
+        @Override
+        protected AjpNioProcessor createProcessor() {
+            AjpNioProcessor processor = new AjpNioProcessor(proto.packetSize, (NioEndpoint)proto.endpoint);
+            proto.configureProcessor(processor);
+            register(processor);
+            return processor;
+        }
 
         @Override
         public void onCreateSSLEngine(SSLEngine engine) {

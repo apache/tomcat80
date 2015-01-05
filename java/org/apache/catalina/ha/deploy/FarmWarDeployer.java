@@ -61,7 +61,8 @@ public class FarmWarDeployer extends ClusterListener
         implements ClusterDeployer, FileChangeListener {
     /*--Static Variables----------------------------------------*/
     private static final Log log = LogFactory.getLog(FarmWarDeployer.class);
-    private static final StringManager sm = StringManager.getManager(FarmWarDeployer.class);
+    private static final StringManager sm =
+        StringManager.getManager(Constants.Package);
 
     /*--Instance Variables--------------------------------------*/
     protected boolean started = false;

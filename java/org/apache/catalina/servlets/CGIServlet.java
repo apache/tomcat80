@@ -374,9 +374,10 @@ public final class CGIServlet extends HttpServlet {
         Enumeration<String> params = req.getParameterNames();
         while (params.hasMoreElements()) {
             String param = params.nextElement();
-            for (String value : req.getParameterValues(param)) {
-                out.println("<li><b>parameter</b> " + param + " = " + value);
-            }
+            String values[] = req.getParameterValues(param);
+            for (int i = 0; i < values.length; i++)
+                out.println("<li><b>parameter</b> " + param + " = " +
+                               values[i]);
         }
         out.println("<li><b>protocol</b> = " + req.getProtocol());
         out.println("<li><b>remoteAddr</b> = " + req.getRemoteAddr());
@@ -1233,7 +1234,8 @@ public final class CGIServlet extends HttpServlet {
             sb.append("</td></tr>");
 
             sb.append("<tr><td>Command Line Params</td><td>");
-            for (String param : cmdLineParameters) {
+            for (int i=0; i < cmdLineParameters.size(); i++) {
+                String param = cmdLineParameters.get(i);
                 sb.append("<p>");
                 sb.append(param);
                 sb.append("</p>");

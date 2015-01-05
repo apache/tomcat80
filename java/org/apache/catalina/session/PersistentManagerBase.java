@@ -424,7 +424,7 @@ public abstract class PersistentManagerBase extends ManagerBase
             }
         }
         processPersistenceChecks();
-        if (getStore() instanceof StoreBase) {
+        if ((getStore() != null) && (getStore() instanceof StoreBase)) {
             ((StoreBase) getStore()).processExpires();
         }
 
@@ -875,9 +875,8 @@ public abstract class PersistentManagerBase extends ManagerBase
             }
         }
 
-        if (getStore() instanceof Lifecycle) {
+        if (getStore() != null && getStore() instanceof Lifecycle)
             ((Lifecycle)getStore()).stop();
-        }
 
         // Require a new random number generator if we are restarted
         super.stopInternal();

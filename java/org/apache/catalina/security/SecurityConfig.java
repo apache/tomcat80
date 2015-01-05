@@ -19,8 +19,6 @@ package org.apache.catalina.security;
 import java.security.Security;
 
 import org.apache.catalina.startup.CatalinaProperties;
-import org.apache.juli.logging.Log;
-import org.apache.juli.logging.LogFactory;
 
 /**
  * Util class to protect Catalina against package access and insertion.
@@ -30,7 +28,8 @@ import org.apache.juli.logging.LogFactory;
 public final class SecurityConfig{
     private static SecurityConfig singleton = null;
 
-    private static final Log log = LogFactory.getLog(SecurityConfig.class);
+    private static final org.apache.juli.logging.Log log=
+        org.apache.juli.logging.LogFactory.getLog( SecurityConfig.class );
 
 
     private static final String PACKAGE_ACCESS =  "sun.,"

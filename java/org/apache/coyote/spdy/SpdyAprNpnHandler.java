@@ -32,7 +32,7 @@ import org.apache.tomcat.util.net.AbstractEndpoint;
 import org.apache.tomcat.util.net.AbstractEndpoint.Handler.SocketState;
 import org.apache.tomcat.util.net.AprEndpoint;
 import org.apache.tomcat.util.net.SocketStatus;
-import org.apache.tomcat.util.net.SocketWrapperBase;
+import org.apache.tomcat.util.net.SocketWrapper;
 
 /**
  * Plugin for APR connector providing SPDY support via NPN negotiation.
@@ -90,7 +90,7 @@ public class SpdyAprNpnHandler implements NpnHandler<Long> {
     }
 
     @Override
-    public SocketState process(SocketWrapperBase<Long> socketWrapper,
+    public SocketState process(SocketWrapper<Long> socketWrapper,
             SocketStatus status) {
 
         long socket = socketWrapper.getSocket().longValue();

@@ -89,6 +89,17 @@ public abstract class ManagerBase extends LifecycleMBeanBase
      */
     protected int maxInactiveInterval = 30 * 60;
 
+
+    protected static final int SESSION_ID_LENGTH_UNSET = -1;
+
+    /**
+     * The session id length of Sessions created by this Manager.
+     * The length should be set directly on the SessionIdGenerator.
+     * Setting it here is deprecated.
+     */
+    protected int sessionIdLength = SESSION_ID_LENGTH_UNSET;
+
+
     /**
      * The Java class name of the secure random number generator class to be
      * used when generating session identifiers. The random number generator
@@ -204,6 +215,25 @@ public abstract class ManagerBase extends LifecycleMBeanBase
     // ------------------------------------------------------------- Properties
 
     @Override
+    @Deprecated
+    public Container getContainer() {
+        return getContext();
+    }
+
+
+    @Override
+    @Deprecated
+    public void setContainer(Container container) {
+
+        if (container instanceof Context || container == null) {
+            setContext((Context) container);
+        } else {
+            log.warn(sm.getString("managerBase.container.noop"));
+        }
+    }
+
+
+    @Override
     public Context getContext() {
         return context;
     }
@@ -219,6 +249,8 @@ public abstract class ManagerBase extends LifecycleMBeanBase
         Context oldContext = this.context;
         this.context = context;
         support.firePropertyChange("context", oldContext, this.context);
+        // TODO - delete the line below in Tomcat 9 onwards
+        support.firePropertyChange("container", oldContext, this.context);
 
         // Register with the new Context (if any)
         if (this.context != null) {
@@ -291,6 +323,46 @@ public abstract class ManagerBase extends LifecycleMBeanBase
         support.firePropertyChange("maxInactiveInterval",
                                    Integer.valueOf(oldMaxInactiveInterval),
                                    Integer.valueOf(this.maxInactiveInterval));
+
+    }
+
+
+    /**
+     * Gets the session id length (in bytes) of Sessions created by
+     * this Manager.
+     *
+     * @deprecated Use {@link SessionIdGenerator#getSessionIdLength()}.
+     *             This method will be removed in Tomcat 9 onwards.
+     *
+     * @return The session id length
+     */
+    @Override
+    @Deprecated
+    public int getSessionIdLength() {
+
+        return (this.sessionIdLength);
+
+    }
+
+
+    /**
+     * Sets the session id length (in bytes) for Sessions created by this
+     * Manager.
+     *
+     * @deprecated Use {@link SessionIdGenerator#setSessionIdLength(int)}.
+     *             This method will be removed in Tomcat 9 onwards.
+     *
+     * @param idLength The session id length
+     */
+    @Override
+    @Deprecated
+    public void setSessionIdLength(int idLength) {
+
+        int oldSessionIdLength = this.sessionIdLength;
+        this.sessionIdLength = idLength;
+        support.firePropertyChange("sessionIdLength",
+                                   Integer.valueOf(oldSessionIdLength),
+                                   Integer.valueOf(this.sessionIdLength));
 
     }
 
@@ -533,6 +605,9 @@ public abstract class ManagerBase extends LifecycleMBeanBase
             setSessionIdGenerator(sessionIdGenerator);
         }
 
+        if (sessionIdLength != SESSION_ID_LENGTH_UNSET) {
+            sessionIdGenerator.setSessionIdLength(sessionIdLength);
+        }
         sessionIdGenerator.setJvmRoute(getJvmRoute());
         if (sessionIdGenerator instanceof SessionIdGeneratorBase) {
             SessionIdGeneratorBase sig = (SessionIdGeneratorBase)sessionIdGenerator;

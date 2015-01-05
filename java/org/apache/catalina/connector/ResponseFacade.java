@@ -106,7 +106,8 @@ public class ResponseFacade
     /**
      * The string manager for this package.
      */
-    protected static final StringManager sm = StringManager.getManager(ResponseFacade.class);
+    protected static final StringManager sm =
+        StringManager.getManager(Constants.Package);
 
 
     /**

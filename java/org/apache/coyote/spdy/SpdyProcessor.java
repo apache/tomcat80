@@ -50,7 +50,7 @@ import org.apache.tomcat.util.net.AbstractEndpoint;
 import org.apache.tomcat.util.net.AbstractEndpoint.Handler.SocketState;
 import org.apache.tomcat.util.net.SSLSupport;
 import org.apache.tomcat.util.net.SocketStatus;
-import org.apache.tomcat.util.net.SocketWrapperBase;
+import org.apache.tomcat.util.net.SocketWrapper;
 
 /**
  * A spdy stream ( multiplexed over a spdy tcp connection ) processed by a
@@ -507,9 +507,20 @@ public class SpdyProcessor<S> extends AbstractProcessor<S> implements Runnable {
     }
 
     @Override
-    public SocketState process(SocketWrapperBase<S> socket)
+    public boolean isComet() {
+        return false;
+    }
+
+    @Override
+    public SocketState process(SocketWrapper<S> socket)
             throws IOException {
         throw new IOException("Unimplemented");
+    }
+
+    @Override
+    public SocketState event(SocketStatus status) throws IOException {
+        System.err.println("EVENT: " + status);
+        return null;
     }
 
     @Override

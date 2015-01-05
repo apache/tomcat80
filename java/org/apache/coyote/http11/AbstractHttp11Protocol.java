@@ -16,16 +16,10 @@
  */
 package org.apache.coyote.http11;
 
+
 import org.apache.coyote.AbstractProtocol;
-import org.apache.tomcat.util.net.AbstractEndpoint;
 
 public abstract class AbstractHttp11Protocol<S> extends AbstractProtocol<S> {
-
-    public AbstractHttp11Protocol(AbstractEndpoint<S> endpoint) {
-        super(endpoint);
-        setSoTimeout(Constants.DEFAULT_CONNECTION_TIMEOUT);
-    }
-
 
     @Override
     protected String getProtocolName() {
@@ -35,6 +29,13 @@ public abstract class AbstractHttp11Protocol<S> extends AbstractProtocol<S> {
 
     // ------------------------------------------------ HTTP specific properties
     // ------------------------------------------ managed in the ProtocolHandler
+
+    private int socketBuffer = 9000;
+    public int getSocketBuffer() { return socketBuffer; }
+    public void setSocketBuffer(int socketBuffer) {
+        this.socketBuffer = socketBuffer;
+    }
+
 
     /**
      * Maximum size of the post which will be saved when processing certain
@@ -189,9 +190,9 @@ public abstract class AbstractHttp11Protocol<S> extends AbstractProtocol<S> {
     // ------------------------------------------------ HTTP specific properties
     // ------------------------------------------ passed through to the EndPoint
 
-    public boolean isSSLEnabled() { return getEndpoint().isSSLEnabled();}
+    public boolean isSSLEnabled() { return endpoint.isSSLEnabled();}
     public void setSSLEnabled(boolean SSLEnabled) {
-        getEndpoint().setSSLEnabled(SSLEnabled);
+        endpoint.setSSLEnabled(SSLEnabled);
     }
 
 
@@ -200,10 +201,10 @@ public abstract class AbstractHttp11Protocol<S> extends AbstractProtocol<S> {
      * connection. The default is the same as for Apache HTTP Server.
      */
     public int getMaxKeepAliveRequests() {
-        return getEndpoint().getMaxKeepAliveRequests();
+        return endpoint.getMaxKeepAliveRequests();
     }
     public void setMaxKeepAliveRequests(int mkar) {
-        getEndpoint().setMaxKeepAliveRequests(mkar);
+        endpoint.setMaxKeepAliveRequests(mkar);
     }
 
     protected NpnHandler<S> npnHandler;
@@ -232,6 +233,7 @@ public abstract class AbstractHttp11Protocol<S> extends AbstractProtocol<S> {
         processor.setNoCompressionUserAgents(getNoCompressionUserAgents());
         processor.setCompressableMimeTypes(getCompressableMimeTypes());
         processor.setRestrictedUserAgents(getRestrictedUserAgents());
+        processor.setSocketBuffer(getSocketBuffer());
         processor.setMaxSavePostSize(getMaxSavePostSize());
         processor.setServer(getServer());
     }

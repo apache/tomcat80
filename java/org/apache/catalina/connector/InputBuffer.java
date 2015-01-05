@@ -49,7 +49,8 @@ public class InputBuffer extends Reader
     /**
      * The string manager for this package.
      */
-    protected static final StringManager sm = StringManager.getManager(InputBuffer.class);
+    protected static final StringManager sm =
+        StringManager.getManager(Constants.Package);
 
 
     // -------------------------------------------------------------- Constants
@@ -213,7 +214,7 @@ public class InputBuffer extends Reader
 
 
     /**
-     * Clear cached encoders (to save memory for async requests).
+     * Clear cached encoders (to save memory for Comet requests).
      */
     public void clearEncoders() {
         encoders.clear();
@@ -283,6 +284,8 @@ public class InputBuffer extends Reader
         if (coyoteRequest.getReadListener() == null) {
             throw new IllegalStateException("not in non blocking mode.");
         }
+        // Need to check is finished before we check available() as BIO always
+        // returns 1 for isAvailable()
         if (isFinished()) {
             // If this is a non-container thread, need to trigger a read
             // which will eventually lead to a call to onAllDataRead() via a

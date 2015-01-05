@@ -14,6 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package javax.el;
 
 import java.beans.FeatureDescriptor;
@@ -26,7 +27,8 @@ public class CompositeELResolver extends ELResolver {
     static {
         Class<?> clazz = null;
         try {
-            clazz = Class.forName("javax.servlet.jsp.el.ScopedAttributeELResolver");
+            clazz =
+                Class.forName("javax.servlet.jsp.el.ScopedAttributeELResolver");
         } catch (ClassNotFoundException e) {
             // Ignore. This is expected if using the EL stand-alone
         }
@@ -59,8 +61,9 @@ public class CompositeELResolver extends ELResolver {
     public Object getValue(ELContext context, Object base, Object property) {
         context.setPropertyResolved(false);
         int sz = this.size;
+        Object result = null;
         for (int i = 0; i < sz; i++) {
-            Object result = this.resolvers[i].getValue(context, base, property);
+            result = this.resolvers[i].getValue(context, base, property);
             if (context.isPropertyResolved()) {
                 return result;
             }
@@ -76,8 +79,10 @@ public class CompositeELResolver extends ELResolver {
             Class<?>[] paramTypes, Object[] params) {
         context.setPropertyResolved(false);
         int sz = this.size;
+        Object obj;
         for (int i = 0; i < sz; i++) {
-            Object obj = this.resolvers[i].invoke(context, base, method, paramTypes, params);
+            obj = this.resolvers[i].invoke(context, base, method, paramTypes,
+                    params);
             if (context.isPropertyResolved()) {
                 return obj;
             }
@@ -89,15 +94,18 @@ public class CompositeELResolver extends ELResolver {
     public Class<?> getType(ELContext context, Object base, Object property) {
         context.setPropertyResolved(false);
         int sz = this.size;
+        Class<?> type;
         for (int i = 0; i < sz; i++) {
-            Class<?> type = this.resolvers[i].getType(context, base, property);
+            type = this.resolvers[i].getType(context, base, property);
             if (context.isPropertyResolved()) {
                 if (SCOPED_ATTRIBUTE_EL_RESOLVER != null &&
-                        SCOPED_ATTRIBUTE_EL_RESOLVER.isAssignableFrom(resolvers[i].getClass())) {
+                        SCOPED_ATTRIBUTE_EL_RESOLVER.isAssignableFrom(
+                                resolvers[i].getClass())) {
                     // Special case since
                     // javax.servlet.jsp.el.ScopedAttributeELResolver will
                     // always return Object.class for type
-                    Object value = resolvers[i].getValue(context, base, property);
+                    Object value =
+                        resolvers[i].getValue(context, base, property);
                     if (value != null) {
                         return value.getClass();
                     }
@@ -109,7 +117,8 @@ public class CompositeELResolver extends ELResolver {
     }
 
     @Override
-    public void setValue(ELContext context, Object base, Object property, Object value) {
+    public void setValue(ELContext context, Object base, Object property,
+            Object value) {
         context.setPropertyResolved(false);
         int sz = this.size;
         for (int i = 0; i < sz; i++) {
@@ -124,8 +133,9 @@ public class CompositeELResolver extends ELResolver {
     public boolean isReadOnly(ELContext context, Object base, Object property) {
         context.setPropertyResolved(false);
         int sz = this.size;
+        boolean readOnly = false;
         for (int i = 0; i < sz; i++) {
-            boolean readOnly = this.resolvers[i].isReadOnly(context, base, property);
+            readOnly = this.resolvers[i].isReadOnly(context, base, property);
             if (context.isPropertyResolved()) {
                 return readOnly;
             }
@@ -140,11 +150,12 @@ public class CompositeELResolver extends ELResolver {
 
     @Override
     public Class<?> getCommonPropertyType(ELContext context, Object base) {
-        Class<?> commonType = null;
         int sz = this.size;
+        Class<?> commonType = null, type = null;
         for (int i = 0; i < sz; i++) {
-            Class<?> type = this.resolvers[i].getCommonPropertyType(context, base);
-            if (type != null && (commonType == null || commonType.isAssignableFrom(type))) {
+            type = this.resolvers[i].getCommonPropertyType(context, base);
+            if (type != null &&
+                    (commonType == null || commonType.isAssignableFrom(type))) {
                 commonType = type;
             }
         }
@@ -155,8 +166,9 @@ public class CompositeELResolver extends ELResolver {
     public Object convertToType(ELContext context, Object obj, Class<?> type) {
         context.setPropertyResolved(false);
         int sz = this.size;
+        Object result = null;
         for (int i = 0; i < sz; i++) {
-            Object result = this.resolvers[i].convertToType(context, obj, type);
+            result = this.resolvers[i].convertToType(context, obj, type);
             if (context.isPropertyResolved()) {
                 return result;
             }
@@ -180,7 +192,8 @@ public class CompositeELResolver extends ELResolver {
 
         private FeatureDescriptor next;
 
-        public FeatureIterator(ELContext context, Object base, ELResolver[] resolvers, int size) {
+        public FeatureIterator(ELContext context, Object base,
+                ELResolver[] resolvers, int size) {
             this.context = context;
             this.base = base;
             this.resolvers = resolvers;
@@ -192,7 +205,8 @@ public class CompositeELResolver extends ELResolver {
 
         private void guaranteeIterator() {
             while (this.itr == null && this.idx < this.size) {
-                this.itr = this.resolvers[this.idx].getFeatureDescriptors(this.context, this.base);
+                this.itr = this.resolvers[this.idx].getFeatureDescriptors(
+                        this.context, this.base);
                 this.idx++;
             }
         }
@@ -201,7 +215,7 @@ public class CompositeELResolver extends ELResolver {
         public boolean hasNext() {
             if (this.next != null)
                 return true;
-            if (this.itr != null) {
+            if (this.itr != null){
                 while (this.next == null && itr.hasNext()) {
                     this.next = itr.next();
                 }
@@ -217,9 +231,8 @@ public class CompositeELResolver extends ELResolver {
 
         @Override
         public FeatureDescriptor next() {
-            if (!hasNext()) {
+            if (!hasNext())
                 throw new NoSuchElementException();
-            }
             FeatureDescriptor result = this.next;
             this.next = null;
             return result;
@@ -231,4 +244,5 @@ public class CompositeELResolver extends ELResolver {
             throw new UnsupportedOperationException();
         }
     }
+
 }

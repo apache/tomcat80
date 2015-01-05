@@ -28,8 +28,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.juli.logging.Log;
-import org.apache.juli.logging.LogFactory;
 import org.apache.tomcat.util.res.StringManager;
 
 /**
@@ -37,7 +35,8 @@ import org.apache.tomcat.util.res.StringManager;
  */
 public class OpenSSLCipherConfigurationParser {
 
-    private static final Log log = LogFactory.getLog(OpenSSLCipherConfigurationParser.class);
+    private static final org.apache.juli.logging.Log log =
+            org.apache.juli.logging.LogFactory.getLog(OpenSSLCipherConfigurationParser.class);
     private static final StringManager sm =
             StringManager.getManager("org.apache.tomcat.util.net.jsse.res");
 
