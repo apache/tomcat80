@@ -45,6 +45,15 @@
   issues to not "pop up" wrt. others).
 -->
 <section name="Tomcat 8.0.17 (markt)">
+  <subsection name="Catalina">
+    <changelog>
+      <fix>
+        Correct a regression in the previous fix for <bug>57252</bug> that broke
+        request listeners for non-async requests that triggered an error that
+        was handled by the ErrorReportingValve. (markt/violetagg)
+      </fix>
+    </changelog>
+  </subsection>
   <subsection name="Coyote">
     <changelog>
       <fix>
