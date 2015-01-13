@@ -45,6 +45,13 @@
   issues to not "pop up" wrt. others).
 -->
 <section name="Tomcat 8.0.18 (markt)">
+  <subsection name="Catalina">
+    <changelog>
+      <add>
+        <bug>57431</bug> Enable usage of custom class for context creation when using embedded tomcat. (fschumacher)
+      </add>
+    </changelog>
+  </subsection>
 </section>
 <section name="Tomcat 8.0.17 (markt)">
   <subsection name="Catalina">
