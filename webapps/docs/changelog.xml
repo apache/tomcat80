@@ -55,6 +55,13 @@
       </add>
     </changelog>
   </subsection>
+  <subsection name="Cluster">
+    <changelog>
+      <fix>
+        Fix mbean descriptor of <code>ClusterSingleSignOn</code>. (kfujino)
+      </fix>
+    </changelog>
+  </subsection>
 </section>
 <section name="Tomcat 8.0.17 (markt)" rtext="2015-01-16">
   <subsection name="Catalina">
