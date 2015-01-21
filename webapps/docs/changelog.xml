@@ -78,6 +78,25 @@
       </fix>
     </changelog>
   </subsection>
+  <subsection name="Tribes">
+    <changelog>
+      <fix>
+        Clarify the handling of Copy message and Copy nodes. (kfujino)
+      </fix>
+      <fix>
+        Copy node does not need to send the entry data. It is enough to send
+        only the node information of the entry. (kfujino)
+      </fix>
+      <fix>
+        ReplicatedMap should send the Copy message when replicating. (kfujino)
+      </fix>
+      <fix>
+        Fix behavior of ReplicatedMap when member has disappeared. If map entry
+        is primary, rebuild the backup members. If primary node of map entry has
+        disappeared, backup node is promoted to primary. (kfujino)
+      </fix>
+    </changelog>
+  </subsection>
 </section>
 <section name="Tomcat 8.0.17 (markt)" rtext="2015-01-16">
   <subsection name="Catalina">
