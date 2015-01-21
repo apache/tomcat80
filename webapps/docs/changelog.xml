@@ -63,6 +63,11 @@
         (markt)
       </fix>
       <fix>
+        <bug>57455</bug>: Explicitly block the use of the double-quote character
+        when configuring the common, server and shared class loaders since
+        double-quote is used to quote values that contain commas. (markt)
+      </fix>
+      <fix>
         <bug>57461</bug>: When an instance of
         <code>org.apache.catalina.startup.VersionLoggerListener</code> logs the
         result of <code>System.getProperty("java.home")</code> don't report it
