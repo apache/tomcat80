@@ -48,6 +48,11 @@
   <subsection name="Catalina">
     <changelog>
       <fix>
+        <bug>57178</bug>: The CORS filter now treats <code>null</code> as a
+        valid origin that matches <code>*</code>. Patch provided by Gregor
+        Zurowski. (markt)
+      </fix>
+      <fix>
         <bug>57425</bug>: Don't add attributes with null value or name to the
         replicated context. (fschumacher)
       </fix>
