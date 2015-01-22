@@ -89,6 +89,11 @@
         happens it will be handled properly. Issue is reported by Coverity Scan.
         (violetagg)
       </fix>
+      <fix>
+        <bug>57481</bug>: Fix <code>IllegalStateException</code> at the end of
+        the request when using non-blocking reads with the HTTP BIO connector.
+        (markt)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Jasper">

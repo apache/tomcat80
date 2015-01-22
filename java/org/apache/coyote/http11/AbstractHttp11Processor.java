@@ -1677,7 +1677,11 @@ public abstract class AbstractHttp11Processor<S> extends AbstractProcessor<S> {
         } else if (status == SocketStatus.OPEN_READ &&
                 request.getReadListener() != null) {
             try {
-                if (inputBuffer.available() > 0) {
+                // Check of asyncStateMachine.isAsyncStarted() is to avoid issue
+                // with BIO. Because it can't do a non-blocking read, BIO always
+                // returns available() == 1. This causes a problem here at the
+                // end of a non-blocking read. See BZ 57481.
+                if (inputBuffer.available() > 0 && asyncStateMachine.isAsyncStarted()) {
                     asyncStateMachine.asyncOperation();
                 }
             } catch (IllegalStateException x) {
