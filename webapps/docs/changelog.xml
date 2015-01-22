@@ -90,6 +90,15 @@
       </fix>
     </changelog>
   </subsection>
+  <subsection name="Jasper">
+    <changelog>
+      <fix>
+        Ensure that classes imported via the page directive are made available
+        to the EL environment via the ImportHandler. Issue is reported by
+        Coverity Scan. (violetagg) 
+      </fix>
+    </changelog>
+  </subsection>
   <subsection name="Cluster">
     <changelog>
       <fix>
