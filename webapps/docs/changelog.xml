@@ -98,6 +98,11 @@
         to the EL environment via the ImportHandler. Issue is reported by
         Coverity Scan. (violetagg) 
       </fix>
+      <fix>
+        <bug>57441</bug>: Do not trigger an error when using functions defined
+        by lambdas or imported via an ImportHandler in an EL expression in a
+        JSP. (markt)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Cluster">
