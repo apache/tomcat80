@@ -81,7 +81,8 @@
       </fix>
       <fix>
         <bug>57476</bug>: Ensure the responses written as part of a forward are
-        fully written before the forward method returns. (markt)
+        fully written. This fixes a regression in 8.0.15 caused by the fix for
+        <bug>57252</bug>. (markt)
       </fix>
       <fix>
         While closing streams for given resources ensure that if an exception
