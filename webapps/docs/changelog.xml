@@ -98,6 +98,10 @@
         Change Response to use UEncoder instances with shared safeChars. 
         (fschumacher)
       </fix>
+      <fix>
+        Ensure that when static resources are served from JARs, only static
+        resources are served. (markt)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Jasper">
