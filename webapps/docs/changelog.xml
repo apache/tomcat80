@@ -102,6 +102,10 @@
         Ensure that when static resources are served from JARs, only static
         resources are served. (markt)
       </fix>
+      <add>
+        Allow <code>VersionLoggerListener</code> to log all system properties.
+        This feature is off by default. (kkolinko)
+      </add>
     </changelog>
   </subsection>
   <subsection name="Jasper">
