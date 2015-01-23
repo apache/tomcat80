@@ -95,7 +95,7 @@
         (markt)
       </fix>
       <fix>
-        Change Response to use UEncoder instances with shared safeChars. 
+        Change Response to use UEncoder instances with shared safeChars.
         (fschumacher)
       </fix>
       <fix>
