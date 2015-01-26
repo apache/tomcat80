@@ -67,7 +67,7 @@
     </changelog>
   </subsection>
 </section>
-<section name="Tomcat 8.0.18 (markt)" rtext="voting in progress">
+<section name="Tomcat 8.0.18 (markt)" rtext="2015-01-26">
   <subsection name="Catalina">
     <changelog>
       <fix>
