@@ -45,6 +45,15 @@
   issues to not "pop up" wrt. others).
 -->
 <section name="Tomcat 8.0.19 (markt)" rtext="in development">
+  <subsection name="WebSocket">
+    <changelog>
+      <fix>
+        <bug>57490</bug>: Make it possible to use Tomcat&apos;s WebSocket client
+        within a web application when running under a SecurityManager. Based on
+        a patch by Mikael Sterner. (markt)
+      </fix>
+    </changelog>
+  </subsection>
   <subsection name="Web applications">
     <changelog>
       <update>
