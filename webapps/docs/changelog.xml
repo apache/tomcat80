@@ -45,6 +45,14 @@
   issues to not "pop up" wrt. others).
 -->
 <section name="Tomcat 8.0.19 (markt)" rtext="in developent">
+  <subsection name="Web applications">
+    <changelog>
+      <update>
+        Clarify documentation for <code>useBodyEncodingForURI</code>
+        attribute of a connector. (kkolinko)
+      </update>
+    </changelog>
+  </subsection>
 </section>
 <section name="Tomcat 8.0.18 (markt)" rtext="voting in progress">
   <subsection name="Catalina">
