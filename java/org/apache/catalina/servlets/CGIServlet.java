@@ -1136,7 +1136,8 @@ public final class CGIServlet extends HttpServlet {
             if (f.exists()) {
                 try {
                     is.close();
-                } catch (IOException ignore) {
+                } catch (IOException e) {
+                    log("Could not close is", e);
                 }
                 // Don't need to expand if it already exists
                 return;
@@ -1173,7 +1174,8 @@ public final class CGIServlet extends HttpServlet {
                     } finally {
                         try {
                             is.close();
-                        } catch (IOException ignore) {
+                        } catch (IOException e) {
+                            log("Could not close is.", e);
                         }
                         fos.close();
                     }
