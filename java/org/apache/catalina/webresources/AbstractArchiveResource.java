@@ -22,36 +22,31 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.cert.Certificate;
 import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
 import java.util.jar.Manifest;
-
-import org.apache.catalina.WebResourceRoot;
 
 public abstract class AbstractArchiveResource extends AbstractResource {
 
-    private final String base;
+    private final AbstractArchiveResourceSet archiveResourceSet;
     private final String baseUrl;
     private final JarEntry resource;
-    private final Manifest manifest;
     private final String codeBaseUrl;
     private final String name;
     private boolean readCerts = false;
     private Certificate[] certificates;
 
-    protected AbstractArchiveResource(WebResourceRoot root, String webAppPath,
-            String base, String baseUrl, JarEntry jarEntry,
-            String internalPath, Manifest manifest, String codeBaseUrl) {
-        super(root, webAppPath);
-        this.base = base;
+    protected AbstractArchiveResource(AbstractArchiveResourceSet archiveResourceSet,
+            String webAppPath, String baseUrl, JarEntry jarEntry, String codeBaseUrl) {
+        super(archiveResourceSet.getRoot(), webAppPath);
+        this.archiveResourceSet = archiveResourceSet;
         this.baseUrl = baseUrl;
         this.resource = jarEntry;
-        this.manifest = manifest;
         this.codeBaseUrl = codeBaseUrl;
 
         String resourceName = resource.getName();
         if (resourceName.charAt(resourceName.length() - 1) == '/') {
             resourceName = resourceName.substring(0, resourceName.length() - 1);
         }
+        String internalPath = archiveResourceSet.getInternalPath();
         if (internalPath.length() > 0 && resourceName.equals(
                 internalPath.subSequence(1, internalPath.length()))) {
             name = "";
@@ -65,8 +60,12 @@ public abstract class AbstractArchiveResource extends AbstractResource {
         }
     }
 
+    protected AbstractArchiveResourceSet getArchiveResourceSet() {
+        return archiveResourceSet;
+    }
+
     protected final String getBase() {
-        return base;
+        return archiveResourceSet.getBase();
     }
 
     protected final String getBaseUrl() {
@@ -205,7 +204,7 @@ public abstract class AbstractArchiveResource extends AbstractResource {
 
     @Override
     public Manifest getManifest() {
-        return manifest;
+        return archiveResourceSet.getManifest();
     }
 
     @Override
@@ -215,15 +214,19 @@ public abstract class AbstractArchiveResource extends AbstractResource {
 
     protected abstract JarInputStreamWrapper getJarInputStreamWrapper();
 
+    /**
+     * This wrapper assumes that the InputStream was created from a JarFile
+     * obtained from a call to getArchiveResourceSet().getJarFile(). If this is
+     * not the case then the usage counting in AbstractArchiveResourceSet will
+     * break and the JarFile may be unexpectedly closed.
+     */
     protected class JarInputStreamWrapper extends InputStream {
 
-        private final JarFile jarFile;
         private final JarEntry jarEntry;
         private final InputStream is;
 
 
-        public JarInputStreamWrapper(JarFile jarFile, JarEntry jarEntry, InputStream is) {
-            this.jarFile = jarFile;
+        public JarInputStreamWrapper(JarEntry jarEntry, InputStream is) {
             this.jarEntry = jarEntry;
             this.is = is;
         }
@@ -261,9 +264,7 @@ public abstract class AbstractArchiveResource extends AbstractResource {
 
         @Override
         public void close() throws IOException {
-            // Closing the JarFile releases the file lock on the JAR and also
-            // closes all input streams created from the JarFile.
-            jarFile.close();
+            archiveResourceSet.closeJarFile();
         }
 
 

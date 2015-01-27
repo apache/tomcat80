@@ -51,6 +51,10 @@
         Clarify threaded usage of variables by removing volatile marker
         in NonceInfo. Issue reported by Coverity Scan. (fschumacher)
       </fix>
+      <fix>
+        <bug>57472</bug>: Fix performance regression in resources implementation
+        when signed JARs are used in a web application. (markt)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="WebSocket">

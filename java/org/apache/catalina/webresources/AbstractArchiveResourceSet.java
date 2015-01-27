@@ -17,6 +17,7 @@
 package org.apache.catalina.webresources;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
@@ -24,6 +25,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 
 import org.apache.catalina.WebResource;
@@ -37,9 +39,17 @@ public abstract class AbstractArchiveResourceSet extends AbstractResourceSet {
     private String baseUrlString;
     private Manifest manifest;
 
+    private JarFile archive = null;
+    private final Object archiveLock = new Object();
+    private long archiveUseCount = 0;
+
 
     protected final void setManifest(Manifest manifest) {
         this.manifest = manifest;
+    }
+
+    protected final Manifest getManifest() {
+        return manifest;
     }
 
     protected final void setBaseUrl(URL baseUrl) {
@@ -265,5 +275,35 @@ public abstract class AbstractArchiveResourceSet extends AbstractResourceSet {
 
         throw new IllegalArgumentException(
                 sm.getString("abstractArchiveResourceSet.setReadOnlyFalse"));
+    }
+
+    protected JarFile openJarFile() throws IOException {
+        synchronized (archiveLock) {
+            if (archive == null) {
+                archive = new JarFile(getBase());
+            }
+            archiveUseCount++;
+            return archive;
+        }
+    }
+
+    protected void closeJarFile() {
+        synchronized (archiveLock) {
+            archiveUseCount--;
+        }
+    }
+
+    @Override
+    public void backgroundProcess() {
+        synchronized (archiveLock) {
+            if (archive != null && archiveUseCount == 0) {
+                try {
+                    archive.close();
+                } catch (IOException e) {
+                    // Log at least WARN
+                }
+                archive = null;
+            }
+        }
     }
 }
