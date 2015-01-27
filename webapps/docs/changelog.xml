@@ -45,6 +45,14 @@
   issues to not "pop up" wrt. others).
 -->
 <section name="Tomcat 8.0.19 (markt)" rtext="in development">
+  <subsection name="Catalina">
+    <changelog>
+      <fix>
+        Clarify threaded usage of variables by removing volatile marker
+        in NonceInfo. Issue reported by Coverity Scan. (fschumacher)
+      </fix>
+    </changelog>
+  </subsection>
   <subsection name="WebSocket">
     <changelog>
       <fix>
