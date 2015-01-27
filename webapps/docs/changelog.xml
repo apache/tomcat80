@@ -66,6 +66,14 @@
       </update>
     </changelog>
   </subsection>
+  <subsection name="Other">
+    <changelog>
+      <fix>
+        Assign newly created stream to field instead of leaking it uselessly.
+        Issue reported by Coverity Scan. (fschumacher)
+      </fix>
+    </changelog>
+  </subsection>
 </section>
 <section name="Tomcat 8.0.18 (markt)" rtext="2015-01-26">
   <subsection name="Catalina">
