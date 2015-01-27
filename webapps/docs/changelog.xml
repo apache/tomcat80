@@ -64,6 +64,10 @@
         Clarify documentation for <code>useBodyEncodingForURI</code>
         attribute of a connector. (kkolinko)
       </update>
+      <fix>
+        Fix possible resource leaks by closing streams properly. Issues
+        reported by Coverity Scan. (fschumacher)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Other">
