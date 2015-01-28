@@ -93,6 +93,11 @@
   </subsection>
   <subsection name="Other">
     <changelog>
+      <add>
+        Enhance bean factory used for JNDI resources. New attribute
+        <code>forceString</code> allows to support non-standard
+        string argument property setters. (rjung)
+      </add>
       <fix>
         Assign newly created stream to field instead of leaking it uselessly.
         Issue reported by Coverity Scan. (fschumacher)
