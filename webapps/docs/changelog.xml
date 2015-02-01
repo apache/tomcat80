@@ -84,6 +84,9 @@
         <bug>57503</bug>: Make clear that the JULI integration for log4j only
         works with log4j 1.2.x. (markt)
       </fix>
+      <fix>
+        <bug>57496</bug>: Remove hard-coded URL in JSP SVG example. (markt)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Tribes">
