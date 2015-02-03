@@ -674,6 +674,6 @@ public class OutputBuffer extends Writer
     }
 
     public void checkRegisterForWrite() {
-        coyoteResponse.checkRegisterForWrite(true);
+        coyoteResponse.checkRegisterForWrite();
     }
 }

@@ -57,6 +57,16 @@
       </fix>
     </changelog>
   </subsection>
+  <subsection name="Coyote">
+    <changelog>
+      <fix>
+        Fix several bugs that could cause multiple registrations for write
+        events for a single socket when using Servlet 3.0 async. Typically, the
+        side effects of these mutltiple registrations would be exceptions
+        appearing in the logs. (markt)
+      </fix>
+    </changelog>
+  </subsection>
   <subsection name="Jasper">
     <changelog>
       <update>
