@@ -128,6 +128,9 @@
         Assign newly created stream to field instead of leaking it uselessly.
         Issue reported by Coverity Scan. (fschumacher)
       </fix>
+      <update>
+        Update optional Checkstyle library to 6.3. (kkolinko)
+      </update>
     </changelog>
   </subsection>
 </section>
