@@ -1050,7 +1050,10 @@ public final class CorsFilter implements Filter {
      *
      * @see  <a href="http://www.w3.org/TR/cors/#terminology"
      *       >http://www.w3.org/TR/cors/#terminology</a>
+     *
+     * @deprecated Unused. Will be removed in Tomcat 9.0.x onwards.
      */
+    @Deprecated
     public static final Collection<String> SIMPLE_HTTP_METHODS =
             new HashSet<>(Arrays.asList("GET", "POST", "HEAD"));
 
@@ -1059,7 +1062,10 @@ public final class CorsFilter implements Filter {
      *
      * @see  <a href="http://www.w3.org/TR/cors/#terminology"
      *       >http://www.w3.org/TR/cors/#terminology</a>
+     *
+     * @deprecated Unused. Will be removed in Tomcat 9.0.x onwards.
      */
+    @Deprecated
     public static final Collection<String> SIMPLE_HTTP_REQUEST_HEADERS =
             new HashSet<>(Arrays.asList("Accept", "Accept-Language",
                     "Content-Language"));
@@ -1069,7 +1075,10 @@ public final class CorsFilter implements Filter {
      *
      * @see  <a href="http://www.w3.org/TR/cors/#terminology"
      *       >http://www.w3.org/TR/cors/#terminology</a>
+     *
+     * @deprecated Unused. Will be removed in Tomcat 9.0.x onwards.
      */
+    @Deprecated
     public static final Collection<String> SIMPLE_HTTP_RESPONSE_HEADERS =
             new HashSet<>(Arrays.asList("Cache-Control", "Content-Language",
                     "Content-Type", "Expires", "Last-Modified", "Pragma"));
