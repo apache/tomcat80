@@ -59,6 +59,9 @@
         <bug>57472</bug>: Fix performance regression in resources implementation
         when signed JARs are used in a web application. (markt)
       </fix>
+      <add>
+        Warn about problematic setting of appBase. (fschumacher)
+      </add>
     </changelog>
   </subsection>
   <subsection name="Coyote">
