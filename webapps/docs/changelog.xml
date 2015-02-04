@@ -52,6 +52,10 @@
         in NonceInfo. Issue reported by Coverity Scan. (fschumacher)
       </fix>
       <fix>
+        <bug>57180</bug>: Further fixes to support the use of arbitrary HTTP
+        methods with the CORS filter. (markt)
+      </fix>
+      <fix>
         <bug>57472</bug>: Fix performance regression in resources implementation
         when signed JARs are used in a web application. (markt)
       </fix>
