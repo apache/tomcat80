@@ -72,6 +72,10 @@
         side effects of these mutltiple registrations would be exceptions
         appearing in the logs. (markt)
       </fix>
+      <fix>
+        <bug>57509</bug>: Improve length check when writing HTTP/1.1
+        response headers: reserve space for 4 extra bytes. (kkolinko)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Jasper">
