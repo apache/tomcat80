@@ -62,6 +62,9 @@
       <add>
         Warn about problematic setting of appBase. (fschumacher)
       </add>
+      <fix>
+        Fix exception while authentication in JDBCRealm. (fschumacher)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Coyote">
