@@ -146,6 +146,12 @@
         Guard the digester from MbeansDescriptorsDigesterSource with its own
         lock object. (fschumacher)
       </fix>
+      <fix>
+        Refactor the unit tests and add some new test properties to make it
+        easier to exclude performance tests and relax timing tests. This is
+        primarily for the ASF CI system where these tests frequently fail.
+        (markt)
+      </fix>
     </changelog>
   </subsection>
 </section>

@@ -18,32 +18,61 @@ package org.apache.catalina.connector;
 
 import java.net.URI;
 
-import static org.junit.Assert.assertTrue;
+import org.junit.Assert;
 import org.junit.Test;
 
-public class TestResponsePerformance {
+import org.apache.catalina.startup.LoggingBaseTest;
+
+public class TestResponsePerformance extends LoggingBaseTest {
+
+    private final int ITERATIONS = 100000;
+
     @Test
     public void testToAbsolutePerformance() throws Exception {
         Request req = new TesterRequest();
         Response resp = new Response();
         resp.setRequest(req);
 
+        // Warm up
+        doHomebrew(resp);
+        doUri();
+
+        // To allow for timing differences between runs, a "best of n" approach
+        // is taken for this test
+        final int bestOf = 5;
+        final int winTarget = (bestOf + 1) / 2;
+        int homebrewWin = 0;
+        int count = 0;
+
+        while (count < bestOf && homebrewWin < winTarget) {
+            long homebrew = doHomebrew(resp);
+            long uri = doUri();
+            log.info("Current 'home-brew': " + homebrew + "ms, Using URI: " + uri + "ms");
+            if (homebrew < uri) {
+                homebrewWin++;
+            }
+            count++;
+        }
+        Assert.assertTrue(homebrewWin == winTarget);
+    }
+
+
+    private long doHomebrew(Response resp) {
         long start = System.currentTimeMillis();
-        for (int i = 0; i < 100000; i++) {
+        for (int i = 0; i < ITERATIONS; i++) {
             resp.toAbsolute("bar.html");
         }
-        long homebrew = System.currentTimeMillis() - start;
+        return System.currentTimeMillis() - start;
+    }
 
-        start = System.currentTimeMillis();
-        for (int i = 0; i < 100000; i++) {
+
+    private long doUri() {
+        long start = System.currentTimeMillis();
+        for (int i = 0; i < ITERATIONS; i++) {
             URI base = URI.create(
                     "http://localhost:8080/level1/level2/foo.html");
             base.resolve(URI.create("bar.html")).toASCIIString();
         }
-        long uri = System.currentTimeMillis() - start;
-
-        System.out.println("Current 'home-brew': " + homebrew +
-                "ms, Using URI: " + uri + "ms");
-        assertTrue(homebrew < uri);
+        return System.currentTimeMillis() - start;
     }
 }
