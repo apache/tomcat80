@@ -170,8 +170,8 @@
         (markt)
       </fix>
       <fix>
-        <bug>57558</bug>: Add missing JAR in Ant task definition rquired by the
-        validate task. (markt)
+        <bug>57558</bug>: Add missing JAR in Ant task definition required by
+        the validate task. (markt)
       </fix>
     </changelog>
   </subsection>
