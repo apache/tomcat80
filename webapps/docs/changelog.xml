@@ -65,6 +65,11 @@
       <fix>
         Fix exception while authentication in JDBCRealm. (fschumacher)
       </fix>
+      <fix>
+        <bug>57556</bug>: Align <code>getRealPath()</code> behaviour with that
+        of earlier versions and include a trailing separator if the real path
+        refers to a directory. (markt) 
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Coyote">
