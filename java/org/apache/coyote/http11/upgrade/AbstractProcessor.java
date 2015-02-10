@@ -93,23 +93,9 @@ public abstract class AbstractProcessor<S>
             throws IOException {
 
         if (status == SocketStatus.OPEN_READ) {
-            try {
-                upgradeServletInputStream.onDataAvailable();
-            } catch (IOException ioe) {
-                // The error handling within the ServletInputStream should have
-                // marked the stream for closure which will get picked up below,
-                // triggering the clean-up of this processor.
-                getLog().debug(sm.getString("abstractProcessor.onDataAvailableFail"), ioe);
-            }
+            upgradeServletInputStream.onDataAvailable();
         } else if (status == SocketStatus.OPEN_WRITE) {
-            try {
-                upgradeServletOutputStream.onWritePossible();
-            } catch (IOException ioe) {
-                // The error handling within the ServletOutputStream should have
-                // marked the stream for closure which will get picked up below,
-                // triggering the clean-up of this processor.
-                getLog().debug(sm.getString("abstractProcessor.onWritePossibleFail"), ioe);
-            }
+            upgradeServletOutputStream.onWritePossible();
         } else if (status == SocketStatus.STOP) {
             try {
                 upgradeServletInputStream.close();

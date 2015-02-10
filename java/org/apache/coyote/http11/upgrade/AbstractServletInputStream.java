@@ -21,10 +21,14 @@ import java.io.IOException;
 import javax.servlet.ReadListener;
 import javax.servlet.ServletInputStream;
 
+import org.apache.juli.logging.Log;
+import org.apache.juli.logging.LogFactory;
+import org.apache.tomcat.util.ExceptionUtils;
 import org.apache.tomcat.util.res.StringManager;
 
 public abstract class AbstractServletInputStream extends ServletInputStream {
 
+    private static final Log log = LogFactory.getLog(AbstractServletInputStream.class);
     protected static final StringManager sm =
             StringManager.getManager(Constants.Package);
 
@@ -182,7 +186,7 @@ public abstract class AbstractServletInputStream extends ServletInputStream {
     }
 
 
-    protected final void onDataAvailable() throws IOException {
+    final void onDataAvailable() {
         if (listener == null) {
             return;
         }
@@ -192,6 +196,9 @@ public abstract class AbstractServletInputStream extends ServletInputStream {
         try {
             thread.setContextClassLoader(applicationLoader);
             listener.onDataAvailable();
+        } catch (Throwable t) {
+            ExceptionUtils.handleThrowable(t);
+            onError(t);
         } finally {
             thread.setContextClassLoader(originalClassLoader);
         }
@@ -207,14 +214,24 @@ public abstract class AbstractServletInputStream extends ServletInputStream {
         try {
             thread.setContextClassLoader(applicationLoader);
             listener.onError(t);
+        } catch (Throwable t2) {
+            ExceptionUtils.handleThrowable(t2);
+            log.warn(sm.getString("upgrade.sis.onErrorFail"), t2);
         } finally {
             thread.setContextClassLoader(originalClassLoader);
+        }
+        try {
+            close();
+        } catch (IOException ioe) {
+            if (log.isDebugEnabled()) {
+                log.debug(sm.getString("upgrade.sis.errorCloseFail"), ioe);
+            }
         }
         ready = Boolean.FALSE;
     }
 
 
-    protected final boolean isCloseRequired() {
+    final boolean isCloseRequired() {
         return closeRequired;
     }
 

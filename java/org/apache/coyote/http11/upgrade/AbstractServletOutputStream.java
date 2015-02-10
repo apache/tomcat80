@@ -21,6 +21,8 @@ import java.io.IOException;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.WriteListener;
 
+import org.apache.juli.logging.Log;
+import org.apache.juli.logging.LogFactory;
 import org.apache.tomcat.util.ExceptionUtils;
 import org.apache.tomcat.util.net.DispatchType;
 import org.apache.tomcat.util.net.SocketWrapper;
@@ -28,6 +30,7 @@ import org.apache.tomcat.util.res.StringManager;
 
 public abstract class AbstractServletOutputStream<S> extends ServletOutputStream {
 
+    private static final Log log = LogFactory.getLog(AbstractServletOutputStream.class);
     protected static final StringManager sm =
             StringManager.getManager(Constants.Package);
 
@@ -108,7 +111,7 @@ public abstract class AbstractServletOutputStream<S> extends ServletOutputStream
     }
 
 
-    protected final boolean isCloseRequired() {
+    final boolean isCloseRequired() {
         return closeRequired;
     }
 
@@ -185,7 +188,7 @@ public abstract class AbstractServletOutputStream<S> extends ServletOutputStream
     }
 
 
-    protected final void onWritePossible() throws IOException {
+    final void onWritePossible() {
         try {
             synchronized (writeLock) {
                 if (bufferLimit > 0) {
@@ -195,11 +198,7 @@ public abstract class AbstractServletOutputStream<S> extends ServletOutputStream
         } catch (Throwable t) {
             ExceptionUtils.handleThrowable(t);
             onError(t);
-            if (t instanceof IOException) {
-                throw t;
-            } else {
-                throw new IOException(t);
-            }
+            return;
         }
 
         // Make sure isReady() and onWritePossible() have a consistent view
@@ -219,6 +218,9 @@ public abstract class AbstractServletOutputStream<S> extends ServletOutputStream
             try {
                 thread.setContextClassLoader(applicationLoader);
                 listener.onWritePossible();
+            } catch (Throwable t) {
+                ExceptionUtils.handleThrowable(t);
+                onError(t);
             } finally {
                 thread.setContextClassLoader(originalClassLoader);
             }
@@ -235,8 +237,18 @@ public abstract class AbstractServletOutputStream<S> extends ServletOutputStream
         try {
             thread.setContextClassLoader(applicationLoader);
             listener.onError(t);
+        } catch (Throwable t2) {
+            ExceptionUtils.handleThrowable(t2);
+            log.warn(sm.getString("upgrade.sos.onErrorFail"), t2);
         } finally {
             thread.setContextClassLoader(originalClassLoader);
+        }
+        try {
+            close();
+        } catch (IOException ioe) {
+            if (log.isDebugEnabled()) {
+                log.debug(sm.getString("upgrade.sos.errorCloseFail"), ioe);
+            }
         }
     }
 
