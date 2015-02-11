@@ -70,6 +70,11 @@
         of earlier versions and include a trailing separator if the real path
         refers to a directory. (markt)
       </fix>
+      <fix>
+        Ensure that Servlet 3.0 async requests where <code>startAsync()</code>
+        is called in one container thread and <code>dispatch()</code> is called
+        in a different container thread complete correctly. (markt)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Coyote">
