@@ -66,6 +66,10 @@
         Fix exception while authentication in JDBCRealm. (fschumacher)
       </fix>
       <fix>
+       <bug>57534</bug>: CORS Filter should only look at media type component of
+       Content-Type request header. (markt)
+      </fix>
+      <fix>
         <bug>57556</bug>: Align <code>getRealPath()</code> behaviour with that
         of earlier versions and include a trailing separator if the real path
         refers to a directory. (markt)
