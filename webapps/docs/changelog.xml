@@ -130,6 +130,10 @@
         <bug>57564</bug>:  Make JspC amenable to subclassing. Patch provided by
         Jan Bartel. (markt)
       </add>
+      <fix>
+        Simplify code in <code>ProtectedFunctionMapper</code> class of
+        Jasper runtime. (kkolinko)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="WebSocket">
