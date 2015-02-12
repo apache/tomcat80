@@ -79,6 +79,11 @@
         is called in one container thread and <code>dispatch()</code> is called
         in a different container thread complete correctly. (markt)
       </fix>
+      <fix>
+        Ensure that user name chekcing in the optional SecurityListener is
+        case-insensitive (as documented) and than the case-insensitive
+        comparison is performed using the system default Locale. (markt)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Coyote">
