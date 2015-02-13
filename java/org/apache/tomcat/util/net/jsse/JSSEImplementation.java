@@ -37,6 +37,13 @@ import org.apache.tomcat.util.net.ServerSocketFactory;
 
 public class JSSEImplementation extends SSLImplementation {
 
+    public JSSEImplementation() {
+        // Make sure the keySizeCache is loaded now as part of connector startup
+        // else the cache will be populated on first use which will slow that
+        // request down.
+        JSSESupport.init();
+    }
+
     @Override
     public String getImplementationName(){
         return "JSSE";

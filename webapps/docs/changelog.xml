@@ -130,6 +130,11 @@
         <bug>57581</bug>: Change statistics byte counter in coyote Request
         object to be long to allow values above 2Gb. (kkolinko)
       </fix>
+      <update>
+        Use the data that supports cipher defintion using OpenSSL syntax to
+        improve the quality of values provided for the
+        <code>javax.servlet.request.key_size</code> request attribute. (markt)
+      </update>
     </changelog>
   </subsection>
   <subsection name="Jasper">
