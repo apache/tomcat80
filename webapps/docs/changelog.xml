@@ -143,6 +143,10 @@
         Simplify code in <code>ProtectedFunctionMapper</code> class of
         Jasper runtime. (kkolinko)
       </fix>
+      <fix>
+        <bug>57574</bug>: Do not check existence of a Java package in
+        <code>javax.el.ImportHandler.importPackage()</code>. (kkolinko)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="WebSocket">
