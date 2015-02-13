@@ -130,6 +130,8 @@ public abstract class AbstractEndpoint<S> {
                 for (SocketWrapper<S> socket : waitingRequests) {
                     long access = socket.getLastAccess();
                     if (socket.getTimeout() > 0 && (now - access) > socket.getTimeout()) {
+                        // Prevent multiple timeouts
+                        socket.setTimeout(-1);
                         processSocket(socket, SocketStatus.TIMEOUT, true);
                     }
                 }
