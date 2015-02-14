@@ -135,6 +135,11 @@
         improve the quality of values provided for the
         <code>javax.servlet.request.key_size</code> request attribute. (markt)
       </update>
+      <fix>
+        Fix a concurrency issue in the APR Poller that meant it was possible
+        under low load for a socket queued to be added to the Poller not to be
+        added for 10 seconds. (markt)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Jasper">
