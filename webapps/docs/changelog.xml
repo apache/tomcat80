@@ -232,6 +232,10 @@
         <bug>57558</bug>: Add missing JAR in Ant task definition required by
         the validate task. (markt)
       </fix>
+      <add>
+        List names of Testsuites that have failed or skipped tests when
+        running the tests with Ant. (kkolinko)
+      </add>
     </changelog>
   </subsection>
 </section>
