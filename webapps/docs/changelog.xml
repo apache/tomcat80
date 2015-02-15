@@ -45,6 +45,15 @@
   issues to not "pop up" wrt. others).
 -->
 <section name="Tomcat 8.0.20 (markt)" rtext="in development">
+  <subsection name="Coyote">
+    <changelog>
+      <fix>
+        Fix a concurrency issue that meant that a change in socket timeout (e.g.
+        when switching to asynchronous I/O) did not always take effect
+        immediately. (markt)
+      </fix>
+    </changelog>
+  </subsection>
 </section>
 <section name="Tomcat 8.0.19 (markt)" rtext="not released">
   <subsection name="Catalina">

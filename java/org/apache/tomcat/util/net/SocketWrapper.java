@@ -27,8 +27,11 @@ public class SocketWrapper<E> {
 
     private volatile E socket;
 
+    // Volatile because I/O and setting the timeout values occurs on a different
+    // thread to the thread checking the timeout.
     private volatile long lastAccess = System.currentTimeMillis();
-    private long timeout = -1;
+    private volatile long timeout = -1;
+
     private boolean error = false;
     private volatile int keepAliveLeft = 100;
     private volatile boolean comet = false;
