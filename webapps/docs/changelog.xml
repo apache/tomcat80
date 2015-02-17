@@ -55,6 +55,14 @@
       </fix>
     </changelog>
   </subsection>
+  <subsection name="Tribes">
+    <changelog>
+      <fix>
+        Make sure that add to the backup node of the map entry when map member
+        has been added to <code>ReplicatedMap</code>. (kfujino)
+      </fix>
+    </changelog>
+  </subsection>
 </section>
 <section name="Tomcat 8.0.20 (markt)" rtext="voting in progress">
   <subsection name="Coyote">
