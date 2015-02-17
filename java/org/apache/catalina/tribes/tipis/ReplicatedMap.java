@@ -204,6 +204,7 @@ public class ReplicatedMap<K,V> extends AbstractReplicatedMap<K,V> {
         if (log.isInfoEnabled()) log.info("Relocation of map entries was complete in " + complete + " ms.");
     }
 
+    @Override
     public void mapMemberAdded(Member member) {
         if ( member.equals(getChannel().getLocalMember(false)) ) return;
         boolean memberAdded = false;
@@ -221,7 +222,7 @@ public class ReplicatedMap<K,V> extends AbstractReplicatedMap<K,V> {
                     Map.Entry<K,MapEntry<K,V>> e = i.next();
                     MapEntry<K,V> entry = innerMap.get(e.getKey());
                     if ( entry == null ) continue;
-                    if (entry.isPrimary() && !inSet(member,entry.getBackupNodes())) {    
+                    if (entry.isPrimary() && !inSet(member,entry.getBackupNodes())) {
                         entry.setBackupNodes(backup);
                     }
                 }
