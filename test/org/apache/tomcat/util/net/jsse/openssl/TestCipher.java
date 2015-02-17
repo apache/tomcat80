@@ -106,6 +106,13 @@ public class TestCipher {
             if (openSSLAlias.contains("RC2-MD5")) {
                 continue;
             }
+            // Added in OpenSSL 1.1.0 but the 8.0.x tests are configured for
+            // 1.0.2
+            if (cipher.getProtocol().equals(Protocol.TLSv1_2) &&
+                    (cipher.getEnc().equals(Encryption.CAMELLIA256) ||
+                            cipher.getEnc().equals(Encryption.CAMELLIA128))) {
+                continue;
+            }
             expectedCipherSuites.add(openSSLAlias + "+" +
                     cipher.getProtocol().getOpenSSLName());
         }
