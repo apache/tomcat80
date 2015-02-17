@@ -34,6 +34,8 @@ public class TesterOpenSSL {
 
     public static final Set<Cipher> OPENSSL_UNIMPLEMENTED_CIPHERS =
             Collections.unmodifiableSet(new HashSet<>(Arrays.asList(
+                    // The following ciphers are not implemented in an OpenSSL
+                    // version
                     Cipher.TLS_DHE_DSS_WITH_RC4_128_SHA,
                     Cipher.SSL_CK_RC2_128_CBC_WITH_MD5,
                     Cipher.SSL_FORTEZZA_DMS_WITH_NULL_SHA,
@@ -44,7 +46,30 @@ public class TesterOpenSSL {
                     Cipher.TLS_RSA_EXPORT1024_WITH_RC2_CBC_56_MD5,
                     Cipher.TLS_DHE_DSS_EXPORT1024_WITH_RC4_56_SHA,
                     Cipher.TLS_RSA_EXPORT1024_WITH_RC4_56_SHA,
-                    Cipher.TLS_RSA_EXPORT1024_WITH_RC4_56_MD5)));
+                    Cipher.TLS_RSA_EXPORT1024_WITH_RC4_56_MD5,
+                    // The following ciphers are implemented in OpenSSL 1.1.0
+                    // but not earlier
+                    Cipher.TLS_RSA_WITH_CAMELLIA_128_CBC_SHA256,
+                    Cipher.TLS_DH_DSS_WITH_CAMELLIA_128_CBC_SHA256,
+                    Cipher.TLS_DH_RSA_WITH_CAMELLIA_128_CBC_SHA256,
+                    Cipher.TLS_DHE_DSS_WITH_CAMELLIA_128_CBC_SHA256,
+                    Cipher.TLS_DHE_RSA_WITH_CAMELLIA_128_CBC_SHA256,
+                    Cipher.TLS_DH_anon_WITH_CAMELLIA_128_CBC_SHA256,
+                    Cipher.TLS_RSA_WITH_CAMELLIA_256_CBC_SHA256,
+                    Cipher.TLS_DH_DSS_WITH_CAMELLIA_256_CBC_SHA256,
+                    Cipher.TLS_DH_RSA_WITH_CAMELLIA_256_CBC_SHA256,
+                    Cipher.TLS_DHE_DSS_WITH_CAMELLIA_256_CBC_SHA256,
+                    Cipher.TLS_DHE_RSA_WITH_CAMELLIA_256_CBC_SHA256,
+                    Cipher.TLS_DH_anon_WITH_CAMELLIA_256_CBC_SHA256,
+                    Cipher.TLS_ECDHE_ECDSA_WITH_CAMELLIA_128_CBC_SHA256,
+                    Cipher.TLS_ECDHE_ECDSA_WITH_CAMELLIA_256_CBC_SHA384,
+                    Cipher.TLS_ECDH_ECDSA_WITH_CAMELLIA_128_CBC_SHA256,
+                    Cipher.TLS_ECDH_ECDSA_WITH_CAMELLIA_256_CBC_SHA384,
+                    Cipher.TLS_ECDHE_RSA_WITH_CAMELLIA_128_CBC_SHA256,
+                    Cipher.TLS_ECDHE_RSA_WITH_CAMELLIA_256_CBC_SHA384,
+                    Cipher.TLS_ECDH_RSA_WITH_CAMELLIA_128_CBC_SHA256,
+                    Cipher.TLS_ECDH_RSA_WITH_CAMELLIA_256_CBC_SHA384)));
+
 
     static {
         // Note: The tests are configured for OpenSSL 1.0.2. Running with a
