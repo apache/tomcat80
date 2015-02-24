@@ -74,6 +74,11 @@
         the bug comments for details.)
         Based upon a patch provided by Ralf Hauser. (schultz)
       </add>
+      <fix>
+        Fix a cipher ordering issue when using the OpenSSL syntax for JSSE
+        cipher configuration to ensure that ephemeral ECDH with AES is preferred
+        to ephemeral ECDH with anthing else. (markt)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Jasper">
