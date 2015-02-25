@@ -92,8 +92,13 @@
       <fix>
         <bug>57583</bug>: Cache &apos;Not Found&apos; results in
         <code>javax.el.ImportHandler.resolveClass()</code> to save repeated
-        attempts to load classes that are known not to exists to improve
+        attempts to load classes that are known not to exist to improve
         performance. (markt)
+      </fix>
+      <fix>
+        <bug>57626</bug>: Correct a regression introduced in the 8.0.16 fix for
+        ensuring Jars were closed after use, that broke recompilation of
+        modified JSPs that depended on a tag file packaged in a Jar. (markt) 
       </fix>
     </changelog>
   </subsection>
