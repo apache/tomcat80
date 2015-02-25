@@ -98,7 +98,7 @@
       <fix>
         <bug>57626</bug>: Correct a regression introduced in the 8.0.16 fix for
         ensuring Jars were closed after use, that broke recompilation of
-        modified JSPs that depended on a tag file packaged in a Jar. (markt) 
+        modified JSPs that depended on a tag file packaged in a Jar. (markt)
       </fix>
     </changelog>
   </subsection>
