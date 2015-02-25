@@ -119,7 +119,7 @@
     </changelog>
   </subsection>
 </section>
-<section name="Tomcat 8.0.20 (markt)" rtext="voting in progress">
+<section name="Tomcat 8.0.20 (markt)" rtext="2015-02-20">
   <subsection name="Coyote">
     <changelog>
       <fix>
