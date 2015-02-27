@@ -61,6 +61,11 @@
         Directory. (kfujino)
       </fix>
       <fix>
+        <bug>55988</bug>: Add support for Java 8 JSSE server-preferred TLS
+        cipher suite ordering. This feature requires Java 8.
+        Based upon a patch provided by Ognjen Blagojevic. (schultz)
+      </fix>
+      <fix>
         Correct a regression in the fix for <bug>57190</bug> that incorrectly
         required the path passed to
         <code>ServletContext.getContext(String)</code> to be an exact match to a

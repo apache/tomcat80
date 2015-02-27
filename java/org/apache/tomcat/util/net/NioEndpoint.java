@@ -588,7 +588,9 @@ public class NioEndpoint extends AbstractEndpoint<NioChannel> {
         engine.setEnabledCipherSuites(enabledCiphers);
         engine.setEnabledProtocols(enabledProtocols);
 
+        configureUseServerCipherSuitesOrder(engine);
         handler.onCreateSSLEngine(engine);
+
         return engine;
     }
 
