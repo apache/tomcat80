@@ -277,18 +277,14 @@ public class TldScanner {
         }
     }
 
-    private class TldScannerCallback implements JarScannerCallback {
-        private boolean tldFound = false;
-        private boolean jarFound = false;
+    class TldScannerCallback implements JarScannerCallback {
+        private boolean foundJarWithoutTld = false;
 
         @Override
         public void scan(JarURLConnection urlConn, String webappPath,
                 boolean isWebapp) throws IOException {
-            if (!jarFound) {
-                jarFound = true;
-            }
             boolean found = false;
-            URL jarURL = null;
+            URL jarURL;
             try (Jar jar = JarFactory.newInstance(urlConn.getURL())) {
                 jarURL = jar.getJarFileURL();
                 jar.nextEntry();
@@ -309,9 +305,8 @@ public class TldScanner {
                     }
                 }
             }
-            if (found) {
-                tldFound = true;
-            } else {
+            if (!found) {
+                foundJarWithoutTld = true;
                 if (log.isDebugEnabled()) {
                     log.debug(Localizer.getMessage("jsp.tldCache.noTldInJar",
                             jarURL.toString()));
@@ -322,9 +317,6 @@ public class TldScanner {
         @Override
         public void scan(File file, final String webappPath, boolean isWebapp)
                 throws IOException {
-            if (!jarFound) {
-                jarFound = true;
-            }
             File metaInf = new File(file, "META-INF");
             if (!metaInf.isDirectory()) {
                 return;
@@ -356,7 +348,6 @@ public class TldScanner {
                         URL url = file.toUri().toURL();
                         TldResourcePath path = new TldResourcePath(url, resourcePath);
                         parseTld(path);
-                        tldFound = true;
                     } catch (SAXException e) {
                         throw new IOException(e);
                     }
@@ -381,8 +372,8 @@ public class TldScanner {
         }
 
 
-        private boolean scanFoundNoTLDs() {
-            return jarFound && !tldFound;
+        boolean scanFoundNoTLDs() {
+            return foundJarWithoutTld;
         }
     }
 }
