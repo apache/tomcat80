@@ -774,7 +774,10 @@ public class HostConfig
     protected void deployWAR(ContextName cn, File war) {
 
         File xml = new File(host.getAppBaseFile(),
-                cn.getBaseName() + "/META-INF/context.xml");
+                cn.getBaseName() + "/" + Constants.ApplicationContextXml);
+
+        File warTracker = new File(host.getAppBaseFile(),
+                cn.getBaseName() + "/" + Constants.WarTracker);
 
         boolean xmlInWar = false;
         JarEntry entry = null;
@@ -789,9 +792,20 @@ public class HostConfig
             entry = null;
         }
 
+        // If there is an expanded directory then any xml in that directory
+        // should only be used if the directory is not out of date and
+        // unpackWARs is true. Note the code below may apply further limits
+        boolean useXml = false;
+        // If the xml file exists then expandedDir must exists so no need to
+        // test that here
+        if (xml.exists() && unpackWARs &&
+                (!warTracker.exists() || warTracker.lastModified() == war.lastModified())) {
+            useXml = true;
+        }
+
         Context context = null;
         try {
-            if (deployXML && xml.exists() && unpackWARs && !copyXML) {
+            if (deployXML && useXml && !copyXML) {
                 synchronized (digesterLock) {
                     try {
                         context = (Context) digester.parse(xml);
