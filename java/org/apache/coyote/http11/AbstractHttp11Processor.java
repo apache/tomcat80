@@ -915,6 +915,10 @@ public abstract class AbstractHttp11Processor<S> extends AbstractProcessor<S> {
             setErrorState(ErrorState.CLOSE_NOW, null);
             break;
         }
+        case END_REQUEST: {
+            endRequest();
+            break;
+        }
         default: {
             actionInternal(actionCode, param);
             break;

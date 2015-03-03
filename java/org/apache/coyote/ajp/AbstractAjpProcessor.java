@@ -653,7 +653,11 @@ public abstract class AbstractAjpProcessor<S> extends AbstractProcessor<S> {
             setErrorState(ErrorState.CLOSE_NOW, null);
             break;
         }
+        case END_REQUEST: {
+            // NO-OP for AJP
+            break;
         }
+       }
     }
 
 
