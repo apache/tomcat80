@@ -146,6 +146,11 @@
         <bug>57587</bug>: Update the JNDI Datasource HOWTO for DBCP2. Patch
         provided by Phil Steitz. (markt)
       </fix>
+      <fix>
+        Remove incorrect note from context configuration page in the
+        documentation web application that stated WAR files located outside the
+        appBase were never unpacked. (markt)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Tribes">
