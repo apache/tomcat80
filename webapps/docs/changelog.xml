@@ -174,7 +174,7 @@
   <subsection name="Other">
     <changelog>
       <update>
-        Update optional Checkstyle library to 6.4. (kkolinko)
+        Update optional Checkstyle library to 6.4.1. (kkolinko)
       </update>
     </changelog>
   </subsection>
