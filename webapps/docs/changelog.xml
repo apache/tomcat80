@@ -153,6 +153,12 @@
   <subsection name="Web applications">
     <changelog>
       <fix>
+        <bug>56058</bug>: Add links to the AccessLogValve documentation for
+        configuring reverse proxies and/or Tomcat to ensure that the desired
+        information is used entered in the access log when Tomcat is running
+        behind a reverse proxy. (markt)
+      </fix>
+      <fix>
         <bug>57587</bug>: Update the JNDI Datasource HOWTO for DBCP2. Patch
         provided by Phil Steitz. (markt)
       </fix>
