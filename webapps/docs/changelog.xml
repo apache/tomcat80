@@ -134,6 +134,11 @@
   <subsection name="Jasper">
     <changelog>
       <fix>
+        <bug>57135</bug>: Package imports via
+        <code>javax.el.ImportHandler</code> should only import public, concrete
+        classes. (markt)
+      </fix>
+      <fix>
         <bug>57583</bug>: Cache &apos;Not Found&apos; results in
         <code>javax.el.ImportHandler.resolveClass()</code> to save repeated
         attempts to load classes that are known not to exist to improve
