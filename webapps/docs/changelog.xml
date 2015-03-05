@@ -139,6 +139,10 @@
         TLDs if the scan does not find a TLD in any jar. Previously a message
         would only be logged if a TLD was not found in all scanned jars. (jboynes)
       </fix>
+      <update>
+        <bug>57662</bug>: Update all references to the ECJ compiler to version
+        4.4.2. (violetagg)
+      </update>
     </changelog>
   </subsection>
   <subsection name="WebSocket">
