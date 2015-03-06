@@ -155,6 +155,11 @@
         modified JSPs that depended on a tag file packaged in a Jar. (markt)
       </fix>
       <fix>
+        <bug>57627</bug>: Correctly determine last modified times for
+        dependencies when a tag file packaged in a JAR depends on a tag file
+        packaged in a second JAR. (markt)
+      </fix>
+      <fix>
         <bug>57647</bug>: Ensure INFO message is logged when scanning jars for
         TLDs if the scan does not find a TLD in any jar. Previously a message
         would only be logged if a TLD was not found in all scanned jars. (jboynes)
