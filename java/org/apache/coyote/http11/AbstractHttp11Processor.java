@@ -1657,7 +1657,7 @@ public abstract class AbstractHttp11Processor<S> extends AbstractProcessor<S> {
     @Override
     public SocketState asyncDispatch(SocketStatus status) {
 
-        if (status == SocketStatus.OPEN_WRITE) {
+        if (status == SocketStatus.OPEN_WRITE && response.getWriteListener() != null) {
             try {
                 asyncStateMachine.asyncOperation();
 
@@ -1683,8 +1683,7 @@ public abstract class AbstractHttp11Processor<S> extends AbstractProcessor<S> {
                 status = SocketStatus.ASYNC_WRITE_ERROR;
                 request.setAttribute(RequestDispatcher.ERROR_EXCEPTION, x);
             }
-        } else if (status == SocketStatus.OPEN_READ &&
-                request.getReadListener() != null) {
+        } else if (status == SocketStatus.OPEN_READ && request.getReadListener() != null) {
             try {
                 // Check of asyncStateMachine.isAsyncStarted() is to avoid issue
                 // with BIO. Because it can't do a non-blocking read, BIO always
