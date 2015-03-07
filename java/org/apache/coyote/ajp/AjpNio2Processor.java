@@ -218,7 +218,9 @@ public class AjpNio2Processor extends AbstractAjpProcessor<Nio2Channel> {
             } else {
                 readBuffer.clear();
                 flipped = false;
-                readBuffer.limit(n);
+                if (n < readBuffer.capacity()) {
+                    readBuffer.limit(n);
+                }
                 try {
                     nRead = socketWrapper.getSocket().read(readBuffer)
                             .get(socketWrapper.getTimeout(), TimeUnit.MILLISECONDS).intValue();

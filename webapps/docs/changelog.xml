@@ -134,6 +134,11 @@
         <code>AsyncContext</code> is used for non-blocking I/O and is completed
         during a write operation. (markt)
       </fix>
+      <fix>
+        <bug>57638</bug>: Avoid an IllegalArgumentException when an AJP request
+        body chunk larger than the socket read buffer is being read. This
+        typically requires a larger than default AJP packetSize. (markt)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Jasper">
