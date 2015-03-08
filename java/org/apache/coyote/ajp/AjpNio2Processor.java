@@ -142,11 +142,12 @@ public class AjpNio2Processor extends AbstractAjpProcessor<Nio2Channel> {
 
         ByteBuffer writeBuffer =
                 socketWrapper.getSocket().getBufHandler().getWriteBuffer();
+        int toWrite = Math.min(length, writeBuffer.remaining());
 
         int result = 0;
         if (block) {
             writeBuffer.clear();
-            writeBuffer.put(src, offset, length);
+            writeBuffer.put(src, offset, toWrite);
             writeBuffer.flip();
             try {
                 result = socketWrapper.getSocket().write(writeBuffer)
@@ -159,14 +160,14 @@ public class AjpNio2Processor extends AbstractAjpProcessor<Nio2Channel> {
             synchronized (writeCompletionHandler) {
                 if (!writePending) {
                     writeBuffer.clear();
-                    writeBuffer.put(src, offset, length);
+                    writeBuffer.put(src, offset, toWrite);
                     writeBuffer.flip();
                     writePending = true;
                     Nio2Endpoint.startInline();
                     socketWrapper.getSocket().write(writeBuffer, socketWrapper.getTimeout(),
                             TimeUnit.MILLISECONDS, socketWrapper, writeCompletionHandler);
                     Nio2Endpoint.endInline();
-                    result = length;
+                    result = toWrite;
                 }
             }
         }
