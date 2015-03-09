@@ -195,6 +195,11 @@
         meant that the incorrect op-codes were used if an uncompressed message
         was converted into more than one compressed message. (markt)
       </fix>
+      <add>
+        <bug>57676</bug>: List conflicting WebSocket endpoint classes when
+        there is a path conflict. Based upon a patch proposed by yangkun.
+        (schultz)
+      </add>
     </changelog>
   </subsection>
   <subsection name="Web applications">
