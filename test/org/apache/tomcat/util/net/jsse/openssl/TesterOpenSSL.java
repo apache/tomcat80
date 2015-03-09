@@ -72,8 +72,8 @@ public class TesterOpenSSL {
 
 
     static {
-        // Note: The tests are configured for OpenSSL 1.0.2. Running with a
-        //       different version is likely to trigger failures
+        // Note: The tests are configured for OpenSSL 1.0.2 stable branch.
+        //       Running with a different version is likely to trigger failures.
         String expected_version = System.getProperty("tomcat.test.openssl.version", "");
         String versionString = null;
         try {
