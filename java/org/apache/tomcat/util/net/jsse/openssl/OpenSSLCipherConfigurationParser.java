@@ -484,6 +484,7 @@ public class OpenSSLCipherConfigurationParser {
         Set<Cipher> complementOfDefault = filterByKeyExchange(all, new HashSet<>(Arrays.asList(KeyExchange.EDH,KeyExchange.EECDH)));
         complementOfDefault = filterByAuthentication(complementOfDefault, Collections.singleton(Authentication.aNULL));
         complementOfDefault.removeAll(aliases.get(eNULL));
+        complementOfDefault.removeAll(aliases.get(SSLv2));
         addListAlias(COMPLEMENTOFDEFAULT, complementOfDefault);
     }
 
