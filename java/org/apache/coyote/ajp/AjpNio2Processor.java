@@ -142,7 +142,7 @@ public class AjpNio2Processor extends AbstractAjpProcessor<Nio2Channel> {
 
         ByteBuffer writeBuffer =
                 socketWrapper.getSocket().getBufHandler().getWriteBuffer();
-        int toWrite = Math.min(length, writeBuffer.remaining());
+        int toWrite = Math.min(length, writeBuffer.capacity());
 
         int result = 0;
         if (block) {
