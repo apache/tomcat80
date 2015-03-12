@@ -858,8 +858,7 @@ public class AprEndpoint extends AbstractEndpoint<Long> {
                     log.debug(sm.getString("endpoint.debug.socket",
                             Long.valueOf(socket)));
                 }
-                AprSocketWrapper wrapper =
-                        new AprSocketWrapper(Long.valueOf(socket));
+                AprSocketWrapper wrapper = new AprSocketWrapper(Long.valueOf(socket), this);
                 wrapper.setKeepAliveLeft(getMaxKeepAliveRequests());
                 wrapper.setSecure(isSSLEnabled());
                 connections.put(Long.valueOf(socket), wrapper);
@@ -940,19 +939,11 @@ public class AprEndpoint extends AbstractEndpoint<Long> {
     }
 
     private void closeSocket(long socket) {
-        // If not running the socket will be destroyed by
-        // parent pool or acceptor socket.
-        // In any case disable double free which would cause JVM core.
-
-        connections.remove(Long.valueOf(socket));
-
-        // While the connector is running, destroySocket() will call
-        // countDownConnection(). Once the connector is stopped, the latch is
-        // removed so it does not matter that destroySocket() does not call
-        // countDownConnection() in that case
-        Poller poller = this.poller;
-        if (poller != null) {
-            poller.close(socket);
+        // Once this is called, the mapping from socket to wrapper will no
+        // longer be required.
+        SocketWrapper<Long> wrapper = connections.remove(Long.valueOf(socket));
+        if (wrapper != null) {
+            ((AprSocketWrapper) wrapper).close();
         }
     }
 
@@ -1532,11 +1523,14 @@ public class AprEndpoint extends AbstractEndpoint<Long> {
         }
 
 
-        protected void close(long socket) {
-            synchronized (this) {
-                closeList.add(socket, 0, 0);
-                this.notify();
-            }
+        /*
+         * This is only called from the SocketWrapper to ensure that it is only
+         * called once per socket. Calling it more than once typically results
+         * in the JVM crash.
+         */
+        private synchronized void close(long socket) {
+            closeList.add(socket, 0, 0);
+            this.notify();
         }
 
 
@@ -2451,11 +2445,29 @@ public class AprEndpoint extends AbstractEndpoint<Long> {
 
     private static class AprSocketWrapper extends SocketWrapper<Long> {
 
+        private final Object closedLock = new Object();
+        private volatile boolean closed = false;
+
         // This field should only be used by Poller#run()
         private int pollerFlags = 0;
 
-        public AprSocketWrapper(Long socket) {
+        private final AprEndpoint endpoint;
+
+        public AprSocketWrapper(Long socket, AprEndpoint endpoint) {
             super(socket);
+            this.endpoint = endpoint;
+        }
+
+        public void close() {
+            synchronized (closedLock) {
+                // APR typically crashes if the same socket is closed twice so
+                // make sure that doesn't happen.
+                if (closed) {
+                    return;
+                }
+                closed = true;
+                endpoint.getPoller().close(getSocket().longValue());
+            }
         }
     }
 }
