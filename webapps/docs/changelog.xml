@@ -232,6 +232,10 @@
         When a map member has been added to <code>ReplicatedMap</code>, make
         sure to add it to backup nodes list of all other members. (kfujino)
       </fix>
+      <fix>
+        Make sure that refuse the messages from a different domain in
+        <code>DomainFilterInterceptor</code>. (kfujino)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Other">
