@@ -1304,13 +1304,13 @@ public class AprEndpoint extends AbstractEndpoint<Long> {
         /**
          * List of sockets to be added to the poller.
          */
-        private SocketList addList = null;
+        private SocketList addList = null;  // Modifications guarded by this
 
 
         /**
          * List of sockets to be closed.
          */
-        private SocketList closeList = null;
+        private SocketList closeList = null; // Modifications guarded by this
 
 
         /**
@@ -1345,7 +1345,7 @@ public class AprEndpoint extends AbstractEndpoint<Long> {
          * Create the poller. With some versions of APR, the maximum poller size
          * will be 62 (recompiling APR is necessary to remove this limitation).
          */
-        protected void init() {
+        protected synchronized void init() {
 
             pool = Pool.create(serverSockPool);
 
@@ -1411,15 +1411,13 @@ public class AprEndpoint extends AbstractEndpoint<Long> {
         /**
          * Destroy the poller.
          */
-        protected void destroy() {
+        protected synchronized void destroy() {
             // Wait for pollerTime before doing anything, so that the poller
             // threads exit, otherwise parallel destruction of sockets which are
             // still in the poller can cause problems
             try {
-                synchronized (this) {
-                    this.notify();
-                    this.wait(pollTime / 1000);
-                }
+                this.notify();
+                this.wait(pollTime / 1000);
             } catch (InterruptedException e) {
                 // Ignore
             }
@@ -1586,7 +1584,7 @@ public class AprEndpoint extends AbstractEndpoint<Long> {
         /**
          * Timeout checks. Must only be called from {@link Poller#run()}.
          */
-        private void maintain() {
+        private synchronized void maintain() {
 
             long date = System.currentTimeMillis();
             // Maintain runs at most once every 1s, although it will likely get
@@ -1655,7 +1653,7 @@ public class AprEndpoint extends AbstractEndpoint<Long> {
                         // Ignore
                     }
                 }
-                // Check timeouts if the poller is empty
+                // Check timeouts if the poller is empty.
                 while (pollerRunning && connectionCount.get() < 1 &&
                         addList.size() < 1 && closeList.size() < 1) {
                     // Reset maintain time.
