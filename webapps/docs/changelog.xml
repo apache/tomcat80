@@ -156,6 +156,13 @@
         Numerous fixes to the APR/native connector to improve robustness.
         (markt)
       </fix>
+      <fix>
+        Stop caching and re-using SocketWrapper instances. With the introduction
+        of upgrade and non-blocking I/O, I/O can occur on non-container threads.
+        This makes it nearly impossible to track whether a SocketWrapper is
+        still being references or not. making re-use a risky proposition.
+        (markt)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Jasper">

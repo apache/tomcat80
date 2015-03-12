@@ -155,25 +155,6 @@ public class SocketWrapper<E> {
         }
     }
 
-    public void reset(E socket, long timeout) {
-        async = false;
-        blockingStatus = true;
-        comet = false;
-        dispatches.clear();
-        error = false;
-        keepAliveLeft = 100;
-        lastAccess = System.currentTimeMillis();
-        localAddr = null;
-        localName = null;
-        localPort = -1;
-        remoteAddr = null;
-        remoteHost = null;
-        remotePort = -1;
-        this.socket = socket;
-        this.timeout = timeout;
-        upgraded = false;
-    }
-
     /**
      * Overridden for debug purposes. No guarantees are made about the format of
      * this message which may vary significantly between point releases.

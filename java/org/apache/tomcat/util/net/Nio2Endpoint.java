@@ -114,11 +114,6 @@ public class Nio2Endpoint extends AbstractEndpoint<Nio2Channel> {
     private SynchronizedStack<SocketProcessor> processorCache;
 
     /**
-     * Cache for socket wrapper objects
-     */
-    private SynchronizedStack<Nio2SocketWrapper> socketWrapperCache;
-
-    /**
      * Bytebuffer cache, each channel holds a set of buffers (two, except for SSL holds four)
      */
     private SynchronizedStack<Nio2Channel> nioChannels;
@@ -248,7 +243,6 @@ public class Nio2Endpoint extends AbstractEndpoint<Nio2Channel> {
 
     protected void releaseCaches() {
         if (useCaches) {
-            this.socketWrapperCache.clear();
             this.nioChannels.clear();
             this.processorCache.clear();
         }
@@ -348,8 +342,6 @@ public class Nio2Endpoint extends AbstractEndpoint<Nio2Channel> {
             if (useCaches) {
                 processorCache = new SynchronizedStack<>(SynchronizedStack.DEFAULT_SIZE,
                         socketProperties.getProcessorCache());
-                socketWrapperCache = new SynchronizedStack<>(SynchronizedStack.DEFAULT_SIZE,
-                        socketProperties.getSocketWrapperCache());
                 nioChannels = new SynchronizedStack<>(SynchronizedStack.DEFAULT_SIZE,
                         socketProperties.getBufferPool());
             }
@@ -404,7 +396,6 @@ public class Nio2Endpoint extends AbstractEndpoint<Nio2Channel> {
                 }
             });
             if (useCaches) {
-                socketWrapperCache.clear();
                 nioChannels.clear();
                 processorCache.clear();
             }
@@ -521,12 +512,9 @@ public class Nio2Endpoint extends AbstractEndpoint<Nio2Channel> {
                     ((SecureNio2Channel) channel).setSSLEngine(engine);
                 }
             }
-            Nio2SocketWrapper socketWrapper = (useCaches) ? socketWrapperCache.pop() : null;
-            if (socketWrapper == null) {
-                socketWrapper = new Nio2SocketWrapper(channel);
-            }
+            Nio2SocketWrapper socketWrapper = new Nio2SocketWrapper(channel);
             channel.reset(socket, socketWrapper);
-            socketWrapper.reset(channel, getSocketProperties().getSoTimeout());
+            socketWrapper.setTimeout(getSocketProperties().getSoTimeout());
             socketWrapper.setKeepAliveLeft(Nio2Endpoint.this.getMaxKeepAliveRequests());
             socketWrapper.setSecure(isSSLEnabled());
             if (sslContext != null) {
@@ -648,7 +636,6 @@ public class Nio2Endpoint extends AbstractEndpoint<Nio2Channel> {
                 }
             } catch (Exception ignore) {
             }
-            nio2Socket.reset(null, -1);
             countDownConnection();
         } catch (Throwable e) {
             ExceptionUtils.handleThrowable(e);
@@ -759,13 +746,6 @@ public class Nio2Endpoint extends AbstractEndpoint<Nio2Channel> {
 
         public Nio2SocketWrapper(Nio2Channel channel) {
             super(channel);
-        }
-
-        @Override
-        public void reset(Nio2Channel channel, long soTimeout) {
-            super.reset(channel, soTimeout);
-            upgradeInit = false;
-            sendfileData = null;
         }
 
         @Override
@@ -1094,7 +1074,6 @@ public class Nio2Endpoint extends AbstractEndpoint<Nio2Channel> {
                         closeSocket(socket, SocketStatus.ERROR);
                         if (useCaches && running && !paused) {
                             nioChannels.push(socket.getSocket());
-                            socketWrapperCache.push((Nio2SocketWrapper) socket);
                         }
                     } else if (state == SocketState.UPGRADING) {
                         socket.setKeptAlive(true);
@@ -1105,7 +1084,6 @@ public class Nio2Endpoint extends AbstractEndpoint<Nio2Channel> {
                     closeSocket(socket, SocketStatus.DISCONNECT);
                     if (useCaches && running && !paused) {
                         nioChannels.push(socket.getSocket());
-                        socketWrapperCache.push(((Nio2SocketWrapper) socket));
                     }
                 }
             } catch (OutOfMemoryError oom) {

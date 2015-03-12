@@ -2428,7 +2428,6 @@ public class AprEndpoint extends AbstractEndpoint<Long> {
             if (state == Handler.SocketState.CLOSED) {
                 // Close socket and pool
                 closeSocket(socket.getSocket().longValue());
-                socket.reset(null, 1);
             } else if (state == Handler.SocketState.LONG) {
                 socket.access();
                 if (socket.isAsync()) {
