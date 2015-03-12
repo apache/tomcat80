@@ -30,7 +30,6 @@ import org.apache.tomcat.jni.Socket;
 import org.apache.tomcat.jni.Status;
 import org.apache.tomcat.util.buf.ByteChunk;
 import org.apache.tomcat.util.net.AbstractEndpoint;
-import org.apache.tomcat.util.net.AprEndpoint;
 import org.apache.tomcat.util.net.SocketWrapper;
 
 /**
@@ -325,7 +324,7 @@ public class InternalAprOutputBuffer extends AbstractOutputBuffer<Long> {
 
     @Override
     protected void registerWriteInterest() {
-        ((AprEndpoint) endpoint).getPoller().add(socket, -1, false, true);
+        wrapper.registerforEvent(-1, false, true);
     }
 
 

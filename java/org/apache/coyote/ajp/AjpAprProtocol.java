@@ -133,9 +133,7 @@ public class AjpAprProtocol extends AbstractAjpProtocol<Long> {
             processor.recycle(isSocketClosing);
             recycledProcessors.push(processor);
             if (addToPoller) {
-                ((AprEndpoint)proto.endpoint).getPoller().add(
-                        socket.getSocket().longValue(),
-                        proto.endpoint.getKeepAliveTimeout(), true, false);
+                socket.registerforEvent(proto.endpoint.getKeepAliveTimeout(), true, false);
             }
         }
 

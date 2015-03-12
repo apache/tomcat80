@@ -257,9 +257,7 @@ public class Http11AprProtocol extends AbstractHttp11Protocol<Long> {
             processor.recycle(isSocketClosing);
             recycledProcessors.push(processor);
             if (addToPoller && proto.endpoint.isRunning()) {
-                ((AprEndpoint)proto.endpoint).getPoller().add(
-                        socket.getSocket().longValue(),
-                        proto.endpoint.getKeepAliveTimeout(), true, false);
+                socket.registerforEvent(proto.endpoint.getKeepAliveTimeout(), true, false);
             }
         }
 
@@ -302,9 +300,7 @@ public class Http11AprProtocol extends AbstractHttp11Protocol<Long> {
                 // Comet
                 if (proto.endpoint.isRunning()) {
                     socket.setComet(true);
-                    ((AprEndpoint) proto.endpoint).getPoller().add(
-                            socket.getSocket().longValue(),
-                            proto.endpoint.getSoTimeout(), true, false);
+                    socket.registerforEvent(proto.endpoint.getSoTimeout(), true, false);
                 } else {
                     // Process a STOP directly
                     ((AprEndpoint) proto.endpoint).processSocket(
@@ -318,7 +314,7 @@ public class Http11AprProtocol extends AbstractHttp11Protocol<Long> {
                     // Connector has been stopped
                     release(socket, processor, true, false);
                 } else {
-                    p.add(socket.getSocket().longValue(), -1, true, false);
+                    socket.registerforEvent(-1, true, false);
                 }
             }
         }
