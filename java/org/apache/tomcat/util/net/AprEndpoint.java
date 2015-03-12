@@ -1257,7 +1257,7 @@ public class AprEndpoint extends AbstractEndpoint<Long> {
 
     // ------------------------------------------------------ Poller Inner Class
 
-   public class Poller implements Runnable {
+    public class Poller implements Runnable {
 
         /**
          * Pointers to the pollers.
