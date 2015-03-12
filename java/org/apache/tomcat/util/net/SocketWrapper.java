@@ -165,4 +165,17 @@ public class SocketWrapper<E> {
     public String toString() {
         return super.toString() + ":" + String.valueOf(socket);
     }
+
+
+    /**
+     * Register the associated socket for the requested events.
+     *
+     * @param timeout The time to wait for the event(s) to occur
+     * @param read    Should the socket be register for read?
+     * @param write   Should the socket be register for write?
+     */
+    public void registerforEvent(int timeout, boolean read, boolean write) {
+        // NO-OP by default.
+        // Currently only implemented by APR.
+    }
 }
