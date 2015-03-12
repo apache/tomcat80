@@ -2446,7 +2446,7 @@ public class AprEndpoint extends AbstractEndpoint<Long> {
     private static class AprSocketWrapper extends SocketWrapper<Long> {
 
         private final Object closedLock = new Object();
-        private volatile boolean closed = false;
+        private boolean closed = false;
 
         // This field should only be used by Poller#run()
         private int pollerFlags = 0;
