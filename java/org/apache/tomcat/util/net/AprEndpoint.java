@@ -1383,7 +1383,16 @@ public class AprEndpoint extends AbstractEndpoint<Long> {
                 pollerSpace[i] = actualPollerSize;
             }
 
-            desc = new long[actualPollerSize * 2];
+            /*
+             * x2 - One descriptor for the socket, one for the event(s).
+             * x2 - Some APR implementations return multiple events for the
+             *      same socket as different entries. Each socket is registered
+             *      for a maximum of two events (read and write) at any one
+             *      time.
+             *
+             * Therefore size is actual poller size *4.
+             */
+            desc = new long[actualPollerSize * 4];
             connectionCount.set(0);
             addList = new SocketList(defaultPollerSize);
             closeList = new SocketList(defaultPollerSize);
@@ -1755,9 +1764,8 @@ public class AprEndpoint extends AbstractEndpoint<Long> {
                     // Poll for the specified interval
                     for (int i = 0; i < pollers.length; i++) {
 
-                        // Flags to ask to reallocate the pool
+                        // Flag to ask to reallocate the pool
                         boolean reset = false;
-                        //ArrayList<Long> skip = null;
 
                         int rv = 0;
                         // Iterate on each pollers, but no need to poll empty pollers
@@ -1776,6 +1784,7 @@ public class AprEndpoint extends AbstractEndpoint<Long> {
                             nextPollerTime += pollerTime;
                         }
                         if (rv > 0) {
+                            rv = mergeDescriptors(desc, rv);
                             pollerSpace[i] += rv;
                             connectionCount.addAndGet(-rv);
                             for (int n = 0; n < rv; n++) {
@@ -1973,6 +1982,37 @@ public class AprEndpoint extends AbstractEndpoint<Long> {
 
             synchronized (this) {
                 this.notifyAll();
+            }
+        }
+
+
+        private int mergeDescriptors(long[] desc, int startCount) {
+            if (OS.IS_BSD || OS.IS_MACOSX) {
+                /*
+                 * Notes: Only the first startCount * 2 elements of the array
+                 *        are populated.
+                 *        The array is event, socket, event, socket etc.
+                 */
+                HashMap<Long,Long> merged = new HashMap<>(startCount);
+                for (int n = 0; n < startCount; n++) {
+                    Long old = merged.put(Long.valueOf(desc[2*n+1]), Long.valueOf(desc[2*n]));
+                    if (old != null) {
+                        // This was a replacement. Merge the old and new value
+                        merged.put(Long.valueOf(desc[2*n+1]),
+                                Long.valueOf(desc[2*n] | old.longValue()));
+                    }
+                }
+                int i = 0;
+                for (Map.Entry<Long,Long> entry : merged.entrySet()) {
+                    desc[i++] = entry.getValue().longValue();
+                    desc[i++] = entry.getKey().longValue();
+                }
+                return merged.size();
+            } else {
+                // Other OS's do not (as far as it is known) return multiple
+                // entries for the same socket when the socket is registered for
+                // multiple events.
+                return startCount;
             }
         }
     }
