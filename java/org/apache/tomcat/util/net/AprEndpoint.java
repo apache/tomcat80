@@ -1571,7 +1571,6 @@ public class AprEndpoint extends AbstractEndpoint<Long> {
          * Timeout checks. Must only be called from {@link Poller#run()}.
          */
         private synchronized void maintain() {
-
             long date = System.currentTimeMillis();
             // Maintain runs at most once every 1s, although it will likely get
             // called more
@@ -1592,6 +1591,8 @@ public class AprEndpoint extends AbstractEndpoint<Long> {
                 if (!comet || (comet && !processSocket(
                         socket, SocketStatus.TIMEOUT))) {
                     destroySocket(socket);
+                    addList.remove(socket);
+                    closeList.remove(socket);
                 }
                 socket = timeouts.check(date);
             }
