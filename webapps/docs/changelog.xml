@@ -152,6 +152,10 @@
         Align the OpenSSL syntax cipher configuration with the OpenSSL 1.0.2
         branch. (markt)
       </update>
+      <fix>
+        Numerous fixes to the APR/native connector to improve robustness.
+        (markt)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Jasper">
