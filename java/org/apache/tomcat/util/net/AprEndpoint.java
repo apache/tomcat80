@@ -2472,8 +2472,14 @@ public class AprEndpoint extends AbstractEndpoint<Long> {
 
         @Override
         public void registerforEvent(int timeout, boolean read, boolean write) {
-            endpoint.getPoller().add(getSocket().longValue(), timeout,
-                    (read ? Poll.APR_POLLIN : 0) | (write ? Poll.APR_POLLOUT : 0));
+            // Make sure an already closed socket is not added to the poller
+            synchronized (closedLock) {
+                if (closed) {
+                    return;
+                }
+                endpoint.getPoller().add(getSocket().longValue(), timeout,
+                        (read ? Poll.APR_POLLIN : 0) | (write ? Poll.APR_POLLOUT : 0));
+            }
         }
     }
 }
