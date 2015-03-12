@@ -1478,15 +1478,9 @@ public class AprEndpoint extends AbstractEndpoint<Long> {
          *
          * @param socket to add to the poller
          * @param timeout to use for this connection
-         * @param read to do read polling
-         * @param write to do write polling
+         * @param flags Events to poll for (Poll.APR_POLLIN and/or
+         *              Poll.APR_POLLOUT)
          */
-        private void add(long socket, int timeout, boolean read, boolean write) {
-            add(socket, timeout,
-                    (read ? Poll.APR_POLLIN : 0) |
-                    (write ? Poll.APR_POLLOUT : 0));
-        }
-
         private void add(long socket, int timeout, int flags) {
             if (log.isDebugEnabled()) {
                 String msg = sm.getString("endpoint.debug.pollerAdd",
@@ -2289,7 +2283,7 @@ public class AprEndpoint extends AbstractEndpoint<Long> {
                                     // poller for processing of further requests
                                     getPoller().add(
                                             state.socket, getKeepAliveTimeout(),
-                                            true, false);
+                                            Poll.APR_POLLIN);
                                 } else {
                                     // Close the socket since this is
                                     // the end of not keep-alive request.
@@ -2386,7 +2380,7 @@ public class AprEndpoint extends AbstractEndpoint<Long> {
                 if (!deferAccept) {
                     if (setSocketOptions(socket.getSocket().longValue())) {
                         getPoller().add(socket.getSocket().longValue(),
-                                getSoTimeout(), true, false);
+                                getSoTimeout(), Poll.APR_POLLIN);
                     } else {
                         // Close socket and pool
                         closeSocket(socket.getSocket().longValue());
