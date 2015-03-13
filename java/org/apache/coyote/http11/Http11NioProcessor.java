@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.io.InterruptedIOException;
 import java.net.InetAddress;
 import java.nio.channels.SelectionKey;
+import java.util.Set;
 
 import javax.net.ssl.SSLEngine;
 
@@ -62,8 +63,8 @@ public class Http11NioProcessor extends AbstractHttp11Processor<NioChannel> {
     // ----------------------------------------------------------- Constructors
 
 
-    public Http11NioProcessor(int maxHttpHeaderSize, NioEndpoint endpoint,
-            int maxTrailerSize, int maxExtensionSize, int maxSwallowSize) {
+    public Http11NioProcessor(int maxHttpHeaderSize, NioEndpoint endpoint, int maxTrailerSize,
+            Set<String> allowedTrailerHeaders, int maxExtensionSize, int maxSwallowSize) {
 
         super(endpoint);
 
@@ -73,7 +74,7 @@ public class Http11NioProcessor extends AbstractHttp11Processor<NioChannel> {
         outputBuffer = new InternalNioOutputBuffer(response, maxHttpHeaderSize);
         response.setOutputBuffer(outputBuffer);
 
-        initializeFilters(maxTrailerSize, maxExtensionSize, maxSwallowSize);
+        initializeFilters(maxTrailerSize, allowedTrailerHeaders, maxExtensionSize, maxSwallowSize);
     }
 
 

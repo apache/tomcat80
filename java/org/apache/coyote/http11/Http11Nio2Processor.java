@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.io.InterruptedIOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
+import java.util.Set;
 
 import javax.net.ssl.SSLEngine;
 
@@ -59,8 +60,8 @@ public class Http11Nio2Processor extends AbstractHttp11Processor<Nio2Channel> {
     // ----------------------------------------------------------- Constructors
 
 
-    public Http11Nio2Processor(int maxHttpHeaderSize, Nio2Endpoint endpoint,
-            int maxTrailerSize, int maxExtensionSize, int maxSwallowSize) {
+    public Http11Nio2Processor(int maxHttpHeaderSize, Nio2Endpoint endpoint, int maxTrailerSize,
+            Set<String> allowedTrailerHeaders, int maxExtensionSize, int maxSwallowSize) {
 
         super(endpoint);
 
@@ -70,7 +71,7 @@ public class Http11Nio2Processor extends AbstractHttp11Processor<Nio2Channel> {
         outputBuffer = new InternalNio2OutputBuffer(response, maxHttpHeaderSize);
         response.setOutputBuffer(outputBuffer);
 
-        initializeFilters(maxTrailerSize, maxExtensionSize, maxSwallowSize);
+        initializeFilters(maxTrailerSize, allowedTrailerHeaders, maxExtensionSize, maxSwallowSize);
     }
 
 

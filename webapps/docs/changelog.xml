@@ -134,6 +134,10 @@
         to ephemeral ECDH with anthing else. (markt)
       </fix>
       <fix>
+        <bug>57570</bug>: Make the processing of trailer headers with chunked
+        input optional and disabled by default. (markt)
+      </fix>
+      <fix>
         <bug>57592</bug>: Correctly handle the case where an
         <code>AsyncContext</code> is used for non-blocking I/O and is completed
         during a write operation. (markt)
