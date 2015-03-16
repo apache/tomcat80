@@ -119,6 +119,11 @@
         when <code>org.apache.tomcat.InstanceManager</code> is not initialized.
         (violetagg)
       </fix>
+      <add>
+        Use the simplified digest output for digest.bat|sh when generating
+        digests with no salt and a single iteration to make it easier to use
+        with DIGEST authentication. (markt)
+      </add>
     </changelog>
   </subsection>
   <subsection name="Coyote">
@@ -251,6 +256,11 @@
         <bug>57683</bug>: Ensure that if a client aborts their connection to the
         stock ticker example (the only way a client can disconnect), the example
         continues to work for existing and new clients. (markt)
+      </fix>
+      <fix>
+        Make it clear that when using digested passwords with DIGEST
+        authentication that no slat and only a single iteration must be used
+        when generating the digest. (markt) 
       </fix>
     </changelog>
   </subsection>
