@@ -124,6 +124,10 @@
         digests with no salt and a single iteration to make it easier to use
         with DIGEST authentication. (markt)
       </add>
+      <fix>
+        Add support for <code>LAST_ACCESS_AT_START</code> system property to
+        <code>SingleSignOn</code>. (kfujino)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Coyote">
