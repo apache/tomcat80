@@ -128,6 +128,10 @@
         Add support for <code>LAST_ACCESS_AT_START</code> system property to
         <code>SingleSignOn</code>. (kfujino)
       </fix>
+      <scode>
+        Refactor Authenticator implementations to reduce code duplication.
+        (markt)
+      </scode>
     </changelog>
   </subsection>
   <subsection name="Coyote">
