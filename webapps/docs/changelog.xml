@@ -279,7 +279,7 @@
       </fix>
       <fix>
         Make it clear that when using digested passwords with DIGEST
-        authentication that no slat and only a single iteration must be used
+        authentication that no salt and only a single iteration must be used
         when generating the digest. (markt)
       </fix>
     </changelog>
