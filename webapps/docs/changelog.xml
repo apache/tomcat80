@@ -132,6 +132,10 @@
         Refactor Authenticator implementations to reduce code duplication.
         (markt)
       </scode>
+      <fix>
+        <bug>57724</bug>: Handle the case in the CORS filter where a user agent
+        includes an origin header for a non-CORS request. (markt)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Coyote">
