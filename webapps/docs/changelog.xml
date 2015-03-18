@@ -185,6 +185,10 @@
         still being references or not. making re-use a risky proposition.
         (markt)
       </fix>
+      <scode>
+        Refactor Connector authentication (only used by AJP) into a separate
+        method. (markt) 
+      </scode>
     </changelog>
   </subsection>
   <subsection name="Jasper">
