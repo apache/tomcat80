@@ -187,7 +187,7 @@
       </fix>
       <scode>
         Refactor Connector authentication (only used by AJP) into a separate
-        method. (markt) 
+        method. (markt)
       </scode>
       <add>
         <bug>57708</bug>: Implement a new feature for AJP connectors - Tomcat
@@ -280,7 +280,7 @@
       <fix>
         Make it clear that when using digested passwords with DIGEST
         authentication that no slat and only a single iteration must be used
-        when generating the digest. (markt) 
+        when generating the digest. (markt)
       </fix>
     </changelog>
   </subsection>
