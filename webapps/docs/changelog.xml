@@ -292,6 +292,9 @@
         authentication that no salt and only a single iteration must be used
         when generating the digest. (markt)
       </fix>
+      <update>
+        Update examples to use Apache Standard Taglib 1.2.5. (jboynes)
+      </update>
     </changelog>
   </subsection>
   <subsection name="Extras">
