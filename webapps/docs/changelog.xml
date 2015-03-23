@@ -117,9 +117,9 @@
       <add>
         Enable Tomcat to detect when a WAR file has been changed while Tomcat is
         not running. Tomcat does this by adding a META-INF/war-tracking file to
-        the expanded directory and settng the last modified time of this file to
+        the expanded directory and setting the last modified time of this file to
         the last modified time of the WAR. If Tomcat detects a modified WAR via
-        this mechanism the web application will be reployed (i.e. the expanded
+        this mechanism the web application will be redeployed (i.e. the expanded
         directory will be removed and the modified WAR expanded in its place).
         (markt)
       </add>
@@ -169,7 +169,7 @@
       <fix>
         Fix a cipher ordering issue when using the OpenSSL syntax for JSSE
         cipher configuration to ensure that ephemeral ECDH with AES is preferred
-        to ephemeral ECDH with anthing else. (markt)
+        to ephemeral ECDH with anything else. (markt)
       </fix>
       <fix>
         <bug>57570</bug>: Make the processing of trailer headers with chunked
@@ -411,7 +411,7 @@
       <fix>
         Fix several bugs that could cause multiple registrations for write
         events for a single socket when using Servlet 3.0 async. Typically, the
-        side effects of these mutltiple registrations would be exceptions
+        side effects of these multiple registrations would be exceptions
         appearing in the logs. (markt)
       </fix>
       <fix>
@@ -435,7 +435,7 @@
       <fix>
         When applying the <code>maxSwallowSize</code> limit to a connection read
         that many bytes first before closing the connection to give the client a
-        chance to read the reponse. (markt)
+        chance to read the response. (markt)
       </fix>
       <fix>
         Prevent an async timeout being processed multiple times for the same
@@ -446,7 +446,7 @@
         object to be long to allow values above 2Gb. (kkolinko)
       </fix>
       <update>
-        Use the data that supports cipher defintion using OpenSSL syntax to
+        Use the data that supports cipher definition using OpenSSL syntax to
         improve the quality of values provided for the
         <code>javax.servlet.request.key_size</code> request attribute. (markt)
       </update>
@@ -913,7 +913,7 @@
       <fix>
         <bug>57338</bug>: Improve the ability of the
         <code>ClusterSingleSignOn</code> valve to handle nodes being added and
-        removed from the Cluser at run time. (markt)
+        removed from the Cluster at run time. (markt)
       </fix>
     </changelog>
   </subsection>
@@ -1093,7 +1093,7 @@
         remove sessions from the store when persisting them. (markt)
       </fix>
       <add>
-        Deprecate the use of system proprties to control cookie parsing and
+        Deprecate the use of system properties to control cookie parsing and
         replace them with attributes on the new <code>CookieProcessor</code>
         that may be configured on a per context basis. (markt)
       </add>
@@ -1278,7 +1278,7 @@
       </fix>
       <fix>
         <bug>57153</bug>: Correctly scan for TLDs located in directories that
-        represent exanded JARs files that have been added to the web application
+        represent expanded JARs files that have been added to the web application
         class loader&apos;s class path. (markt)
       </fix>
       <fix>
@@ -1571,7 +1571,7 @@
         Schumacher. (violetagg)
       </fix>
       <fix>
-        Fix a potential resource leak in JDTCompiler when checking wether
+        Fix a potential resource leak in JDTCompiler when checking whether
         a resource is a package. Reported by Coverity Scan. (fschumacher)
       </fix>
       <fix>
@@ -1661,7 +1661,7 @@
   <subsection name="Coyote">
     <changelog>
       <fix>
-        When building a list of JSSE ciphers from an OpenSSL cipher defintiion,
+        When building a list of JSSE ciphers from an OpenSSL cipher definition,
         ignore unknown criteria rather than throwing a
         <code>NullPointerException</code>. (markt)
       </fix>
@@ -2110,7 +2110,7 @@
       </update>
       <fix>
         <bug>56685</bug>: Add quotes necessary for <code>daemon.sh</code> to
-        work correctly on Solaris. Based on a suggesiton by lfuka. (markt)
+        work correctly on Solaris. Based on a suggestion by lfuka. (markt)
       </fix>
       <update>
         Update package renamed Apache Commons Pool2 to r1609323 to pick various
@@ -3579,7 +3579,7 @@
       </add>
       <fix>
         <bug>55166</bug>: Move the JSP descriptor and tag library descriptor
-        schema defintion files from jsp-api.jar to servlet-api.jar so relative
+        schema definition files from jsp-api.jar to servlet-api.jar so relative
         includes between the J2EE, Servlet and JSP schemas are correctly
         resolved. (markt)
       </fix>
