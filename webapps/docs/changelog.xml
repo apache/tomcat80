@@ -145,6 +145,13 @@
         <bug>57724</bug>: Handle the case in the CORS filter where a user agent
         includes an origin header for a non-CORS request. (markt)
       </fix>
+      <fix>
+        When searching for SCIs
+        <code>o.a.catalina.Context.getParentClassLoader</code> will be used
+        instead of <code>java.lang.ClassLoader.getParent</code>. Thus one can
+        provide the correct parent class loader when running embedded Tomcat in
+        other environments such as OSGi. (violetagg)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Coyote">
