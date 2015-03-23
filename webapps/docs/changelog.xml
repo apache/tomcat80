@@ -152,6 +152,11 @@
         provide the correct parent class loader when running embedded Tomcat in
         other environments such as OSGi. (violetagg)
       </fix>
+      <fix>
+        <bug>57743</bug>: Fix a locked file / resource leak issue when a JAR is
+        accessed just before or during web application undeploy. Patch provided
+        by  Pavel Avgustinov. (markt)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Coyote">
