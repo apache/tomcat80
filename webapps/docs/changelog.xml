@@ -68,12 +68,12 @@
       <fix>
         <bug>56608</bug>: When deploying an external WAR, add watched resources
         in the expanded directory based on whether the expanded directory is
-        expected to exist rather than if it does exist.
+        expected to exist rather than if it does exist. (markt)
       </fix>
       <fix>
          When triggering a reload due to a modified watched resource, ensure
          that multiple changed watched resources only trigger one reload rather
-         than a series of reloads.
+         than a series of reloads. (markt)
       </fix>
       <fix>
         Correct a regression in the fix for <bug>57190</bug> that incorrectly
@@ -114,6 +114,15 @@
         <bug>57675</bug>: Correctly quote strings when using the extended
         access log. (markt)
       </fix>
+      <add>
+        Enable Tomcat to detect when a WAR file has been changed while Tomcat is
+        not running. Tomcat does this by adding a META-INF/war-tracking file to
+        the expanded directory and settng the last modified time of this file to
+        the last modified time of the WAR. If Tomcat detects a modified WAR via
+        this mechanism the web application will be reployed (i.e. the expanded
+        directory will be removed and the modified WAR expanded in its place).
+        (markt)
+      </add>
       <fix>
         <bug>57704</bug>: Fix potential NPEs during web application start/stop
         when <code>org.apache.tomcat.InstanceManager</code> is not initialized.
