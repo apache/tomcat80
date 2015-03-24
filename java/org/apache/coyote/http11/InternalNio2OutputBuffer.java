@@ -32,6 +32,8 @@ import javax.servlet.RequestDispatcher;
 
 import org.apache.coyote.OutputBuffer;
 import org.apache.coyote.Response;
+import org.apache.juli.logging.Log;
+import org.apache.juli.logging.LogFactory;
 import org.apache.tomcat.util.buf.ByteChunk;
 import org.apache.tomcat.util.net.AbstractEndpoint;
 import org.apache.tomcat.util.net.Nio2Channel;
@@ -43,6 +45,8 @@ import org.apache.tomcat.util.net.SocketWrapper;
  * Output buffer implementation for NIO2.
  */
 public class InternalNio2OutputBuffer extends AbstractOutputBuffer<Nio2Channel> {
+
+    private static final Log log = LogFactory.getLog(InternalNio2OutputBuffer.class);
 
     // ----------------------------------------------------------- Constructors
 
@@ -151,6 +155,11 @@ public class InternalNio2OutputBuffer extends AbstractOutputBuffer<Nio2Channel> 
 
             @Override
             public void failed(Throwable exc, ByteBuffer attachment) {
+                if (socket == null) {
+                    log.warn(sm.getString("iob.nio2.nullSocket"), exc);
+                    // Can't do anything else with a null socket
+                    return;
+                }
                 socket.setError(true);
                 if (exc instanceof IOException) {
                     e = (IOException) exc;
@@ -202,6 +211,11 @@ public class InternalNio2OutputBuffer extends AbstractOutputBuffer<Nio2Channel> 
 
             @Override
             public void failed(Throwable exc, ByteBuffer[] attachment) {
+                if (socket == null) {
+                    log.warn(sm.getString("iob.nio2.nullSocket"), exc);
+                    // Can't do anything else with a null socket
+                    return;
+                }
                 socket.setError(true);
                 if (exc instanceof IOException) {
                     e = (IOException) exc;
