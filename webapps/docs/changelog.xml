@@ -45,6 +45,18 @@
   issues do not "pop up" wrt. others).
 -->
 <section name="Tomcat 8.0.22 (markt)" rtext="in development">
+  <subsection name="Catalina">
+    <changelog>
+      <fix>
+        <bug>57736</bug>: Change the format of the Tomcat specific URLs for
+        resources inside JARs that are in turn packed in a WAR. The
+        <code>^/</code> sequence has been replaced by <code>*/</code> so that
+        the resulting URLs are compliant with RFC 2396 and do not trigger
+        exceptions when converted to URIs. The old format will continue to be
+        accepted. (markt)
+      </fix>
+    </changelog>
+  </subsection>
 </section>
 <section name="Tomcat 8.0.21 (markt)" rtext="voting in progress">
   <subsection name="Catalina">
