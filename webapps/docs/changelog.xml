@@ -57,6 +57,14 @@
       </fix>
     </changelog>
   </subsection>
+  <subsection name="WebSocket">
+    <changelog>
+      <fix>
+        <bug>57761</bug>: Ensure that the opening HTTP request is correctly
+        formatted when the WebSocket client connects to a server root. (remm)
+      </fix>
+    </changelog>
+  </subsection>
 </section>
 <section name="Tomcat 8.0.21 (markt)" rtext="voting in progress">
   <subsection name="Catalina">
