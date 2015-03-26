@@ -55,6 +55,10 @@
         exceptions when converted to URIs. The old format will continue to be
         accepted. (markt)
       </fix>
+      <fix>
+        <bug>57752</bug>: Exclude non-cached resources from the Cache statistics
+        for resource lookups. Patch provided by Adam Mlodzinski. (markt)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="WebSocket">
