@@ -67,6 +67,10 @@
         <bug>57761</bug>: Ensure that the opening HTTP request is correctly
         formatted when the WebSocket client connects to a server root. (remm)
       </fix>
+      <fix>
+        <bug>57762</bug>: Ensure that the WebSocket client correctly detects
+        when the connection to the server is dropped. (markt)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Web applications">
