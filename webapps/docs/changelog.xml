@@ -69,6 +69,15 @@
       </fix>
     </changelog>
   </subsection>
+  <subsection name="Web applications">
+    <changelog>
+      <add>
+        <bug>57759</bug>: Add information to the keyAlias documentation to make
+        it clear that the order keys are read from the keystore is
+        implementation dependent. (markt)
+      </add>
+    </changelog>
+  </subsection>
 </section>
 <section name="Tomcat 8.0.21 (markt)" rtext="2015-03-26">
   <subsection name="Catalina">
