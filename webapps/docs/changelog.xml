@@ -59,6 +59,10 @@
         <bug>57752</bug>: Exclude non-cached resources from the Cache statistics
         for resource lookups. Patch provided by Adam Mlodzinski. (markt)
       </fix>
+      <add>
+        Allow logging of the remote port in the access log using the format
+        pattern <code>%{remote}p</code>. (rjung)
+      </add>
     </changelog>
   </subsection>
   <subsection name="WebSocket">
