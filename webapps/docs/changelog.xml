@@ -78,6 +78,11 @@
         rather than an increase in modification time is used to determine if the
         resource has changed. (markt)
       </fix>
+      <fix>
+        Cleanup <code>o.a.tomcat.util.digester.Digester</code> from debug
+        messages that do not give any valuable information. Patch provided
+        by Polina Genova. (violetagg)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="WebSocket">
