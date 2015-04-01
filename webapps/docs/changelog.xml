@@ -125,6 +125,13 @@
       </add>
     </changelog>
   </subsection>
+  <subsection name="Other">
+    <changelog>
+      <fix>
+        Add missing pom for tomcat-storeconfig. (remm)
+      </fix>
+    </changelog>
+  </subsection>
 </section>
 <section name="Tomcat 8.0.21 (markt)" rtext="2015-03-26">
   <subsection name="Catalina">
