@@ -140,6 +140,9 @@
       <fix>
         Add missing pom for tomcat-storeconfig. (remm)
       </fix>
+      <update>
+        Update optional Checkstyle library to 6.5. (kkolinko)
+      </update>
     </changelog>
   </subsection>
 </section>
