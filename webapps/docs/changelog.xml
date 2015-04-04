@@ -409,6 +409,10 @@
         documentation web application that stated WAR files located outside the
         appBase were never unpacked. (markt)
       </fix>
+      <update>
+        <bug>57644</bug>: Update examples to use Apache Standard Taglib 1.2.5.
+        (jboynes)
+      </update>
       <fix>
         <bug>57683</bug>: Ensure that if a client aborts their connection to the
         stock ticker example (the only way a client can disconnect), the example
@@ -419,9 +423,6 @@
         authentication that no salt and only a single iteration must be used
         when generating the digest. (markt)
       </fix>
-      <update>
-        Update examples to use Apache Standard Taglib 1.2.5. (jboynes)
-      </update>
     </changelog>
   </subsection>
   <subsection name="Extras">
