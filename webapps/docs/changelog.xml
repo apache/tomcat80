@@ -105,10 +105,11 @@
   <subsection name="Cluster">
     <changelog>
       <fix>
-        Avoid unnecessary call of <code>DeltaRequest#addSessionListener</code>
+        Avoid unnecessary call of <code>DeltaRequest.addSessionListener()</code>
         in non-primary nodes. (kfujino)
       </fix>
     </changelog>
+  </subsection>
   <subsection name="WebSocket">
     <changelog>
       <fix>
