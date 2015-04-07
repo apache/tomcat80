@@ -89,6 +89,10 @@
         after the web application has been stopped rather than before to avoid
         potential ClassNotFoundExceptions. (markt)
       </fix>
+      <fix>
+        Fix wrong logger name of
+        <code>org.apache.catalina.webresources.StandardRoot</code>. (kfujino)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Coyote">
