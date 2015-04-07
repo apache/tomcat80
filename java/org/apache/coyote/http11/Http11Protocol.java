@@ -30,7 +30,6 @@ import org.apache.tomcat.util.net.AbstractEndpoint;
 import org.apache.tomcat.util.net.JIoEndpoint;
 import org.apache.tomcat.util.net.JIoEndpoint.Handler;
 import org.apache.tomcat.util.net.SSLImplementation;
-import org.apache.tomcat.util.net.SocketStatus;
 import org.apache.tomcat.util.net.SocketWrapper;
 
 
@@ -93,13 +92,6 @@ public class Http11Protocol extends AbstractHttp11JsseProtocol<Socket> {
         }
     }
 
-    @Override
-    public void start() throws Exception {
-        super.start();
-        if (npnHandler != null) {
-            npnHandler.init(endpoint, 0, getAdapter());
-        }
-    }
 
     // ----------------------------------------------------- JMX related methods
 
@@ -133,18 +125,6 @@ public class Http11Protocol extends AbstractHttp11JsseProtocol<Socket> {
         @Override
         public SSLImplementation getSslImplementation() {
             return proto.sslImplementation;
-        }
-
-        @Override
-        public SocketState process(SocketWrapper<Socket> socket,
-                SocketStatus status) {
-            if (proto.npnHandler != null) {
-                SocketState ss = proto.npnHandler.process(socket, status);
-                if (ss != SocketState.OPEN) {
-                    return ss;
-                }
-            }
-            return super.process(socket, status);
         }
 
         /**

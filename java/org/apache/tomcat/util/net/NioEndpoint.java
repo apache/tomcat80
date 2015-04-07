@@ -580,7 +580,6 @@ public class NioEndpoint extends AbstractEndpoint<NioChannel> {
         engine.setEnabledProtocols(enabledProtocols);
 
         configureUseServerCipherSuitesOrder(engine);
-        handler.onCreateSSLEngine(engine);
 
         return engine;
     }
@@ -1433,7 +1432,6 @@ public class NioEndpoint extends AbstractEndpoint<NioChannel> {
         public void release(SocketWrapper<NioChannel> socket);
         public void release(SocketChannel socket);
         public SSLImplementation getSslImplementation();
-        public void onCreateSSLEngine(SSLEngine engine);
     }
 
 

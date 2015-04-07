@@ -21,7 +21,6 @@ import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 import java.util.Iterator;
 
-import javax.net.ssl.SSLEngine;
 import javax.servlet.http.HttpUpgradeHandler;
 
 import org.apache.coyote.AbstractProtocol;
@@ -35,7 +34,6 @@ import org.apache.tomcat.util.net.NioEndpoint;
 import org.apache.tomcat.util.net.NioEndpoint.Handler;
 import org.apache.tomcat.util.net.SSLImplementation;
 import org.apache.tomcat.util.net.SecureNioChannel;
-import org.apache.tomcat.util.net.SocketStatus;
 import org.apache.tomcat.util.net.SocketWrapper;
 
 
@@ -76,13 +74,6 @@ public class Http11NioProtocol extends AbstractHttp11JsseProtocol<NioChannel> {
         return ((NioEndpoint)endpoint);
     }
 
-    @Override
-    public void start() throws Exception {
-        super.start();
-        if (npnHandler != null) {
-            npnHandler.init(getEndpoint(), 0, getAdapter());
-        }
-    }
 
     // -------------------- Properties--------------------
 
@@ -211,18 +202,6 @@ public class Http11NioProtocol extends AbstractHttp11JsseProtocol<NioChannel> {
             }
         }
 
-        @Override
-        public SocketState process(SocketWrapper<NioChannel> socket,
-                SocketStatus status) {
-            if (proto.npnHandler != null) {
-                SocketState ss = proto.npnHandler.process(socket, status);
-                if (ss != SocketState.OPEN) {
-                    return ss;
-                }
-            }
-            return super.process(socket, status);
-        }
-
 
         /**
          * Expected to be used by the handler once the processor is no longer
@@ -296,13 +275,6 @@ public class Http11NioProtocol extends AbstractHttp11JsseProtocol<NioChannel> {
             return new NioProcessor(socket, leftoverInput, httpUpgradeProcessor,
                     proto.getEndpoint().getSelectorPool(),
                     proto.getUpgradeAsyncWriteBufferSize());
-        }
-
-        @Override
-        public void onCreateSSLEngine(SSLEngine engine) {
-            if (proto.npnHandler != null) {
-                proto.npnHandler.onCreateEngine(engine);
-            }
         }
     }
 }

@@ -211,15 +211,6 @@ public class Http11AprProtocol extends AbstractHttp11Protocol<Long> {
     }
 
 
-    @Override
-    public void start() throws Exception {
-        super.start();
-        if (npnHandler != null) {
-            long sslCtx = ((AprEndpoint) endpoint).getJniSslContext();
-            npnHandler.init(endpoint, sslCtx, getAdapter());
-        }
-    }
-
     // --------------------  Connection handler --------------------
 
     protected static class Http11ConnectionHandler
@@ -259,28 +250,6 @@ public class Http11AprProtocol extends AbstractHttp11Protocol<Long> {
             if (addToPoller && proto.endpoint.isRunning()) {
                 socket.registerforEvent(proto.endpoint.getKeepAliveTimeout(), true, false);
             }
-        }
-
-        @Override
-        public SocketState process(SocketWrapper<Long> socket,
-                SocketStatus status) {
-            if (proto.npnHandler != null) {
-                Processor<Long> processor = null;
-                if (status == SocketStatus.OPEN_READ) {
-                    processor = connections.get(socket.getSocket());
-
-                }
-                if (processor == null) {
-                    // if not null - this is a former comet request, handled by http11
-                    SocketState socketState = proto.npnHandler.process(socket, status);
-                    // handled by npn protocol.
-                    if (socketState == SocketState.CLOSED ||
-                            socketState == SocketState.LONG) {
-                        return socketState;
-                    }
-                }
-            }
-            return super.process(socket, status);
         }
 
         @Override

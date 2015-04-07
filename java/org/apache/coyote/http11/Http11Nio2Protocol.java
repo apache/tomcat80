@@ -20,7 +20,6 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.ReadPendingException;
 
-import javax.net.ssl.SSLEngine;
 import javax.servlet.http.HttpUpgradeHandler;
 
 import org.apache.coyote.AbstractProtocol;
@@ -71,13 +70,6 @@ public class Http11Nio2Protocol extends AbstractHttp11JsseProtocol<Nio2Channel> 
         return ((Nio2Endpoint)endpoint);
     }
 
-    @Override
-    public void start() throws Exception {
-        super.start();
-        if (npnHandler != null) {
-            npnHandler.init(getEndpoint(), 0, getAdapter());
-        }
-    }
 
     // -------------------- Properties--------------------
 
@@ -163,18 +155,6 @@ public class Http11Nio2Protocol extends AbstractHttp11JsseProtocol<Nio2Channel> 
                 processor.recycle(true);
                 recycledProcessors.push(processor);
             }
-        }
-
-        @Override
-        public SocketState process(SocketWrapper<Nio2Channel> socket,
-                SocketStatus status) {
-            if (proto.npnHandler != null) {
-                SocketState ss = proto.npnHandler.process(socket, status);
-                if (ss != SocketState.OPEN) {
-                    return ss;
-                }
-            }
-            return super.process(socket, status);
         }
 
 
@@ -263,13 +243,6 @@ public class Http11Nio2Protocol extends AbstractHttp11JsseProtocol<Nio2Channel> 
                 throws IOException {
             return new Nio2Processor(proto.endpoint, socket, leftoverInput,
                     httpUpgradeProcessor, proto.getUpgradeAsyncWriteBufferSize());
-        }
-
-        @Override
-        public void onCreateSSLEngine(SSLEngine engine) {
-            if (proto.npnHandler != null) {
-                proto.npnHandler.onCreateEngine(engine);
-            }
         }
 
         @Override
