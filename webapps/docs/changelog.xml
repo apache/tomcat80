@@ -104,6 +104,12 @@
         application is performing I/O on a non-container thread without using
         the Servlet 3+ asynchronous API. (markt)
       </fix>
+      <scode>
+        Remove the experimental support for SPDY. No current user agent supports
+        the version of SPDY that the experiment targetted. Note: HTTP/2 support
+        is under development for Tomcat 9 and may be back-ported to Tomcat 8
+        once complete. (markt) 
+      </scode>
     </changelog>
   </subsection>
   <subsection name="Cluster">
