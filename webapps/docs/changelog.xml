@@ -93,6 +93,10 @@
         Fix wrong logger name of
         <code>org.apache.catalina.webresources.StandardRoot</code>. (kfujino)
       </fix>
+      <fix>
+        <bug>57801</bug>: Improve the error message in the start script in case
+        the PID read from the PID file is already owned by a process. (rjung)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Coyote">
