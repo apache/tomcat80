@@ -114,6 +114,18 @@
         is under development for Tomcat 9 and may be back-ported to Tomcat 8
         once complete. (markt)
       </scode>
+      <fix>
+        Possible incomplete writes with SSL NIO2. (remm)
+      </fix>
+      <fix>
+        Incorrect reads with SSL NIO2 caused by a bad strategy for handling IO
+        differences between NIO and NIO2 that don't seem to be justified.
+        (remm)
+      </fix>
+      <fix>
+        After some errors, the pending flags could remain set when using SSL
+        NIO2. (remm)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Cluster">
