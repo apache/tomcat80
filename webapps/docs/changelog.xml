@@ -134,6 +134,10 @@
         Avoid unnecessary call of <code>DeltaRequest.addSessionListener()</code>
         in non-primary nodes. (kfujino)
       </fix>
+      <add>
+        Add new attribute that send all actions for session across Tomcat
+        cluster nodes. (kfujino)
+      </add>
     </changelog>
   </subsection>
   <subsection name="WebSocket">
