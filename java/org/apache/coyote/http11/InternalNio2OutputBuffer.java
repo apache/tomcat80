@@ -212,7 +212,7 @@ public class InternalNio2OutputBuffer extends AbstractOutputBuffer<Nio2Channel> 
             @Override
             public void failed(Throwable exc, ByteBuffer[] attachment) {
                 if (socket == null) {
-                    log.warn(sm.getString("iob.nio2.nullSocket"), exc);
+                    log.debug(sm.getString("iob.nio2.nullSocket"), exc);
                     // Can't do anything else with a null socket
                     return;
                 }
