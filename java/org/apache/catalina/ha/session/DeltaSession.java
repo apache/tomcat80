@@ -134,7 +134,7 @@ public class DeltaSession extends StandardSession implements Externalizable,Clus
         lock();
         try {
             return getDeltaRequest().serialize();
-        } finally{
+        } finally {
             unlock();
         }
     }
