@@ -126,6 +126,12 @@
         After some errors, the pending flags could remain set when using SSL
         NIO2. (remm)
       </fix>
+      <fix>
+        <bug>57833</bug>: When using JKS based keystores for NIO or NIO2, ensure
+        that the key alias is always converted to lower caes since that is what
+        JKS key stores expect. Based on a patch by  Santosh Giri Govind M.
+        (markt)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Cluster">

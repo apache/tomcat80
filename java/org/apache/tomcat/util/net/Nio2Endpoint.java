@@ -30,6 +30,7 @@ import java.nio.channels.ClosedChannelException;
 import java.nio.channels.CompletionHandler;
 import java.nio.channels.FileChannel;
 import java.nio.file.StandardOpenOption;
+import java.util.Locale;
 import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.RejectedExecutionException;
@@ -319,7 +320,12 @@ public class Nio2Endpoint extends AbstractEndpoint<Nio2Channel> {
         KeyManager[] result = new KeyManager[managers.length];
         for (int i=0; i<result.length; i++) {
             if (managers[i] instanceof X509KeyManager && getKeyAlias()!=null) {
-                result[i] = new NioX509KeyManager((X509KeyManager)managers[i],getKeyAlias());
+                String keyAlias = getKeyAlias();
+                // JKS keystores always convert the alias name to lower case
+                if ("jks".equalsIgnoreCase(getKeystoreType())) {
+                    keyAlias = keyAlias.toLowerCase(Locale.ENGLISH);
+                }
+                result[i] = new NioX509KeyManager((X509KeyManager) managers[i], keyAlias);
             } else {
                 result[i] = managers[i];
             }
