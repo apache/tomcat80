@@ -59,7 +59,7 @@ import org.apache.tomcat.util.res.StringManager;
  */
 public class SingleSignOn extends ValveBase {
 
-    private static final StringManager sm = StringManager.getManager(SingleSignOn.class.getName());
+    private static final StringManager sm = StringManager.getManager(Constants.Package);
 
     /* The engine at the top of the container hierarchy in which this SSO Valve
      * has been placed. It is used to get back to a session object from a
