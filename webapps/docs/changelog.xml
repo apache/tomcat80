@@ -97,6 +97,10 @@
         <bug>57801</bug>: Improve the error message in the start script in case
         the PID read from the PID file is already owned by a process. (rjung)
       </fix>
+      <fix>
+        <bug>57841</bug>: Improve error logging during web application start.
+        (markt)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Coyote">
