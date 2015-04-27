@@ -321,7 +321,7 @@ public class Response
                 // Ignore - the client has probably closed the connection
             }
         }
-        return coyoteResponse.getBytesWritten(flush);
+        return getCoyoteResponse().getBytesWritten(flush);
     }
 
     /**
@@ -458,7 +458,7 @@ public class Response
      * Return the content length that was set or calculated for this Response.
      */
     public int getContentLength() {
-        return coyoteResponse.getContentLength();
+        return getCoyoteResponse().getContentLength();
     }
 
 
@@ -468,7 +468,7 @@ public class Response
      */
     @Override
     public String getContentType() {
-        return coyoteResponse.getContentType();
+        return getCoyoteResponse().getContentType();
     }
 
 
@@ -525,7 +525,7 @@ public class Response
      */
     @Override
     public String getCharacterEncoding() {
-        return (coyoteResponse.getCharacterEncoding());
+        return (getCoyoteResponse().getCharacterEncoding());
     }
 
 
@@ -559,7 +559,7 @@ public class Response
      */
     @Override
     public Locale getLocale() {
-        return (coyoteResponse.getLocale());
+        return (getCoyoteResponse().getLocale());
     }
 
 
@@ -609,7 +609,7 @@ public class Response
      */
     @Override
     public boolean isCommitted() {
-        return coyoteResponse.isCommitted();
+        return getCoyoteResponse().isCommitted();
     }
 
 
@@ -626,7 +626,7 @@ public class Response
             return;
         }
 
-        coyoteResponse.reset();
+        getCoyoteResponse().reset();
         outputBuffer.reset();
         usingOutputStream = false;
         usingWriter = false;
@@ -723,7 +723,7 @@ public class Response
             return;
         }
 
-        coyoteResponse.setContentLength(length);
+        getCoyoteResponse().setContentLength(length);
 
     }
 
@@ -746,7 +746,7 @@ public class Response
         }
 
         if (type == null) {
-            coyoteResponse.setContentType(null);
+            getCoyoteResponse().setContentType(null);
             return;
         }
 
@@ -754,16 +754,16 @@ public class Response
         if (m == null) {
             // Invalid - Assume no charset and just pass through whatever
             // the user provided.
-            coyoteResponse.setContentTypeNoCharset(type);
+            getCoyoteResponse().setContentTypeNoCharset(type);
             return;
         }
 
-        coyoteResponse.setContentTypeNoCharset(m[0]);
+        getCoyoteResponse().setContentTypeNoCharset(m[0]);
 
         if (m[1] != null) {
             // Ignore charset if getWriter() has already been called
             if (!usingWriter) {
-                coyoteResponse.setCharacterEncoding(m[1]);
+                getCoyoteResponse().setCharacterEncoding(m[1]);
                 isCharacterEncodingSet = true;
             }
         }
@@ -795,7 +795,7 @@ public class Response
             return;
         }
 
-        coyoteResponse.setCharacterEncoding(charset);
+        getCoyoteResponse().setCharacterEncoding(charset);
         isCharacterEncodingSet = true;
     }
 
@@ -818,7 +818,7 @@ public class Response
             return;
         }
 
-        coyoteResponse.setLocale(locale);
+        getCoyoteResponse().setLocale(locale);
 
         // Ignore any call made after the getWriter has been invoked.
         // The default should be used
@@ -832,7 +832,7 @@ public class Response
 
         String charset = getContext().getCharset(locale);
         if (charset != null) {
-            coyoteResponse.setCharacterEncoding(charset);
+            getCoyoteResponse().setCharacterEncoding(charset);
         }
     }
 
@@ -842,14 +842,14 @@ public class Response
 
     @Override
     public String getHeader(String name) {
-        return coyoteResponse.getMimeHeaders().getHeader(name);
+        return getCoyoteResponse().getMimeHeaders().getHeader(name);
     }
 
 
     @Override
     public Collection<String> getHeaderNames() {
 
-        MimeHeaders headers = coyoteResponse.getMimeHeaders();
+        MimeHeaders headers = getCoyoteResponse().getMimeHeaders();
         int n = headers.size();
         List<String> result = new ArrayList<>(n);
         for (int i = 0; i < n; i++) {
@@ -864,7 +864,7 @@ public class Response
     public Collection<String> getHeaders(String name) {
 
         Enumeration<String> enumeration =
-            coyoteResponse.getMimeHeaders().values(name);
+                getCoyoteResponse().getMimeHeaders().values(name);
         Vector<String> result = new Vector<>();
         while (enumeration.hasMoreElements()) {
             result.addElement(enumeration.nextElement());
@@ -878,13 +878,13 @@ public class Response
      * for this Response.
      */
     public String getMessage() {
-        return coyoteResponse.getMessage();
+        return getCoyoteResponse().getMessage();
     }
 
 
     @Override
     public int getStatus() {
-        return coyoteResponse.getStatus();
+        return getCoyoteResponse().getStatus();
     }
 
 
@@ -928,7 +928,7 @@ public class Response
         final String startsWith = name + "=";
         String header = generateCookieString(cookie);
         boolean set = false;
-        MimeHeaders headers = coyoteResponse.getMimeHeaders();
+        MimeHeaders headers = getCoyoteResponse().getMimeHeaders();
         int n = headers.size();
         for (int i = 0; i < n; i++) {
             if (headers.getName(i).toString().equals(headername)) {
@@ -1027,7 +1027,7 @@ public class Response
             return;
         }
 
-        coyoteResponse.addHeader(name, value, charset);
+        getCoyoteResponse().addHeader(name, value, charset);
     }
 
 
@@ -1089,15 +1089,15 @@ public class Response
         if(cc=='C' || cc=='c') {
             if(name.equalsIgnoreCase("Content-Type")) {
                 // Will return null if this has not been set
-                return (coyoteResponse.getContentType() != null);
+                return (getCoyoteResponse().getContentType() != null);
             }
             if(name.equalsIgnoreCase("Content-Length")) {
                 // -1 means not known and is not sent to client
-                return (coyoteResponse.getContentLengthLong() != -1);
+                return (getCoyoteResponse().getContentLengthLong() != -1);
             }
         }
 
-        return coyoteResponse.containsHeader(name);
+        return getCoyoteResponse().containsHeader(name);
     }
 
 
@@ -1200,7 +1200,7 @@ public class Response
             return;
         }
 
-        coyoteResponse.action(ActionCode.ACK, null);
+        getCoyoteResponse().action(ActionCode.ACK, null);
     }
 
 
@@ -1245,8 +1245,8 @@ public class Response
 
         setError();
 
-        coyoteResponse.setStatus(status);
-        coyoteResponse.setMessage(message);
+        getCoyoteResponse().setStatus(status);
+        getCoyoteResponse().setMessage(message);
 
         // Clear any data content that has been buffered
         resetBuffer();
@@ -1369,7 +1369,7 @@ public class Response
             return;
         }
 
-        coyoteResponse.setHeader(name, value);
+        getCoyoteResponse().setHeader(name, value);
     }
 
 
@@ -1434,8 +1434,8 @@ public class Response
             return;
         }
 
-        coyoteResponse.setStatus(status);
-        coyoteResponse.setMessage(message);
+        getCoyoteResponse().setStatus(status);
+        getCoyoteResponse().setMessage(message);
 
     }
 
