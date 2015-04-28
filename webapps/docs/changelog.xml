@@ -237,6 +237,10 @@
       <update>
         Update optional Checkstyle library to 6.5. (kkolinko)
       </update>
+      <fix>
+        <bug>57707</bug>: Improve error message when trying to run a release
+        build on a non-Windows platform and Wine is not available. (markt)
+      </fix>
     </changelog>
   </subsection>
 </section>
