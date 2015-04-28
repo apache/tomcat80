@@ -64,6 +64,11 @@
         pattern <code>%{remote}p</code>. (rjung)
       </add>
       <fix>
+        <bug>57556</bug>: Refine the previous fix fo rthis issue so that the
+        real path returned only has a trialing separator if the requested path
+        ended with <code>/</code>. (markt)
+      </fix>
+      <fix>
         <bug>57765</bug>: When checking last modified times as part of the
         automatic deployment process, account for the fact that
         <code>File.lastModified()</code> has a resolution of one second to
