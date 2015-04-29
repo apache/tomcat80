@@ -153,7 +153,7 @@
       </fix>
       <fix>
         <bug>57837</bug>: Add <code>text/css</code> to the default list of
-        compressable MIME types. (markt) 
+        compressable MIME types. (markt)
       </fix>
     </changelog>
   </subsection>
