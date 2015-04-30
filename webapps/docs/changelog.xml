@@ -51,6 +51,11 @@
         <bug>57875</bug>: Add <code>javax.websocket.*</code> to the classes for
         which the web application class loader always delegates first. (markt)
       </fix>
+      <fix>
+        <bug>57871</bug>: Ensure that setting the the allowHttpSepsInV0 property
+        of a LegacyCookieProcessor to false only prevents HTTP separators from
+        being used without quotes. (markt)
+      </fix>
     </changelog>
   </subsection>
   <subsection>
