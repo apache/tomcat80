@@ -58,13 +58,20 @@
       </fix>
     </changelog>
   </subsection>
-  <subsection>
+  <subsection name="Web applications">
     <changelog>
       <fix>
         <bug>57875</bug>: Update the web application class loader documentation
         to reflect the more relaxed approach to SRV.10.7.2 in Tomcat 8 onwards.
         (markt)
       </fix>
+    </changelog>
+  </subsection>
+  <subsection name="Other">
+    <changelog>
+      <update>
+        Update optional Checkstyle library to 6.6. (kkolinko)
+      </update>
     </changelog>
   </subsection>
 </section>
