@@ -58,6 +58,15 @@
       </fix>
     </changelog>
   </subsection>
+  <subsection name="Coyote">
+    <changelog>
+      <fix>
+        Follow up to previous fix that removed the behavior difference between
+        NIO and NIO2 for SSL, which caused corruption with NIO2.
+        (remm)
+      </fix>
+    </changelog>
+  </subsection>
   <subsection name="Web applications">
     <changelog>
       <fix>

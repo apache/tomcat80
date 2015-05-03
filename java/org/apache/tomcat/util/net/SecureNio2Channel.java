@@ -481,25 +481,29 @@ public class SecureNio2Channel extends Nio2Channel  {
         private final Future<Integer> integer;
         public FutureRead(ByteBuffer dst) {
             this.dst = dst;
-            this.integer = sc.read(netInBuffer);
+            if (netInBuffer.position() > 0) {
+                this.integer = null;
+            } else {
+                this.integer = sc.read(netInBuffer);
+            }
         }
         @Override
         public boolean cancel(boolean mayInterruptIfRunning) {
             readPending = false;
-            return integer.cancel(mayInterruptIfRunning);
+            return (integer == null) ? false : integer.cancel(mayInterruptIfRunning);
         }
         @Override
         public boolean isCancelled() {
-            return integer.isCancelled();
+            return (integer == null) ? false : integer.isCancelled();
         }
         @Override
         public boolean isDone() {
-            return integer.isDone();
+            return (integer == null) ? true : integer.isDone();
         }
         @Override
         public Integer get() throws InterruptedException, ExecutionException {
             try {
-                return unwrap(integer.get().intValue());
+                return (integer == null) ? unwrap(netInBuffer.position(), -1, TimeUnit.MILLISECONDS) : unwrap(integer.get().intValue(), -1, TimeUnit.MILLISECONDS);
             } finally {
                 readPending = false;
             }
@@ -509,12 +513,12 @@ public class SecureNio2Channel extends Nio2Channel  {
                 throws InterruptedException, ExecutionException,
                 TimeoutException {
             try {
-                return unwrap(integer.get(timeout, unit).intValue());
+                return (integer == null) ? unwrap(netInBuffer.position(), timeout, unit) : unwrap(integer.get(timeout, unit).intValue(), timeout, unit);
             } finally {
                 readPending = false;
             }
         }
-        private Integer unwrap(int nRead) throws ExecutionException {
+        private Integer unwrap(int nRead, long timeout, TimeUnit unit) throws ExecutionException {
             //are we in the middle of closing or closed?
             if (closing || closed)
                 return Integer.valueOf(-1);
@@ -545,7 +549,19 @@ public class SecureNio2Channel extends Nio2Channel  {
                     }
                     //if we need more network data, then bail out for now.
                     if (unwrap.getStatus() == Status.BUFFER_UNDERFLOW) {
-                        break;
+                        if (read == 0) {
+                            try {
+                                if (timeout > 0) {
+                                    return unwrap(sc.read(netInBuffer).get(timeout, unit).intValue(), timeout, unit);
+                                } else {
+                                    return unwrap(sc.read(netInBuffer).get().intValue(), -1, TimeUnit.MILLISECONDS);
+                                }
+                            } catch (InterruptedException | TimeoutException e) {
+                                throw new ExecutionException(e);
+                            }
+                        } else {
+                            break;
+                        }
                     }
                 } else if (unwrap.getStatus() == Status.BUFFER_OVERFLOW && read > 0) {
                     //buffer overflow can happen, if we have read data, then
@@ -683,70 +699,9 @@ public class SecureNio2Channel extends Nio2Channel  {
         return new FutureWrite(src);
     }
 
-    private class ReadCompletionHandler<A> implements CompletionHandler<Integer, A> {
-        protected ByteBuffer dst;
-        protected CompletionHandler<Integer, ? super A> handler;
-        protected ReadCompletionHandler(ByteBuffer dst, CompletionHandler<Integer, ? super A> handler) {
-            this.dst = dst;
-            this.handler = handler;
-        }
-
-        @Override
-        public void completed(Integer nBytes, A attach) {
-            if (nBytes.intValue() < 0) {
-                failed(new EOFException(), attach);
-            } else {
-                try {
-                    //the data read
-                    int read = 0;
-                    //the SSL engine result
-                    SSLEngineResult unwrap;
-                    do {
-                        //prepare the buffer
-                        netInBuffer.flip();
-                        //unwrap the data
-                        unwrap = sslEngine.unwrap(netInBuffer, dst);
-                        //compact the buffer
-                        netInBuffer.compact();
-                        if (unwrap.getStatus() == Status.OK || unwrap.getStatus() == Status.BUFFER_UNDERFLOW) {
-                            //we did receive some data, add it to our total
-                            read += unwrap.bytesProduced();
-                            //perform any tasks if needed
-                            if (unwrap.getHandshakeStatus() == HandshakeStatus.NEED_TASK)
-                                tasks();
-                            //if we need more network data, then bail out for now.
-                            if (unwrap.getStatus() == Status.BUFFER_UNDERFLOW) {
-                                break;
-                            }
-                        } else if (unwrap.getStatus() == Status.BUFFER_OVERFLOW && read > 0) {
-                            //buffer overflow can happen, if we have read data, then
-                            //empty out the dst buffer before we do another read
-                            break;
-                        } else {
-                            //here we should trap BUFFER_OVERFLOW and call expand on the buffer
-                            //for now, throw an exception, as we initialized the buffers
-                            //in the constructor
-                            throw new IOException(sm.getString("channel.nio.ssl.unwrapFail", unwrap.getStatus()));
-                        }
-                    } while ((netInBuffer.position() != 0)); //continue to unwrapping as long as the input buffer has stuff
-                    // If everything is OK, so complete
-                    readPending = false;
-                    handler.completed(Integer.valueOf(read), attach);
-                } catch (Exception e) {
-                    failed(e, attach);
-                }
-            }
-        }
-        @Override
-        public void failed(Throwable exc, A attach) {
-            readPending = false;
-            handler.failed(exc, attach);
-        }
-    }
-
     @Override
     public <A> void read(final ByteBuffer dst,
-            long timeout, TimeUnit unit, final A attachment,
+            final long timeout, final TimeUnit unit, final A attachment,
             final CompletionHandler<Integer, ? super A> handler) {
         // Check state
         if (closing || closed) {
@@ -761,7 +716,69 @@ public class SecureNio2Channel extends Nio2Channel  {
         } else {
             readPending = true;
         }
-        sc.read(netInBuffer, timeout, unit, attachment, new ReadCompletionHandler<>(dst, handler));
+        CompletionHandler<Integer, A> readCompletionHandler = new CompletionHandler<Integer, A>() {
+            @Override
+            public void completed(Integer nBytes, A attach) {
+                if (nBytes.intValue() < 0) {
+                    failed(new EOFException(), attach);
+                } else {
+                    try {
+                        //the data read
+                        int read = 0;
+                        //the SSL engine result
+                        SSLEngineResult unwrap;
+                        do {
+                            //prepare the buffer
+                            netInBuffer.flip();
+                            //unwrap the data
+                            unwrap = sslEngine.unwrap(netInBuffer, dst);
+                            //compact the buffer
+                            netInBuffer.compact();
+                            if (unwrap.getStatus() == Status.OK || unwrap.getStatus() == Status.BUFFER_UNDERFLOW) {
+                                //we did receive some data, add it to our total
+                                read += unwrap.bytesProduced();
+                                //perform any tasks if needed
+                                if (unwrap.getHandshakeStatus() == HandshakeStatus.NEED_TASK)
+                                    tasks();
+                                //if we need more network data, then bail out for now.
+                                if (unwrap.getStatus() == Status.BUFFER_UNDERFLOW) {
+                                    if (read == 0) {
+                                        sc.read(netInBuffer, timeout, unit, attach, this);
+                                        return;
+                                    } else {
+                                        break;
+                                    }
+                                }
+                            } else if (unwrap.getStatus() == Status.BUFFER_OVERFLOW && read > 0) {
+                                //buffer overflow can happen, if we have read data, then
+                                //empty out the dst buffer before we do another read
+                                break;
+                            } else {
+                                //here we should trap BUFFER_OVERFLOW and call expand on the buffer
+                                //for now, throw an exception, as we initialized the buffers
+                                //in the constructor
+                                throw new IOException(sm.getString("channel.nio.ssl.unwrapFail", unwrap.getStatus()));
+                            }
+                        } while ((netInBuffer.position() != 0)); //continue to unwrapping as long as the input buffer has stuff
+                        // If everything is OK, so complete
+                        readPending = false;
+                        handler.completed(Integer.valueOf(read), attach);
+                    } catch (Exception e) {
+                        failed(e, attach);
+                    }
+                }
+            }
+            @Override
+            public void failed(Throwable exc, A attach) {
+                readPending = false;
+                handler.failed(exc, attach);
+            }
+        };
+        if (netInBuffer.position() > 0) {
+            readCompletionHandler.completed(Integer.valueOf(netInBuffer.position()), attachment);
+        } else {
+            sc.read(netInBuffer, timeout, unit, attachment, readCompletionHandler);
+        }
     }
 
     @Override
