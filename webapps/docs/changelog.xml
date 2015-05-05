@@ -67,6 +67,15 @@
       </fix>
     </changelog>
   </subsection>
+  <subsection name="Jasper">
+    <changelog>
+      <fix>
+        <bug>57802</bug>: Correct the default impementation of
+        <code>convertToType()</code> provided by
+        <code>javax.el.ELResolver</code>. (markt)
+      </fix>
+    </changelog>
+  </subsection>
   <subsection name="Web applications">
     <changelog>
       <fix>
