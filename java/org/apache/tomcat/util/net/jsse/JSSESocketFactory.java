@@ -556,8 +556,7 @@ public class JSSESocketFactory implements ServerSocketFactory, SSLUtil {
             algorithm = TrustManagerFactory.getDefaultAlgorithm();
         }
 
-        return getTrustManagers(truststoreType, endpoint.getKeystoreProvider(),
-                algorithm);
+        return getTrustManagers(truststoreType, endpoint.getTruststoreProvider(), algorithm);
     }
 
     @Override
