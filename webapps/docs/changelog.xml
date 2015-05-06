@@ -79,6 +79,10 @@
         <code>convertToType()</code> provided by
         <code>javax.el.ELResolver</code>. (markt)
       </fix>
+      <fix>
+        <bug>57887</bug>: Fix ompilation of recursive tag files packaged in a
+        JAR. (markt)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Web applications">
