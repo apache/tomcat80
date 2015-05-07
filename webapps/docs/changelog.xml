@@ -3737,6 +3737,13 @@
       <add>
         Context listener to allow better EE and framework integration. (remm)
       </add>
+      <fix>
+        <bug>57896</bug>: Support defensive copying of "cookie" header so that
+        unescaping double quotes in a cookie value does not corrupt original
+        value of "cookie" header. This is an opt-in feature, enabled by
+        <code>org.apache.tomcat.util.http.ServerCookie.PRESERVE_COOKIE_HEADER</code>
+        system property. (remm/kkolinko)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Coyote">
