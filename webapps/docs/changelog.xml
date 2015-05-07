@@ -87,6 +87,11 @@
         to reflect the more relaxed approach to SRV.10.7.2 in Tomcat 8 onwards.
         (markt)
       </fix>
+      <fix>
+        <bug>57896</bug>: Document system property
+        <code>org.apache.tomcat.util.http.ServerCookie.PRESERVE_COOKIE_HEADER</code>
+        that was introduced in Tomcat 8.0.0. (kkolinko)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Other">
