@@ -2577,6 +2577,7 @@
         Improve configuration of cache sizes in the endpoint. (markt)
       </fix>
       <add>
+        Fix CVE-2014-0230:
         Add a new limit, defaulting to 2MB, for the amount of data Tomcat will
         swallow for an aborted upload. The limit is configurable by
         <code>maxSwallowSize</code> attribute of an HTTP connector. (markt)
