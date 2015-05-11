@@ -80,6 +80,14 @@
       </fix>
     </changelog>
   </subsection>
+  <subsection name="Cluster">
+    <changelog>
+      <fix>
+        Make sure that stream is closed after using it in
+        <code>DeltaSession.applyDiff()</code>. (kfujino)
+      </fix>
+    </changelog>
+  </subsection>
   <subsection name="Web applications">
     <changelog>
       <fix>
