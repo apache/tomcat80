@@ -70,6 +70,11 @@
   <subsection name="Jasper">
     <changelog>
       <fix>
+        <bug>56438</bug>: Add debug logging to TLD discovery that logs positive
+        and negative results for JARs, resource paths and directories. Patch
+        provided by VIN. (markt)
+      </fix>
+      <fix>
         <bug>57802</bug>: Correct the default impementation of
         <code>convertToType()</code> provided by
         <code>javax.el.ELResolver</code>. (markt)
