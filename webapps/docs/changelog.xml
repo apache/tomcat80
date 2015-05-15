@@ -61,7 +61,7 @@
         Java 8 update 40 and later. The workaround should be safe for earlier
         Java versions but it can be disabled with the
         <code>applyJava8u40Fix</code> attribute of the SPNEGO authenticator if
-        necessary. (markt) 
+        necessary. (markt)
       </fix>
     </changelog>
   </subsection>
