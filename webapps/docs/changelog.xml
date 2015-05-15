@@ -82,7 +82,7 @@
         provided by VIN. (markt)
       </fix>
       <fix>
-        <bug>57802</bug>: Correct the default impementation of
+        <bug>57802</bug>: Correct the default implementation of
         <code>convertToType()</code> provided by
         <code>javax.el.ELResolver</code>. (markt)
       </fix>
@@ -151,7 +151,7 @@
         pattern <code>%{remote}p</code>. (rjung)
       </add>
       <fix>
-        <bug>57556</bug>: Refine the previous fix fo rthis issue so that the
+        <bug>57556</bug>: Refine the previous fix for this issue so that the
         real path returned only has a trialing separator if the requested path
         ended with <code>/</code>. (markt)
       </fix>
@@ -216,7 +216,7 @@
       </fix>
       <scode>
         Remove the experimental support for SPDY. No current user agent supports
-        the version of SPDY that the experiment targetted. Note: HTTP/2 support
+        the version of SPDY that the experiment targeted. Note: HTTP/2 support
         is under development for Tomcat 9 and may be back-ported to Tomcat 8
         once complete. (markt)
       </scode>
@@ -234,7 +234,7 @@
       </fix>
       <fix>
         <bug>57833</bug>: When using JKS based keystores for NIO or NIO2, ensure
-        that the key alias is always converted to lower caes since that is what
+        that the key alias is always converted to lower case since that is what
         JKS key stores expect. Based on a patch by  Santosh Giri Govind M.
         (markt)
       </fix>
