@@ -69,6 +69,11 @@
         <code>applyJava8u40Fix</code> attribute of the SPNEGO authenticator if
         necessary. (markt)
       </fix>
+      <fix>
+        <bug>57926</bug>: Restore the original <code>X-Forwarded-By</code> and
+        <code>X-Forwarded-For</code> headers after processing by the
+        <code>RemoteIPValve </code>. (markt)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Coyote">
