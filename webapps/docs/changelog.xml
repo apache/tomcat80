@@ -102,6 +102,10 @@
         Use <code>StringManager</code> to provide i18n support in the
         <code>org.apache.catalina.ha packages</code>. (kfujino)
       </scode>
+      <scode>
+        Add the context name to log messages when replication context failed to
+        start. (kfujino)
+      </scode>
     </changelog>
   </subsection>
   <subsection name="Web applications">
