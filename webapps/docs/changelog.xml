@@ -47,6 +47,12 @@
 <section name="Tomcat 8.0.23 (markt)" rtext="in development">
   <subsection name="Catalina">
     <changelog>
+      <add>
+        <bug>54618</bug>: Add a new <code>HttpHeaderSecurityFilter</code> that
+        adds the <code>Strict-Transport-Security</code>,
+        <code>X-Frame-Options</code> and <code>X-Content-Type-Options</code>
+        HTTP headers to the response. (markt)
+      </add>
       <fix>
         <bug>57875</bug>: Add <code>javax.websocket.*</code> to the classes for
         which the web application class loader always delegates first. (markt)
