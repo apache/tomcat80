@@ -98,6 +98,10 @@
         Make sure that stream is closed after using it in
         <code>DeltaSession.applyDiff()</code>. (kfujino)
       </fix>
+      <scode>
+        Use <code>StringManager</code> to provide i18n support in the
+        <code>org.apache.catalina.ha packages</code>. (kfujino)
+      </scode>
     </changelog>
   </subsection>
   <subsection name="Web applications">
