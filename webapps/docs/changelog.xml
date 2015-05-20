@@ -45,6 +45,15 @@
   issues do not "pop up" wrt. others).
 -->
 <section name="Tomcat 8.0.24 (markt)" rtext="in development">
+  <subsection name="Coyote">
+    <changelog>
+      <fix>
+        <bug>57936</bug>: Improve robustness of the acceptor thread count
+        parameter for NIO2, since it must be set to 1. Submitted by
+        Oliver Kant. (remm)
+      </fix>
+    </changelog>
+  </subsection>
 </section>
 <section name="Tomcat 8.0.23 (markt)" rtext="release in progress">
   <subsection name="Catalina">
