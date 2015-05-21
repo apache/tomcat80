@@ -27,9 +27,9 @@ import org.apache.juli.logging.LogFactory;
  * @version 1.0
  */
 public class UUIDGenerator {
-    private static final Log log = LogFactory.getLog(UUIDGenerator.class);
+    private static final Log log = LogFactory.getLog(UUIDGenerator.class.getPackage().getName());
     protected static final StringManager sm =
-        StringManager.getManager("org.apache.catalina.tribes.util");
+            StringManager.getManager("org.apache.catalina.tribes.util");
 
     public static final int UUID_LENGTH = 16;
     public static final int UUID_VERSION = 4;
@@ -58,7 +58,7 @@ public class UUIDGenerator {
 
     public static byte[] randomUUID(boolean secure, byte[] into, int offset) {
         if ( (offset+UUID_LENGTH)>into.length )
-            throw new ArrayIndexOutOfBoundsException("Unable to fit "+UUID_LENGTH+" bytes into the array. length:"+into.length+" required length:"+(offset+UUID_LENGTH));
+            throw new ArrayIndexOutOfBoundsException(sm.getString("uuidGenerator.unable.fit", UUID_LENGTH, into.length, (offset+UUID_LENGTH)));
         Random r = (secure&&(secrand!=null))?secrand:rand;
         nextBytes(into,offset,UUID_LENGTH,r);
         into[6+offset] &= 0x0F;

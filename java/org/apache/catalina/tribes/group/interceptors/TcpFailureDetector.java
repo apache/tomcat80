@@ -36,6 +36,9 @@ import org.apache.catalina.tribes.io.ChannelData;
 import org.apache.catalina.tribes.io.XByteBuffer;
 import org.apache.catalina.tribes.membership.Membership;
 import org.apache.catalina.tribes.membership.StaticMember;
+import org.apache.catalina.tribes.util.StringManager;
+import org.apache.juli.logging.Log;
+import org.apache.juli.logging.LogFactory;
 
 /**
  * <p>Title: A perfect failure detector </p>
@@ -58,7 +61,9 @@ import org.apache.catalina.tribes.membership.StaticMember;
  */
 public class TcpFailureDetector extends ChannelInterceptorBase {
 
-    private static final org.apache.juli.logging.Log log = org.apache.juli.logging.LogFactory.getLog( TcpFailureDetector.class );
+    private static final Log log = LogFactory.getLog( TcpFailureDetector.class );
+    protected static final StringManager sm =
+            StringManager.getManager(TcpFailureDetector.class.getPackage().getName());
 
     protected static final byte[] TCP_FAIL_DETECT = new byte[] {
         79, -89, 115, 72, 121, -126, 67, -55, -97, 111, -119, -128, -95, 91, 7, 20,
@@ -143,11 +148,11 @@ public class TcpFailureDetector extends ChannelInterceptorBase {
         boolean shutdown = Arrays.equals(member.getCommand(),Member.SHUTDOWN_PAYLOAD);
         if ( !shutdown )
             if(log.isInfoEnabled())
-                log.info("Received memberDisappeared["+member+"] message. Will verify.");
+                log.info(sm.getString("tcpFailureDetector.memberDisappeared.verify", member));
         synchronized (membership) {
             if (!membership.contains(member)) {
                 if(log.isInfoEnabled())
-                    log.info("Verification complete. Member already disappeared["+member+"]");
+                    log.info(sm.getString("tcpFailureDetector.already.disappeared", member));
                 return;
             }
             //check to see if the member really is gone
@@ -167,11 +172,11 @@ public class TcpFailureDetector extends ChannelInterceptorBase {
         }
         if ( notify ) {
             if(log.isInfoEnabled())
-                log.info("Verification complete. Member disappeared["+member+"]");
+                log.info(sm.getString("tcpFailureDetector.member.disappeared", member));
             super.memberDisappeared(member);
         } else {
             if(log.isInfoEnabled())
-                log.info("Verification complete. Member still alive["+member+"]");
+                log.info(sm.getString("tcpFailureDetector.still.alive", member));
 
         }
     }
@@ -213,7 +218,7 @@ public class TcpFailureDetector extends ChannelInterceptorBase {
                 else performForcedCheck();
             }
         } catch (Exception x) {
-            log.warn("Unable to perform heartbeat on the TcpFailureDetector.",x);
+            log.warn(sm.getString("tcpFailureDetector.heartbeat.failed"),x);
         }
     }
 
@@ -249,7 +254,7 @@ public class TcpFailureDetector extends ChannelInterceptorBase {
             if (membership.memberAlive(members[i])) {
                 //we don't have this one in our membership, check to see if he/she is alive
                 if (memberAlive(members[i])) {
-                    log.warn("Member added, even though we werent notified:" + members[i]);
+                    log.warn(sm.getString("tcpFailureDetector.performBasicCheck.memberAdded", members[i]));
                     super.memberAdded(members[i]);
                 } else {
                     membership.removeMember(members[i]);
@@ -267,7 +272,7 @@ public class TcpFailureDetector extends ChannelInterceptorBase {
                 super.memberDisappeared(m);
                 removeSuspects.remove(m);
                 if(log.isInfoEnabled())
-                    log.info("Suspect member, confirmed dead.["+m+"]");
+                    log.info(sm.getString("tcpFailureDetector.suspectMember.dead", m));
             } else {
                 if (removeSuspectsTimeout > 0) {
                     long timeNow = System.currentTimeMillis();
@@ -289,7 +294,7 @@ public class TcpFailureDetector extends ChannelInterceptorBase {
                 super.memberAdded(m);
                 addSuspects.remove(m);
                 if(log.isInfoEnabled())
-                    log.info("Suspect member, confirmed alive.["+m+"]");
+                    log.info(sm.getString("tcpFailureDetector.suspectMember.alive", m));
             } //end if
         }
     }
@@ -339,7 +344,7 @@ public class TcpFailureDetector extends ChannelInterceptorBase {
         } catch (ConnectException cx) {
             //do nothing, we couldn't connect
         } catch (Exception x) {
-            log.error("Unable to perform failure detection check, assuming member down.",x);
+            log.error(sm.getString("tcpFailureDetector.failureDetection.failed"),x);
         }
         return false;
     }

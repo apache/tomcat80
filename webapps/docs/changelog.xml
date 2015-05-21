@@ -54,6 +54,14 @@
       </fix>
     </changelog>
   </subsection>
+  <subsection name="Tribes">
+    <changelog>
+      <scode>
+        Use <code>StringManager</code> to provide i18n support in the
+        <code>org.apache.catalina.tribes</code> packages. (kfujino)
+      </scode>
+    </changelog>
+  </subsection>
 </section>
 <section name="Tomcat 8.0.23 (markt)" rtext="release in progress">
   <subsection name="Catalina">
