@@ -32,6 +32,7 @@ import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 import java.nio.channels.WritableByteChannel;
+import java.util.ConcurrentModificationException;
 import java.util.Iterator;
 import java.util.Locale;
 import java.util.Set;
@@ -1277,57 +1278,62 @@ public class NioEndpoint extends AbstractEndpoint<NioChannel> {
             //timeout
             Set<SelectionKey> keys = selector.keys();
             int keycount = 0;
-            for (Iterator<SelectionKey> iter = keys.iterator(); iter.hasNext();) {
-                SelectionKey key = iter.next();
-                keycount++;
-                try {
-                    KeyAttachment ka = (KeyAttachment) key.attachment();
-                    if ( ka == null ) {
-                        cancelledKey(key, SocketStatus.ERROR); //we don't support any keys without attachments
-                    } else if ( ka.getError() ) {
-                        cancelledKey(key, SocketStatus.ERROR);//TODO this is not yet being used
-                    } else if (ka.getCometNotify() ) {
-                        ka.setCometNotify(false);
-                        int ops = ka.interestOps() & ~OP_CALLBACK;
-                        reg(key,ka,0);//avoid multiple calls, this gets re-registered after invocation
-                        ka.interestOps(ops);
-                        if (!processSocket(ka, SocketStatus.OPEN_READ, true)) processSocket(ka, SocketStatus.DISCONNECT, true);
-                    } else if ((ka.interestOps()&SelectionKey.OP_READ) == SelectionKey.OP_READ ||
-                              (ka.interestOps()&SelectionKey.OP_WRITE) == SelectionKey.OP_WRITE) {
-                        //only timeout sockets that we are waiting for a read from
-                        long delta = now - ka.getLastAccess();
-                        long timeout = ka.getTimeout();
-                        boolean isTimedout = timeout > 0 && delta > timeout;
-                        if ( close ) {
-                            key.interestOps(0);
-                            ka.interestOps(0); //avoid duplicate stop calls
-                            processKey(key,ka);
-                        } else if (isTimedout) {
-                            key.interestOps(0);
-                            ka.interestOps(0); //avoid duplicate timeout calls
-                            cancelledKey(key, SocketStatus.TIMEOUT);
-                        }
-                    } else if (ka.isAsync() || ka.isComet()) {
-                        if (close) {
-                            key.interestOps(0);
-                            ka.interestOps(0); //avoid duplicate stop calls
-                            processKey(key,ka);
-                        } else if (!ka.isAsync() || ka.getTimeout() > 0) {
-                            // Async requests with a timeout of 0 or less never timeout
+            try {
+                for (Iterator<SelectionKey> iter = keys.iterator(); iter.hasNext();) {
+                    SelectionKey key = iter.next();
+                    keycount++;
+                    try {
+                        KeyAttachment ka = (KeyAttachment) key.attachment();
+                        if ( ka == null ) {
+                            cancelledKey(key, SocketStatus.ERROR); //we don't support any keys without attachments
+                        } else if ( ka.getError() ) {
+                            cancelledKey(key, SocketStatus.ERROR);//TODO this is not yet being used
+                        } else if (ka.getCometNotify() ) {
+                            ka.setCometNotify(false);
+                            int ops = ka.interestOps() & ~OP_CALLBACK;
+                            reg(key,ka,0);//avoid multiple calls, this gets re-registered after invocation
+                            ka.interestOps(ops);
+                            if (!processSocket(ka, SocketStatus.OPEN_READ, true)) processSocket(ka, SocketStatus.DISCONNECT, true);
+                        } else if ((ka.interestOps()&SelectionKey.OP_READ) == SelectionKey.OP_READ ||
+                                  (ka.interestOps()&SelectionKey.OP_WRITE) == SelectionKey.OP_WRITE) {
+                            //only timeout sockets that we are waiting for a read from
                             long delta = now - ka.getLastAccess();
-                            long timeout = (ka.getTimeout()==-1)?((long) socketProperties.getSoTimeout()):(ka.getTimeout());
-                            boolean isTimedout = delta > timeout;
-                            if (isTimedout) {
-                                // Prevent subsequent timeouts if the timeout event takes a while to process
-                                ka.access(Long.MAX_VALUE);
-                                processSocket(ka, SocketStatus.TIMEOUT, true);
+                            long timeout = ka.getTimeout();
+                            boolean isTimedout = timeout > 0 && delta > timeout;
+                            if ( close ) {
+                                key.interestOps(0);
+                                ka.interestOps(0); //avoid duplicate stop calls
+                                processKey(key,ka);
+                            } else if (isTimedout) {
+                                key.interestOps(0);
+                                ka.interestOps(0); //avoid duplicate timeout calls
+                                cancelledKey(key, SocketStatus.TIMEOUT);
                             }
-                        }
-                    }//end if
-                }catch ( CancelledKeyException ckx ) {
-                    cancelledKey(key, SocketStatus.ERROR);
-                }
-            }//for
+                        } else if (ka.isAsync() || ka.isComet()) {
+                            if (close) {
+                                key.interestOps(0);
+                                ka.interestOps(0); //avoid duplicate stop calls
+                                processKey(key,ka);
+                            } else if (!ka.isAsync() || ka.getTimeout() > 0) {
+                                // Async requests with a timeout of 0 or less never timeout
+                                long delta = now - ka.getLastAccess();
+                                long timeout = (ka.getTimeout()==-1)?((long) socketProperties.getSoTimeout()):(ka.getTimeout());
+                                boolean isTimedout = delta > timeout;
+                                if (isTimedout) {
+                                    // Prevent subsequent timeouts if the timeout event takes a while to process
+                                    ka.access(Long.MAX_VALUE);
+                                    processSocket(ka, SocketStatus.TIMEOUT, true);
+                                }
+                            }
+                        }//end if
+                    } catch ( CancelledKeyException ckx ) {
+                        cancelledKey(key, SocketStatus.ERROR);
+                    }
+                }//for
+            } catch (ConcurrentModificationException cme) {
+                // See https://bz.apache.org/bugzilla/show_bug.cgi?id=57943
+                log.warn(sm.getString("endpoint.nio.timeoutCme"), cme);
+            }
             long prevExp = nextExpiration; //for logging purposes only
             nextExpiration = System.currentTimeMillis() +
                     socketProperties.getTimeoutInterval();

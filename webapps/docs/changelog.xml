@@ -52,6 +52,12 @@
         parameter for NIO2, since it must be set to 1. Submitted by
         Oliver Kant. (remm)
       </fix>
+      <add>
+        <bug>57943</bug>: Added a work-around to catch
+        <code>ConcurrentModificationException</code>s during Poller timeout
+        processing that were causing the Poller thread to stop. The root cause
+        of these exceptions is currently unknown. (markt)
+      </add>
     </changelog>
   </subsection>
   <subsection name="Tribes">
@@ -63,7 +69,7 @@
     </changelog>
   </subsection>
 </section>
-<section name="Tomcat 8.0.23 (markt)" rtext="release in progress">
+<section name="Tomcat 8.0.23 (markt)" rtext="2015-05-22">
   <subsection name="Catalina">
     <changelog>
       <add>
