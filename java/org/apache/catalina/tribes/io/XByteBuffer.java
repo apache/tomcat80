@@ -53,7 +53,7 @@ public class XByteBuffer
     private static final Log log = LogFactory.getLog( XByteBuffer.class );
     protected static final StringManager sm =
             StringManager.getManager(XByteBuffer.class.getPackage().getName());
-    
+
     /**
      * This is a package header, 7 bytes (FLT2002)
      */

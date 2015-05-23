@@ -42,7 +42,7 @@ public class MessageDispatchInterceptor extends ChannelInterceptorBase implement
     private static final Log log = LogFactory.getLog(MessageDispatchInterceptor.class);
     protected static final StringManager sm =
             StringManager.getManager(MessageDispatchInterceptor.class.getPackage().getName());
-    
+
     protected long maxQueueSize = 1024*1024*64; //64MB
     protected final FastQueue queue = new FastQueue();
     protected volatile boolean run = false;
