@@ -71,9 +71,7 @@ public class TesterOpenSSL {
                     Cipher.TLS_ECDH_RSA_WITH_CAMELLIA_256_CBC_SHA384,
                     // The following have been removed from OpenSSL on 2015-05-23
                     Cipher.TLS_DH_RSA_EXPORT_WITH_DES40_CBC_SHA,
-                    Cipher.SSL_DH_RSA_EXPORT_WITH_DES40_CBC_SHA,
-                    Cipher.TLS_DH_DSS_EXPORT_WITH_DES40_CBC_SHA,
-                    Cipher.SSL_DH_DSS_EXPORT_WITH_DES40_CBC_SHA)));
+                    Cipher.TLS_DH_DSS_EXPORT_WITH_DES40_CBC_SHA)));
 
 
     static {
