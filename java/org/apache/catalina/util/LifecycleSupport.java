@@ -22,10 +22,6 @@ package org.apache.catalina.util;
 import org.apache.catalina.Lifecycle;
 import org.apache.catalina.LifecycleEvent;
 import org.apache.catalina.LifecycleListener;
-import org.apache.juli.logging.Log;
-import org.apache.juli.logging.LogFactory;
-import org.apache.tomcat.util.ExceptionUtils;
-import org.apache.tomcat.util.res.StringManager;
 
 
 /**
@@ -36,11 +32,9 @@ import org.apache.tomcat.util.res.StringManager;
  */
 public final class LifecycleSupport {
 
-    private static final Log log = LogFactory.getLog(LifecycleSupport.class);
-    private static final StringManager sm = StringManager.getManager("org.apache.catalina.util");
-
 
     // ----------------------------------------------------------- Constructors
+
 
     /**
      * Construct a new LifecycleSupport object associated with the specified
@@ -119,15 +113,9 @@ public final class LifecycleSupport {
 
         LifecycleEvent event = new LifecycleEvent(lifecycle, type, data);
         LifecycleListener interested[] = listeners;
-        for (int i = 0; i < interested.length; i++) {
-            try {
-                interested[i].lifecycleEvent(event);
-            } catch (Throwable t) {
-                ExceptionUtils.handleThrowable(t);
-                log.error(sm.getString("lifecycleBase.listenerFail",
-                        type, interested[i].getClass().getName()), t);
-            }
-        }
+        for (int i = 0; i < interested.length; i++)
+            interested[i].lifecycleEvent(event);
+
     }
 
 
