@@ -51,7 +51,7 @@
         <bug>57939</bug>: Catch and log exceptions thrown by
         <code>LifecycleListener</code> implementations to prevent them from
         stopping the execution of subsequent <code>LifecycleListener</code>s.
-        (markt) 
+        (markt)
       </add>
     </changelog>
   </subsection>
