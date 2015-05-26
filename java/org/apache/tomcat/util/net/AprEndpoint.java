@@ -1311,7 +1311,8 @@ public class AprEndpoint extends AbstractEndpoint<Long> {
 
 
         /**
-         * Last run of maintain. Maintain will run usually every 5s.
+         * Last run of maintain. Maintain will run approximately once every one
+         * second (may be slightly longer between runs).
          */
         private long lastMaintain = System.currentTimeMillis();
 
@@ -1622,7 +1623,6 @@ public class AprEndpoint extends AbstractEndpoint<Long> {
         @Override
         public void run() {
 
-            int maintain = 0;
             SocketList localAddList = new SocketList(getMaxConnections());
             SocketList localCloseList = new SocketList(getMaxConnections());
 
@@ -1640,7 +1640,6 @@ public class AprEndpoint extends AbstractEndpoint<Long> {
                 // Check timeouts if the poller is empty.
                 while (pollerRunning && connectionCount.get() < 1 &&
                         addList.size() < 1 && closeList.size() < 1) {
-                    // Reset maintain time.
                     try {
                         if (getSoTimeout() > 0 && pollerRunning) {
                             maintain();
@@ -1954,24 +1953,21 @@ public class AprEndpoint extends AbstractEndpoint<Long> {
                         }
 
                     }
-
-                    // Process socket timeouts
-                    if (getSoTimeout() > 0 && maintain++ > 1000 && pollerRunning) {
-                        // This works and uses only one timeout mechanism for everything, but the
-                        // non event poller might be a bit faster by using the old maintain.
-                        maintain = 0;
-                        maintain();
-                    }
-
                 } catch (Throwable t) {
                     ExceptionUtils.handleThrowable(t);
-                    if (maintain == 0) {
-                        getLog().warn(sm.getString("endpoint.timeout.error"), t);
-                    } else {
-                        getLog().warn(sm.getString("endpoint.poll.error"), t);
-                    }
+                    getLog().warn(sm.getString("endpoint.poll.error"), t);
                 }
-
+                try {
+                    // Process socket timeouts
+                    if (getSoTimeout() > 0 && pollerRunning) {
+                        // This works and uses only one timeout mechanism for everything, but the
+                        // non event poller might be a bit faster by using the old maintain.
+                        maintain();
+                    }
+                } catch (Throwable t) {
+                    ExceptionUtils.handleThrowable(t);
+                    getLog().warn(sm.getString("endpoint.timeout.error"), t);
+                }
             }
 
             synchronized (this) {
