@@ -41,5 +41,4 @@ public class Constants {
     public static final String SSL_PROTO_TLSv1      = "TLSv1";
     public static final String SSL_PROTO_SSLv3      = "SSLv3";
     public static final String SSL_PROTO_SSLv2      = "SSLv2";
-    public static final String SSL_PROTO_SSLv2Hello = "SSLv2Hello";
 }
