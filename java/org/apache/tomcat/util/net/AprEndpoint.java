@@ -18,7 +18,9 @@ package org.apache.tomcat.util.net;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executor;
 import java.util.concurrent.RejectedExecutionException;
@@ -66,6 +68,16 @@ public class AprEndpoint extends AbstractEndpoint<Long> {
 
 
     private static final Log log = LogFactory.getLog(AprEndpoint.class);
+
+    protected static final Set<String> SSL_PROTO_ALL = new HashSet<>();
+
+    static {
+        /* Default used if SSLProtocol is not configured, also
+           used if SSLProtocol="All" */
+        SSL_PROTO_ALL.add(Constants.SSL_PROTO_TLSv1);
+        SSL_PROTO_ALL.add(Constants.SSL_PROTO_TLSv1_1);
+        SSL_PROTO_ALL.add(Constants.SSL_PROTO_TLSv1_2);
+    }
 
     // ----------------------------------------------------------------- Fields
     /**
@@ -504,8 +516,42 @@ public class AprEndpoint extends AbstractEndpoint<Long> {
             if (SSLProtocol == null || SSLProtocol.length() == 0) {
                 value = SSL.SSL_PROTOCOL_ALL;
             } else {
-                for (String protocol : SSLProtocol.split("\\+")) {
-                    protocol = protocol.trim();
+
+                Set<String> protocols = new HashSet<>();
+
+                // List of protocol names, separated by "+" or "-".
+                // Semantics is adding ("+") or removing ("-") from left
+                // to right, starting with an empty protocol set.
+                // Tokens are individual protocol names or "all" for a
+                // default set of supported protocols.
+
+                // Split using a positive lookahead to keep the separator in
+                // the capture so we can check which case it is.
+                for (String protocol : SSLProtocol.split("(?=[-+])")) {
+                    String trimmed = protocol.trim();
+                    // Ignore token which only consists of prefix character
+                    if (trimmed.length() > 1) {
+                        if (trimmed.charAt(0) == '-') {
+                            trimmed = trimmed.substring(1).trim();
+                            if (trimmed.equalsIgnoreCase(Constants.SSL_PROTO_ALL)) {
+                                protocols.removeAll(SSL_PROTO_ALL);
+                            } else {
+                                protocols.remove(trimmed);
+                            }
+                        } else {
+                            if (trimmed.charAt(0) == '+') {
+                                trimmed = trimmed.substring(1).trim();
+                            }
+                            if (trimmed.equalsIgnoreCase(Constants.SSL_PROTO_ALL)) {
+                                protocols.addAll(SSL_PROTO_ALL);
+                            } else {
+                                protocols.add(trimmed);
+                            }
+                        }
+                    }
+                }
+
+                for (String protocol : protocols) {
                     if (Constants.SSL_PROTO_SSLv2.equalsIgnoreCase(protocol)) {
                         value |= SSL.SSL_PROTOCOL_SSLV2;
                     } else if (Constants.SSL_PROTO_SSLv3.equalsIgnoreCase(protocol)) {
@@ -516,8 +562,6 @@ public class AprEndpoint extends AbstractEndpoint<Long> {
                         value |= SSL.SSL_PROTOCOL_TLSV1_1;
                     } else if (Constants.SSL_PROTO_TLSv1_1.equalsIgnoreCase(protocol)) {
                         value |= SSL.SSL_PROTOCOL_TLSV1_2;
-                    } else if (Constants.SSL_PROTO_ALL.equalsIgnoreCase(protocol)) {
-                        value |= SSL.SSL_PROTOCOL_ALL;
                     } else {
                         // Protocol not recognized, fail to start as it is safer than
                         // continuing with the default which might enable more than the
