@@ -72,6 +72,10 @@
         Fix possible very long (1000 seconds) timeout with APR/native connector.
         (markt)
       </fix>
+      <fix>
+        Support "-" separator in the SSLProtocol configuration of the
+        APR/native connector for protocol exclusion. (rjung)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Web applications">
