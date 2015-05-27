@@ -87,7 +87,7 @@ public final class TesterSupport {
         }
         tomcat.getConnector().setSecure(true);
         tomcat.getConnector().setProperty("SSLEnabled", "true");
-        // OpenSSL before 1.0.1 only supports TLSv1.1.
+        // OpenSSL before 1.0.1 only supports TLSv1.
         // Our default SSLProtocol setting "all" includes unsupported TLSv1.1 and 1.2
         // and would produce an error during init.
         // Trigger loading of the native library and choose old protocol
