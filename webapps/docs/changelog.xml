@@ -104,6 +104,9 @@
         Update package renamed Apache Commons DBCP to r1682314 to pick up the
         DBCP 2.1 release and additional fixes since then. (markt)
       </update>
+      <update>
+        Update package renamed Apache Commons Pool to the 2.4 release. (markt)
+      </update>
     </changelog>
   </subsection>
 </section>
