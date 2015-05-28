@@ -94,6 +94,14 @@
       </scode>
     </changelog>
   </subsection>
+  <subsection name="Other">
+    <changelog>
+      <update>
+        Update package renamed Apache Commons BCEL to r1682271 to pick up some
+        some code clean up. (markt)
+      </update>
+    </changelog>
+  </subsection>
 </section>
 <section name="Tomcat 8.0.23 (markt)" rtext="2015-05-22">
   <subsection name="Catalina">
