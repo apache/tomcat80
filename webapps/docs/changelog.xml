@@ -115,6 +115,9 @@
         Update package renamed Apache Commons Codes to r1682326. No functional
         changes. Javadoc only. (markt)
       </update>
+      <update>
+        Update optional Checkstyle library to 6.7. (kkolinko)
+      </update>
     </changelog>
   </subsection>
 </section>
