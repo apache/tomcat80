@@ -78,6 +78,15 @@
       </add>
     </changelog>
   </subsection>
+  <subsection name="WebSocket">
+    <changelog>
+      <fix>
+        <bug>57969</bug>: Provide path parameters to POJO via per session
+        <code>javax.websocket.server.ServerEndpointConfig</code> as they vary
+        between different requests. (violetagg)
+      </fix>
+    </changelog>
+  </subsection>
   <subsection name="Web applications">
     <changelog>
       <fix>
