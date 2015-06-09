@@ -53,6 +53,10 @@
         stopping the execution of subsequent <code>LifecycleListener</code>s.
         (markt)
       </add>
+      <fix>
+        <bug>57977</bug>: Correctly bind and unbind the web application class
+        loader during execution of the PersistentValve. (markt)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Coyote">
