@@ -58,6 +58,10 @@
   <subsection name="Coyote">
     <changelog>
       <fix>
+        <bug>57265</bug>: Further fix to address a potential threading issue
+        when sendfile is used in conjunction with TLS. (markt)
+      </fix>
+      <fix>
         <bug>57936</bug>: Improve robustness of the acceptor thread count
         parameter for NIO2, since it must be set to 1. Submitted by
         Oliver Kant. (remm)
