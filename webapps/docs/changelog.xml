@@ -64,6 +64,12 @@
         <code>loadClass(String, boolean)</code> and <code>filter()</code>.
         (markt)
       </fix>
+      <fix>
+        Correct a bug that prevented the web application class loader&apos;s
+        <code>filter()</code> from working correctly. It only returned
+        <code>true</code> for classes in sub-packages of the listed packages,
+        but not classes located in the packages themselves. (markt)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Coyote">
