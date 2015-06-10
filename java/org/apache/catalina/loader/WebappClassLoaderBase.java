@@ -1216,7 +1216,8 @@ public abstract class WebappClassLoaderBase extends URLClassLoader
             }
 
             // (0.2) Try loading the class with the system class loader, to prevent
-            //       the webapp from overriding J2SE classes
+            //       the webapp from overriding Java SE classes. This implements
+            //       SRV.10.7.2
             String resourceName = binaryNameToPath(name, false);
             ClassLoader javaseLoader = getJavaseClassLoader();
             if (javaseLoader.getResource(resourceName) != null) {
@@ -2389,10 +2390,6 @@ public abstract class WebappClassLoaderBase extends URLClassLoader
      */
     protected Class<?> findClassInternal(String name) {
 
-        if (!validate(name)) {
-            return null;
-        }
-
         String path = binaryNameToPath(name, true);
 
         ResourceEntry entry = null;
@@ -2760,46 +2757,16 @@ public abstract class WebappClassLoaderBase extends URLClassLoader
 
 
     /**
-     * Validate a classname. As per SRV.9.7.2, we must restrict loading of
-     * classes from J2SE (java.*) and most classes of the servlet API
-     * (javax.servlet.*). That should enhance robustness and prevent a number
-     * of user error (where an older version of servlet.jar would be present
-     * in /WEB-INF/lib).
+     * Unused.
      *
-     * @param name class name
-     * @return true if the name is valid
+     * @param name usused
+     * @return Always <code>true</code>
+     *
+     * @deprecated Unused. Will be removed in Tomcat 9 onwards.
      */
+    @Deprecated
     protected boolean validate(String name) {
-
-        // Need to be careful with order here
-        if (name == null) {
-            // Can't load a class without a name
-            return false;
-        }
-        if (name.startsWith("java.")) {
-            // Must never load java.* classes
-            return false;
-        }
-        if (name.startsWith("javax.servlet.jsp.jstl")) {
-            // OK for web apps to package JSTL
-            return true;
-        }
-        if (name.startsWith("javax.servlet.")) {
-            // Web apps should never package any other Servlet or JSP classes
-            return false;
-        }
-        if (name.startsWith("javax.el")) {
-            // Must never load javax.el.* classes
-            return false;
-        }
-        if (name.startsWith("javax.websocket")) {
-            // Must never load javax.websocket.* classes
-            return false;
-        }
-
-        // Assume everything else is OK
         return true;
-
     }
 
 
