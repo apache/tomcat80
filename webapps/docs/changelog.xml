@@ -70,6 +70,11 @@
         <code>true</code> for classes in sub-packages of the listed packages,
         but not classes located in the packages themselves. (markt)
       </fix>
+      <fix>
+        Add the WebSocket API classes to the list of classes that the web
+        application class loader will always delegate to its parent for laoding
+        first. (markt)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Coyote">
