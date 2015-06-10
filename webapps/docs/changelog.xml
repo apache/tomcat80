@@ -75,6 +75,13 @@
         application class loader will always delegate to its parent for laoding
         first. (markt)
       </fix>
+      <fix>
+        <bug>58015</bug>: Ensure that whenever the web application class loader
+        checks to see if it should delegate first, it also checks the result
+        of the <code>filter()</code> method which may indicate that it should
+        always delegate first for the current class/resource regardless of the
+        value of the delegate configuration option. (markt)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Coyote">

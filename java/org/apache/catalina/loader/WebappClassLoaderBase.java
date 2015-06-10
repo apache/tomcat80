@@ -189,10 +189,10 @@ public abstract class WebappClassLoaderBase extends URLClassLoader
      * from a webapp class loader without delegating first.
      */
     protected final Matcher packageTriggersDeny = Pattern.compile(
-            "^javax\\.el\\.|" +
-            "^javax\\.servlet\\.|" +
-            "^javax\\.websocket\\.|" +
-            "^org\\.apache\\.(catalina|coyote|el|jasper|juli|naming|tomcat)\\."
+            "^javax(\\.|/)el(\\.|/)|" +
+            "^javax(\\.|/)servlet(\\.|/)|" +
+            "^javax(\\.|/)websocket(\\.|/)|" +
+            "^org(\\.|/)apache(\\.|/)(catalina|coyote|el|jasper|juli|naming|tomcat)(\\.|/)"
             ).matcher("");
 
 
@@ -202,8 +202,8 @@ public abstract class WebappClassLoaderBase extends URLClassLoader
      * {@link #packageTriggersDeny}.
      */
     protected final Matcher packageTriggersPermit =
-            Pattern.compile("^javax\\.servlet\\.jsp\\.jstl\\.|" +
-                    "^org\\.apache\\.tomcat\\.jdbc\\.").matcher("");
+            Pattern.compile("^javax(\\.|/)servlet(\\.|/)jsp(\\.|/)jstl(\\.|/)|" +
+                    "^org(\\.|/)apache(\\.|/)tomcat(\\.|/)jdbc(\\.|/)").matcher("");
 
 
     /**
@@ -1025,8 +1025,10 @@ public abstract class WebappClassLoaderBase extends URLClassLoader
 
         URL url = null;
 
+        boolean delegateFirst = delegate || filter(name);
+
         // (1) Delegate to parent if requested
-        if (delegate) {
+        if (delegateFirst) {
             if (log.isDebugEnabled())
                 log.debug("  Delegating to parent classloader " + parent);
             url = parent.getResource(name);
@@ -1046,7 +1048,7 @@ public abstract class WebappClassLoaderBase extends URLClassLoader
         }
 
         // (3) Delegate to parent unconditionally if not already attempted
-        if( !delegate ) {
+        if (!delegateFirst) {
             url = parent.getResource(name);
             if (url != null) {
                 if (log.isDebugEnabled())
@@ -1090,8 +1092,10 @@ public abstract class WebappClassLoaderBase extends URLClassLoader
             return (stream);
         }
 
+        boolean delegateFirst = delegate || filter(name);
+
         // (1) Delegate to parent if requested
-        if (delegate) {
+        if (delegateFirst) {
             if (log.isDebugEnabled())
                 log.debug("  Delegating to parent classloader " + parent);
             stream = parent.getResourceAsStream(name);
@@ -1123,7 +1127,7 @@ public abstract class WebappClassLoaderBase extends URLClassLoader
         }
 
         // (3) Delegate to parent unconditionally
-        if (!delegate) {
+        if (!delegateFirst) {
             if (log.isDebugEnabled())
                 log.debug("  Delegating to parent classloader unconditionally " + parent);
             stream = parent.getResourceAsStream(name);
