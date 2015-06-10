@@ -134,6 +134,11 @@
         Use <code>StringManager</code> to provide i18n support in the
         <code>org.apache.catalina.tribes</code> packages. (kfujino)
       </scode>
+      <fix>
+        Do not set the nodes that failed to replication to the backup nodes.
+        Ensure that the nodes that the data has been successfully replicated are
+        set to the backup node. (kfujino)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Other">
