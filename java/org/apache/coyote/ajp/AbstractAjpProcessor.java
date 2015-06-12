@@ -1648,7 +1648,7 @@ public abstract class AbstractAjpProcessor<S> extends AbstractProcessor<S> {
 
         bytesWritten += off;
 
-        if (len > 0) {
+        if (len > 0 && !blocking) {
             // Add this chunk to the buffer
             addToBuffers(chunk.getBuffer(), off, len);
         }

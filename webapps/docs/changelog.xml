@@ -109,6 +109,10 @@
         Support "-" separator in the SSLProtocol configuration of the
         APR/native connector for protocol exclusion. (rjung)
       </add>
+      <fix>
+        <bug>58004</bug>: Fix AJP buffering output data even in blocking mode.
+        (remm)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="WebSocket">
