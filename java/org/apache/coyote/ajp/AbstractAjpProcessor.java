@@ -957,6 +957,7 @@ public abstract class AbstractAjpProcessor<S> extends AbstractProcessor<S> {
         swallowResponse = false;
         bytesWritten = 0;
         resetErrorState();
+        bufferedWrites.clear();
     }
 
 
