@@ -152,15 +152,17 @@ public abstract class WebappClassLoaderBase extends URLClassLoader
 
         protected final String name;
         protected final String path;
+        protected final boolean manifestRequired;
 
-        PrivilegedFindResourceByName(String name, String path) {
+        PrivilegedFindResourceByName(String name, String path, boolean manifestRequired) {
             this.name = name;
             this.path = path;
+            this.manifestRequired = manifestRequired;
         }
 
         @Override
         public ResourceEntry run() {
-            return findResourceInternal(name, path);
+            return findResourceInternal(name, path, manifestRequired);
         }
 
     }
@@ -928,10 +930,10 @@ public abstract class WebappClassLoaderBase extends URLClassLoader
         if (entry == null) {
             if (securityManager != null) {
                 PrivilegedAction<ResourceEntry> dp =
-                    new PrivilegedFindResourceByName(name, path);
+                    new PrivilegedFindResourceByName(name, path, false);
                 entry = AccessController.doPrivileged(dp);
             } else {
-                entry = findResourceInternal(name, path);
+                entry = findResourceInternal(name, path, false);
             }
         }
         if (entry != null) {
@@ -2401,10 +2403,10 @@ public abstract class WebappClassLoaderBase extends URLClassLoader
 
         if (securityManager != null) {
             PrivilegedAction<ResourceEntry> dp =
-                new PrivilegedFindResourceByName(name, path);
+                new PrivilegedFindResourceByName(name, path, true);
             entry = AccessController.doPrivileged(dp);
         } else {
-            entry = findResourceInternal(name, path);
+            entry = findResourceInternal(name, path, true);
         }
 
         if (entry == null) {
@@ -2524,7 +2526,8 @@ public abstract class WebappClassLoaderBase extends URLClassLoader
      *
      * @return the loaded resource, or null if the resource isn't found
      */
-    protected ResourceEntry findResourceInternal(final String name, final String path) {
+    protected ResourceEntry findResourceInternal(final String name, final String path,
+            boolean manifestRequired) {
 
         checkStateForResourceLoading(name);
 
@@ -2598,7 +2601,10 @@ public abstract class WebappClassLoaderBase extends URLClassLoader
                 entry.certificates = resource.getCertificates();
             }
         }
-        entry.manifest = resource.getManifest();
+
+        if (manifestRequired) {
+            entry.manifest = resource.getManifest();
+        }
 
         if (isClassResource && entry.binaryContent != null &&
                 this.transformers.size() > 0) {
