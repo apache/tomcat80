@@ -112,6 +112,11 @@
         of these exceptions is currently unknown. (markt)
       </add>
       <fix>
+        <bug>57944</bug>: Ensure that if non-blocking I/O listeners are set on
+        a non-container thread that the expected listener events are still
+        triggered. (markt)
+      </fix>
+      <fix>
         Fix possible very long (1000 seconds) timeout with APR/native connector.
         (markt)
       </fix>
