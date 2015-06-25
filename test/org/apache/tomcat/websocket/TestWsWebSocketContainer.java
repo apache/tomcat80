@@ -47,15 +47,13 @@ import javax.websocket.server.ServerEndpointConfig;
 import org.junit.Assert;
 import org.junit.Assume;
 import org.junit.Test;
+
 import org.apache.catalina.Context;
 import org.apache.catalina.servlets.DefaultServlet;
 import org.apache.catalina.startup.Tomcat;
 import org.apache.catalina.startup.TomcatBaseTest;
 import org.apache.coyote.http11.Http11Protocol;
 import org.apache.tomcat.util.net.TesterSupport;
-import org.apache.tomcat.websocket.TesterEchoServer;
-import org.apache.tomcat.websocket.TestWsWebSocketContainer.EndpointA;
-import org.apache.tomcat.websocket.TestWsWebSocketContainer.EndpointB;
 import org.apache.tomcat.websocket.TesterMessageCountClient.BasicBinary;
 import org.apache.tomcat.websocket.TesterMessageCountClient.BasicHandler;
 import org.apache.tomcat.websocket.TesterMessageCountClient.BasicText;
