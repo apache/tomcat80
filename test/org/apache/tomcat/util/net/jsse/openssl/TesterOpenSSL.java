@@ -37,10 +37,6 @@ public class TesterOpenSSL {
                     // The following ciphers are not implemented in an OpenSSL
                     // version
                     Cipher.TLS_DHE_DSS_WITH_RC4_128_SHA,
-                    Cipher.SSL_CK_RC2_128_CBC_WITH_MD5,
-                    Cipher.SSL_FORTEZZA_DMS_WITH_NULL_SHA,
-                    Cipher.SSL_FORTEZZA_DMS_WITH_FORTEZZA_CBC_SHA,
-                    Cipher.SSL_FORTEZZA_DMS_WITH_RC4_128_SHA,
                     Cipher.TLS_DHE_DSS_EXPORT1024_WITH_DES_CBC_SHA,
                     Cipher.TLS_RSA_EXPORT1024_WITH_DES_CBC_SHA,
                     Cipher.TLS_RSA_EXPORT1024_WITH_RC2_CBC_56_MD5,
@@ -69,6 +65,8 @@ public class TesterOpenSSL {
                     Cipher.TLS_ECDHE_RSA_WITH_CAMELLIA_256_CBC_SHA384,
                     Cipher.TLS_ECDH_RSA_WITH_CAMELLIA_128_CBC_SHA256,
                     Cipher.TLS_ECDH_RSA_WITH_CAMELLIA_256_CBC_SHA384,
+                    Cipher.TLS_PSK_WITH_AES_128_GCM_SHA256,
+                    Cipher.TLS_PSK_WITH_AES_256_GCM_SHA384,
                     // The following have been removed from OpenSSL on 2015-05-23
                     Cipher.TLS_DH_RSA_EXPORT_WITH_DES40_CBC_SHA,
                     Cipher.TLS_DH_DSS_EXPORT_WITH_DES40_CBC_SHA)));

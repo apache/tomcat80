@@ -115,7 +115,8 @@ public class TestCipher {
             // 1.0.2
             if (cipher.getProtocol().equals(Protocol.TLSv1_2) &&
                     (cipher.getEnc().equals(Encryption.CAMELLIA256) ||
-                            cipher.getEnc().equals(Encryption.CAMELLIA128))) {
+                            cipher.getEnc().equals(Encryption.CAMELLIA128)||
+                            cipher.getAu().equals(Authentication.PSK))) {
                 continue;
             }
             expectedCipherSuites.add(openSSLAlias + "+" +
