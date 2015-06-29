@@ -199,6 +199,18 @@
         <code>SlowQueryReport#removeOldest</code> and handle the abandoned
         connection properly. (kfujino)
       </fix>
+      <fix>
+        <bug>58042</bug>: In <code>SlowQueryReportJmx</code>, the
+        <code>LogSlow</code> and <code>logFailed</code> attributes that
+        inherited from <code>SlowQueryReport</code> are used as a condition of
+        whether JMX notifications are sent. (kfujino)
+      </fix>
+      <fix>
+        Ensure that specified <code>Boolean</code> attribute values of
+        <code>SlowQueryReport</code> reflect correctly. The <code>LogSlow</code>
+        and the <code>logFailed</code> are not system property, these are
+        attributes of <code>SlowQueryReport</code>. (kfujino)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Other">
