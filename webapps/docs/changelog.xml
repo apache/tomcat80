@@ -106,6 +106,9 @@
         ANT for web application deployment. Based on a patch provided by Lukasz
         Jader. (violetagg)
       </fix>
+      <fix>
+        Fix CredentialHandler element handling in storeconfig. (remm)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Coyote">
