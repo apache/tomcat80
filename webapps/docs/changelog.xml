@@ -58,6 +58,10 @@
         (Resources loaded from these locations are cached by the web application
         class loader.) (markt)
       </fix>
+      <fix>
+        <bug>58096</bug>: Classes loaded from <code>/WEB-INF/classes/</code>
+        should use that directory as their code base. (markt)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Coyote">
