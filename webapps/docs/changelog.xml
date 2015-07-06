@@ -52,6 +52,12 @@
         unpacked WAR in the same way the manifest is available if the WAR is not
         unpacked. (markt)
       </fix>
+      <fix>
+        Ensure that only <code>/WEB-INF/classes/</code> and
+        <code>/WEB-INF/lib/</code> are excluded from the web resource caching.
+        (Resources loaded from these locations are cached by the web application
+        class loader.) (markt)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Coyote">
