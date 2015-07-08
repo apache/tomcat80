@@ -62,6 +62,10 @@
         <bug>58096</bug>: Classes loaded from <code>/WEB-INF/classes/</code>
         should use that directory as their code base. (markt)
       </fix>
+      <fix>
+        <bug>58086</bug>: Correct a regression in the fix for 58086 that
+        incorrectly handled WAR URLs. (violetagg)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Coyote">
