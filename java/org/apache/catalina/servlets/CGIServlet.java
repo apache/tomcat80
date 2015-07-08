@@ -539,39 +539,34 @@ public final class CGIServlet extends HttpServlet {
 
 
     /**
-     * Provides CGI Gateway service -- delegates to <code>doGet</code>
+     * Provides CGI Gateway service -- delegates to
+     * {@link #doGet(HttpServletRequest, HttpServletResponse)}.
      *
      * @param  req   HttpServletRequest passed in by servlet container
      * @param  res   HttpServletResponse passed in by servlet container
      *
      * @exception  ServletException  if a servlet-specific exception occurs
      * @exception  IOException  if a read/write exception occurs
-     *
-     * @see javax.servlet.http.HttpServlet
-     *
      */
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse res)
-        throws IOException, ServletException {
+            throws IOException, ServletException {
         doGet(req, res);
     }
 
 
     /**
-     * Provides CGI Gateway service
+     * Provides CGI Gateway service.
      *
      * @param  req   HttpServletRequest passed in by servlet container
      * @param  res   HttpServletResponse passed in by servlet container
      *
      * @exception  ServletException  if a servlet-specific exception occurs
      * @exception  IOException  if a read/write exception occurs
-     *
-     * @see javax.servlet.http.HttpServlet
-     *
      */
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse res)
-        throws ServletException, IOException {
+            throws ServletException, IOException {
 
         CGIEnvironment cgiEnv = new CGIEnvironment(req, getServletContext());
 
@@ -580,16 +575,13 @@ public final class CGIServlet extends HttpServlet {
                                           cgiEnv.getEnvironment(),
                                           cgiEnv.getWorkingDirectory(),
                                           cgiEnv.getParameters());
-            //if POST, we need to cgi.setInput
-            //REMIND: how does this interact with Servlet API 2.3's Filters?!
+
             if ("POST".equals(req.getMethod())) {
                 cgi.setInput(req.getInputStream());
             }
             cgi.setResponse(res);
             cgi.run();
-        }
-
-        if (!cgiEnv.isValid()) {
+        } else {
             res.setStatus(404);
         }
 
@@ -626,11 +618,8 @@ public final class CGIServlet extends HttpServlet {
             printServletEnvironment(out, req, res);
 
             out.println("</BODY></HTML>");
-
         }
-
-
-    } //doGet
+    }
 
 
     /**
