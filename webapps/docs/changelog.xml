@@ -4050,7 +4050,7 @@
       </scode>
       <add>
         <bug>55317</bug>: Facilitate weaving by allowing ClassFileTransformer to
-        be added to WebppClassLoader. Patch by Nick Williams. (markt)
+        be added to WebappClassLoader. Patch by Nick Williams. (markt)
       </add>
       <fix>
         <bug>55620</bug>: Enable Tomcat to start when either $CATALINA_HOME
