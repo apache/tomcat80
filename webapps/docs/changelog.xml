@@ -111,6 +111,10 @@
       <update>
         Update optional Checkstyle library to 6.8.1. (kkolinko)
       </update>
+      <fix>
+        Update sample Eclipse IDE configuration to exclude test/webapp* and
+        similar paths from compiler sourcepath. (kkolinko)
+      </fix>
     </changelog>
   </subsection>
 </section>
