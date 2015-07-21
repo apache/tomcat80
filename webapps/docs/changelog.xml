@@ -106,6 +106,15 @@
       </fix>
     </changelog>
   </subsection>
+  <subsection name="jdbc-pool">
+    <changelog>
+      <fix>
+        <bug>58042</bug>: The default value of <code>logFailed</code> attribute
+        of <code>SlowQueryReport</code> is changed to <code>false</code> so that
+        the failed queries are not logged by default. (kfujino)
+      </fix>
+    </changelog>
+  </subsection>
   <subsection name="Other">
     <changelog>
       <update>
