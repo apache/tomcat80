@@ -121,6 +121,9 @@
         of <code>SlowQueryReport</code> is changed to <code>false</code> so that
         the failed queries are not logged by default. (kfujino)
       </fix>
+      <fix>
+        Fix potential NPE in <code>QueryTimeoutInterceptor</code>. (kfujino)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Other">
