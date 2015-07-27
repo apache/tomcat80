@@ -109,6 +109,9 @@
         org/apache/jsp/tag/web directory. Correct a regression in the fix for
         52725. (violetagg)
       </fix>
+      <fix>
+        Fix a resource leak in JspC identified by Eclipse. (markt)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Web applications">
