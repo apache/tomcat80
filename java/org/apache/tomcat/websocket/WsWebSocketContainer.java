@@ -587,7 +587,6 @@ public class WsWebSocketContainer
      * @throws DeploymentException
      * @throws TimeoutException
      */
-    @SuppressWarnings("null")
     private HandshakeResponse processResponse(ByteBuffer response,
             AsyncChannelWrapper channel, long timeout) throws InterruptedException,
             ExecutionException, DeploymentException, EOFException,
