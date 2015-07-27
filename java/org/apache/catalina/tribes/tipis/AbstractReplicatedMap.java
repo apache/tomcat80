@@ -240,7 +240,8 @@ public abstract class AbstractReplicatedMap<K,V>
         }
         long complete = System.currentTimeMillis() - start;
         if (log.isInfoEnabled())
-            log.info(sm.getString("abstractReplicatedMap.init.completed", mapContextName, complete));
+            log.info(sm.getString("abstractReplicatedMap.init.completed",
+                    mapContextName, Long.toString(complete)));
     }
 
 
@@ -846,7 +847,8 @@ public abstract class AbstractReplicatedMap<K,V>
 
         } //while
         long complete = System.currentTimeMillis() - start;
-        if (log.isInfoEnabled()) log.info(sm.getString("abstractReplicatedMap.relocate.complete", complete));
+        if (log.isInfoEnabled()) log.info(sm.getString("abstractReplicatedMap.relocate.complete",
+                Long.toString(complete)));
     }
 
     public int getNextBackupIndex() {
