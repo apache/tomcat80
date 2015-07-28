@@ -1059,6 +1059,10 @@ public abstract class AbstractEndpoint<S> {
 
     protected final Set<SocketWrapper<S>> waitingRequests = Collections
             .newSetFromMap(new ConcurrentHashMap<SocketWrapper<S>, Boolean>());
+    public void removeWaitingRequest(SocketWrapper<S> socketWrapper) {
+        waitingRequests.remove(socketWrapper);
+    }
+
 
     /**
      * Configures SSLEngine to honor cipher suites ordering based upon
