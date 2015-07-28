@@ -580,6 +580,7 @@ public class Nio2Endpoint extends AbstractEndpoint<Nio2Channel> {
 
     protected boolean processSocket0(SocketWrapper<Nio2Channel> socketWrapper, SocketStatus status, boolean dispatch) {
         try {
+            waitingRequests.remove(socketWrapper);
             SocketProcessor sc = (useCaches) ? processorCache.pop() : null;
             if (sc == null) {
                 sc = new SocketProcessor(socketWrapper, status);
