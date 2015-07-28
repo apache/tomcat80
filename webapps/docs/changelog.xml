@@ -128,7 +128,7 @@
       </fix>
       <fix>
         <bug>58112</bug>: Update the documentation for using the Catalina tasks
-        in an Apache Ant build file. (markt) 
+        in an Apache Ant build file. (markt)
       </fix>
     </changelog>
   </subsection>
