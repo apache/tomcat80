@@ -82,6 +82,8 @@
         broke Comet support when running under a security manager. Based on a
         patch provided by Johno Crawford. (markt)
       </fix>
+      <fix>58125</fix>: Avoid a possible <code>ClassCircularityError</code> when
+      running under a security manager. (markt)
       <fix>
         <bug>58179</bug>: Fix a thread safety issues that could mean concurrent
         threads setting the same attribute on a <code>ServletContext</code>
