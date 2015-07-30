@@ -91,6 +91,10 @@
         threads setting the same attribute on a <code>ServletContext</code>
         could both see <code>null</code> as the old value. (markt)
       </fix>
+      <fix>
+        Allow web archives bigger than 2G to be deployed using ANT tasks.
+        (violetagg)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Coyote">
