@@ -141,6 +141,8 @@ public abstract class WebappClassLoaderBase extends URLClassLoader
     private static final String CLASS_FILE_SUFFIX = ".class";
     private static final String SERVICES_PREFIX = "/META-INF/services/";
 
+    private static final Manifest MANIFEST_UNKNOWN = new Manifest();
+
     static {
         ClassLoader.registerAsParallelCapable();
         JVM_THREAD_GROUP_NAMES.add(JVM_THREAD_GROUP_SYSTEM);
@@ -2552,8 +2554,17 @@ public abstract class WebappClassLoaderBase extends URLClassLoader
             return null;
         }
 
+        WebResource resource = null;
+
         ResourceEntry entry = resourceEntries.get(path);
         if (entry != null) {
+            if (manifestRequired && entry.manifest == MANIFEST_UNKNOWN) {
+                // This resource was added to the cache when a request was made
+                // for the resource that did not need the manifest. Now the
+                // manifest is required, the cache entry needs to be updated.
+                resource = resources.getClassLoaderResource(path);
+                entry.manifest = resource.getManifest();
+            }
             return entry;
         }
 
@@ -2563,7 +2574,6 @@ public abstract class WebappClassLoaderBase extends URLClassLoader
              isCacheable = path.startsWith(SERVICES_PREFIX);
         }
 
-        WebResource resource = null;
 
         boolean fileNeedConvert = false;
 
@@ -2621,6 +2631,8 @@ public abstract class WebappClassLoaderBase extends URLClassLoader
 
         if (manifestRequired) {
             entry.manifest = resource.getManifest();
+        } else {
+            entry.manifest = MANIFEST_UNKNOWN;
         }
 
         if (isClassResource && entry.binaryContent != null &&
