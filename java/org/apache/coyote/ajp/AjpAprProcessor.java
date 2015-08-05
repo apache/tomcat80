@@ -197,9 +197,9 @@ public class AjpAprProcessor extends AbstractAjpProcessor<Long> {
             nRead = readSocket(inputBuffer.limit(),
                     inputBuffer.capacity() - inputBuffer.limit(),
                     nextReadBlocks);
-            if (nRead == 0) {
-                // Must be a non-blocking read
-                return false;
+            if (nRead > 0) {
+                inputBuffer.limit(inputBuffer.limit() + nRead);
+                nextReadBlocks = true;
             } else if (-nRead == Status.EAGAIN) {
                 return false;
             } else if ((-nRead) == Status.ETIMEDOUT || (-nRead) == Status.TIMEUP) {
@@ -215,9 +215,6 @@ public class AjpAprProcessor extends AbstractAjpProcessor<Long> {
                     // non-blocking read that returned no data.
                     return false;
                 }
-            } else if (nRead > 0) {
-                inputBuffer.limit(inputBuffer.limit() + nRead);
-                nextReadBlocks = true;
             } else {
                 throw new IOException(sm.getString("ajpprocessor.failedread"));
             }

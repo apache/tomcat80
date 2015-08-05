@@ -119,6 +119,11 @@
         requests so that the async timeout thread doesn't process it during the
         next request. (markt)
       </fix>
+      <fix>
+        <bug>58151</bug>: Correctly handle EOF in the AJP APR/native connector
+        to prevent the connector entering a loop and generate excessive CPU
+        load. (markt) 
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Jasper">
