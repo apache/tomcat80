@@ -66,6 +66,11 @@
         returned instead. (markt)
       </add>
       <fix>
+        <bug>58031</bug>: Make the (first) reason parameter parsing failed
+        available as a request attribute and then use it to provide a better 
+        status code via the FailedRequstFilter (if configured). (markt)
+      </fix>
+      <fix>
         <bug>58086</bug>: Correct a regression in the fix for 58086 that
         incorrectly handled WAR URLs. (violetagg)
       </fix>
