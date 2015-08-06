@@ -147,6 +147,11 @@
       <fix>
         Fix a resource leak in JspC identified by Eclipse. (markt)
       </fix>
+      <fix>
+        <bug>58178</bug>: Expressions in a tag file should use the tag
+        file&apos;s <code>PageContext</code> rather than that of the containing
+        page. (markt)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="WebSocket">
