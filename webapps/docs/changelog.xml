@@ -67,7 +67,7 @@
       </add>
       <fix>
         <bug>58031</bug>: Make the (first) reason parameter parsing failed
-        available as a request attribute and then use it to provide a better 
+        available as a request attribute and then use it to provide a better
         status code via the FailedRequstFilter (if configured). (markt)
       </fix>
       <fix>
