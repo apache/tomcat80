@@ -223,6 +223,10 @@
         similar paths from compiler sourcepath. (kkolinko)
       </fix>
       <update>
+        Update package renamed Apache Commons Pool to Commons Pool 2.4.2.
+        (markt)
+      </update>
+      <update>
         Update package renamed Apache Commons DBCP to Commons DBCP 2.1.1.
         (markt)
       </update>
