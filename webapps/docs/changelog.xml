@@ -222,6 +222,10 @@
         Update sample Eclipse IDE configuration to exclude test/webapp* and
         similar paths from compiler sourcepath. (kkolinko)
       </fix>
+      <update>
+        Update package renamed Apache Commons DBCP to Commons DBCP 2.1.1.
+        (markt)
+      </update>
     </changelog>
   </subsection>
 </section>
