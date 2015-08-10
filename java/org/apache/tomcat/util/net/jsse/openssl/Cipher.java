@@ -65,7 +65,8 @@ public enum Cipher {
             false,
             0,
             0,
-            "SSL_RSA_WITH_NULL_MD5"
+            new String[] {"SSL_RSA_WITH_NULL_MD5"},
+            null
     ),
     // Cipher 02
     TLS_RSA_WITH_NULL_SHA(
@@ -81,7 +82,8 @@ public enum Cipher {
             true,
             0,
             0,
-            "SSL_RSA_WITH_NULL_SHA"
+            new String[] {"SSL_RSA_WITH_NULL_SHA"},
+            null
     ),
     // Cipher 03
     TLS_RSA_EXPORT_WITH_RC4_40_MD5(
@@ -97,7 +99,8 @@ public enum Cipher {
             false,
             40,
             128,
-            "SSL_RSA_EXPORT_WITH_RC4_40_MD5"
+            new String[] {"SSL_RSA_EXPORT_WITH_RC4_40_MD5"},
+            null
     ),
     // Cipher 04
     TLS_RSA_WITH_RC4_128_MD5(
@@ -113,7 +116,8 @@ public enum Cipher {
             false,
             128,
             128,
-            "SSL_RSA_WITH_RC4_128_MD5"
+            new String[] {"SSL_RSA_WITH_RC4_128_MD5"},
+            null
     ),
     // Cipher 05
     TLS_RSA_WITH_RC4_128_SHA(
@@ -129,7 +133,8 @@ public enum Cipher {
             false,
             128,
             128,
-            "SSL_RSA_WITH_RC4_128_SHA"
+            new String[] {"SSL_RSA_WITH_RC4_128_SHA"},
+            null
     ),
     // Cipher 06
     TLS_RSA_EXPORT_WITH_RC2_CBC_40_MD5(
@@ -145,7 +150,8 @@ public enum Cipher {
             false,
             40,
             128,
-            "SSL_RSA_EXPORT_WITH_RC2_CBC_40_MD5"
+            new String[] {"SSL_RSA_EXPORT_WITH_RC2_CBC_40_MD5"},
+            null
     ),
     // Cipher 07
     TLS_RSA_WITH_IDEA_CBC_SHA(
@@ -161,7 +167,8 @@ public enum Cipher {
             false,
             128,
             128,
-            "SSL_RSA_WITH_IDEA_CBC_SHA"
+            new String[] {"SSL_RSA_WITH_IDEA_CBC_SHA"},
+            null
     ),
     // Cipher 08
     TLS_RSA_EXPORT_WITH_DES40_CBC_SHA(
@@ -177,7 +184,8 @@ public enum Cipher {
             false,
             40,
             56,
-            "SSL_RSA_EXPORT_WITH_DES40_CBC_SHA"
+            new String[] {"SSL_RSA_EXPORT_WITH_DES40_CBC_SHA"},
+            null
     ),
     // Cipher 09
     TLS_RSA_WITH_DES_CBC_SHA(
@@ -193,7 +201,8 @@ public enum Cipher {
             false,
             56,
             56,
-            "SSL_RSA_WITH_DES_CBC_SHA"
+            new String[] {"SSL_RSA_WITH_DES_CBC_SHA"},
+            null
     ),
     // Cipher 0A
     TLS_RSA_WITH_3DES_EDE_CBC_SHA(
@@ -209,7 +218,8 @@ public enum Cipher {
             true,
             112,
             168,
-            "SSL_RSA_WITH_3DES_EDE_CBC_SHA"
+            new String[] {"SSL_RSA_WITH_3DES_EDE_CBC_SHA"},
+            null
     ),
     /* The DH ciphers */
     // Cipher 0B
@@ -226,7 +236,8 @@ public enum Cipher {
             false,
             40,
             56,
-            "SSL_DH_DSS_EXPORT_WITH_DES40_CBC_SHA"
+            new String[] {"SSL_DH_DSS_EXPORT_WITH_DES40_CBC_SHA"},
+            null
     ),
     // Cipher 0C
     TLS_DH_DSS_WITH_DES_CBC_SHA(
@@ -242,7 +253,8 @@ public enum Cipher {
             false,
             56,
             56,
-            "SSL_DH_DSS_WITH_DES_CBC_SHA"
+            new String[] {"SSL_DH_DSS_WITH_DES_CBC_SHA"},
+            null
     ),
     // Cipher 0D
     TLS_DH_DSS_WITH_3DES_EDE_CBC_SHA(
@@ -258,7 +270,8 @@ public enum Cipher {
             true,
             112,
             168,
-            "SSL_DH_DSS_WITH_3DES_EDE_CBC_SHA"
+            new String[] {"SSL_DH_DSS_WITH_3DES_EDE_CBC_SHA"},
+            null
     ),
     // Cipher 0E
     TLS_DH_RSA_EXPORT_WITH_DES40_CBC_SHA(
@@ -274,7 +287,8 @@ public enum Cipher {
             false,
             40,
             56,
-            "SSL_DH_RSA_EXPORT_WITH_DES40_CBC_SHA"
+            new String[] {"SSL_DH_RSA_EXPORT_WITH_DES40_CBC_SHA"},
+            null
     ),
     // Cipher 0F
     TLS_DH_RSA_WITH_DES_CBC_SHA(
@@ -290,7 +304,8 @@ public enum Cipher {
             false,
             56,
             56,
-            "SSL_DH_RSA_WITH_DES_CBC_SHA"
+            new String[] {"SSL_DH_RSA_WITH_DES_CBC_SHA"},
+            null
     ),
     // Cipher 10
     TLS_DH_RSA_WITH_3DES_EDE_CBC_SHA(
@@ -306,13 +321,14 @@ public enum Cipher {
             true,
             112,
             168,
-            "SSL_DH_RSA_WITH_3DES_EDE_CBC_SHA"
+            new String[] {"SSL_DH_RSA_WITH_3DES_EDE_CBC_SHA"},
+            null
     ),
     /* The Ephemeral DH ciphers */
     // Cipher 11
     TLS_DHE_DSS_EXPORT_WITH_DES40_CBC_SHA(
             0x0011,
-            "EXP-EDH-DSS-DES-CBC-SHA",
+            "EXP-DHE-DSS-DES-CBC-SHA",
             KeyExchange.EDH,
             Authentication.DSS,
             Encryption.DES,
@@ -323,12 +339,13 @@ public enum Cipher {
             false,
             40,
             56,
-            "SSL_DHE_DSS_EXPORT_WITH_DES40_CBC_SHA"
+            new String[] {"SSL_DHE_DSS_EXPORT_WITH_DES40_CBC_SHA"},
+            new String[] {"EXP-EDH-DSS-DES-CBC-SHA"}
     ),
     // Cipher 12
     TLS_DHE_DSS_WITH_DES_CBC_SHA(
             0x0012,
-            "EDH-DSS-DES-CBC-SHA",
+            "DHE-DSS-DES-CBC-SHA",
             KeyExchange.EDH,
             Authentication.DSS,
             Encryption.DES,
@@ -339,12 +356,13 @@ public enum Cipher {
             false,
             56,
             56,
-            "SSL_DHE_DSS_WITH_DES_CBC_SHA"
+            new String[] {"SSL_DHE_DSS_WITH_DES_CBC_SHA"},
+            new String[] {"EDH-DSS-DES-CBC-SHA"}
     ),
     // Cipher 13
     TLS_DHE_DSS_WITH_3DES_EDE_CBC_SHA(
             0x0013,
-            "EDH-DSS-DES-CBC3-SHA",
+            "DHE-DSS-DES-CBC3-SHA",
             KeyExchange.EDH,
             Authentication.DSS,
             Encryption.TRIPLE_DES,
@@ -355,12 +373,13 @@ public enum Cipher {
             true,
             112,
             168,
-            "SSL_DHE_DSS_WITH_3DES_EDE_CBC_SHA"
+            new String[] {"SSL_DHE_DSS_WITH_3DES_EDE_CBC_SHA"},
+            new String[] {"EDH-DSS-DES-CBC3-SHA"}
     ),
     // Cipher 14
     TLS_DHE_RSA_EXPORT_WITH_DES40_CBC_SHA(
             0x0014,
-            "EXP-EDH-RSA-DES-CBC-SHA",
+            "EXP-DHE-RSA-DES-CBC-SHA",
             KeyExchange.EDH,
             Authentication.RSA,
             Encryption.DES,
@@ -371,12 +390,13 @@ public enum Cipher {
             false,
             40,
             56,
-            "SSL_DHE_RSA_EXPORT_WITH_DES40_CBC_SHA"
+            new String[] {"SSL_DHE_RSA_EXPORT_WITH_DES40_CBC_SHA"},
+            new String[] {"EXP-EDH-RSA-DES-CBC-SHA"}
     ),
     // Cipher 15
     TLS_DHE_RSA_WITH_DES_CBC_SHA(
             0x0015,
-            "EDH-RSA-DES-CBC-SHA",
+            "DHE-RSA-DES-CBC-SHA",
             KeyExchange.EDH,
             Authentication.RSA,
             Encryption.DES,
@@ -387,12 +407,13 @@ public enum Cipher {
             false,
             56,
             56,
-            "SSL_DHE_RSA_WITH_DES_CBC_SHA"
+            new String[] {"SSL_DHE_RSA_WITH_DES_CBC_SHA"},
+            new String[] {"EDH-RSA-DES-CBC-SHA"}
     ),
     // Cipher 16
     TLS_DHE_RSA_WITH_3DES_EDE_CBC_SHA(
             0x0016,
-            "EDH-RSA-DES-CBC3-SHA",
+            "DHE-RSA-DES-CBC3-SHA",
             KeyExchange.EDH,
             Authentication.RSA,
             Encryption.TRIPLE_DES,
@@ -403,7 +424,8 @@ public enum Cipher {
             true,
             112,
             168,
-            "SSL_DHE_RSA_WITH_3DES_EDE_CBC_SHA"
+            new String[] {"SSL_DHE_RSA_WITH_3DES_EDE_CBC_SHA"},
+            new String[] {"EDH-RSA-DES-CBC3-SHA"}
     ),
     // Cipher 17
     TLS_DH_anon_EXPORT_WITH_RC4_40_MD5(
@@ -419,7 +441,8 @@ public enum Cipher {
             false,
             40,
             128,
-            "SSL_DH_anon_EXPORT_WITH_RC4_40_MD5"
+            new String[] {"SSL_DH_anon_EXPORT_WITH_RC4_40_MD5"},
+            null
     ),
     // Cipher 18
     TLS_DH_anon_WITH_RC4_128_MD5(
@@ -435,7 +458,8 @@ public enum Cipher {
             false,
             128,
             128,
-            "SSL_DH_anon_WITH_RC4_128_MD5"
+            new String[] {"SSL_DH_anon_WITH_RC4_128_MD5"},
+            null
     ),
     // Cipher 19
     TLS_DH_anon_EXPORT_WITH_DES40_CBC_SHA(
@@ -451,7 +475,8 @@ public enum Cipher {
             false,
             40,
             128,
-            "SSL_DH_anon_EXPORT_WITH_DES40_CBC_SHA"
+            new String[] {"SSL_DH_anon_EXPORT_WITH_DES40_CBC_SHA"},
+            null
     ),
     // Cipher 1A
     TLS_DH_anon_WITH_DES_CBC_SHA(
@@ -467,7 +492,8 @@ public enum Cipher {
             false,
             56,
             56,
-            "SSL_DH_anon_WITH_DES_CBC_SHA"
+            new String[] {"SSL_DH_anon_WITH_DES_CBC_SHA"},
+            null
     ),
     // Cipher 1B
     TLS_DH_anon_WITH_3DES_EDE_CBC_SHA(
@@ -483,7 +509,8 @@ public enum Cipher {
             true,
             112,
             168,
-            "SSL_DH_anon_WITH_3DES_EDE_CBC_SHA"
+            new String[] {"SSL_DH_anon_WITH_3DES_EDE_CBC_SHA"},
+            null
     ),
     /* Fortezza ciphersuite from SSL 3.0 spec
      * Neither OpenSSL nor Java implement these ciphers and the IDs used
@@ -500,7 +527,9 @@ public enum Cipher {
             EncryptionLevel.STRONG_NONE,
             false,
             0,
-            0
+            0,
+            null,
+            null
     ),
     // Cipher 1D
     SSL_FORTEZZA_DMS_WITH_FORTEZZA_CBC_SHA(
@@ -514,7 +543,9 @@ public enum Cipher {
             EncryptionLevel.STRONG_NONE,
             false,
             0,
-            0
+            0,
+            null,
+            null
     ),
     // Cipher 1E - overlaps with Kerberos below
     SSL_FORTEZZA_DMS_WITH_RC4_128_SHA(
@@ -528,7 +559,9 @@ public enum Cipher {
             EncryptionLevel.MEDIUM,
             false,
             128,
-            128
+            128,
+            null,
+            null
     ),
      */
     /* The Kerberos ciphers. OpenSSL doesn't support these. Java does but they
@@ -546,7 +579,9 @@ public enum Cipher {
             EncryptionLevel.LOW,
             false,
             56,
-            56
+            56,
+            null,
+            null
     ),
     // Cipher 1F
     TLS_KRB5_WITH_3DES_EDE_CBC_SHA(
@@ -560,7 +595,9 @@ public enum Cipher {
             EncryptionLevel.HIGH,
             true,
             112,
-            168
+            168,
+            null,
+            null
     ),
     // Cipher 20
     TLS_KRB5_WITH_RC4_128_SHA(
@@ -574,7 +611,9 @@ public enum Cipher {
             EncryptionLevel.MEDIUM,
             false,
             128,
-            128
+            128,
+            null,
+            null
     ),
     // Cipher 21
     TLS_KRB5_WITH_IDEA_CBC_SHA(
@@ -588,7 +627,9 @@ public enum Cipher {
             EncryptionLevel.MEDIUM,
             false,
             128,
-            128
+            128,
+            null,
+            null
     ),
     // Cipher 22
     TLS_KRB5_WITH_DES_CBC_MD5(
@@ -602,7 +643,9 @@ public enum Cipher {
             EncryptionLevel.LOW,
             false,
             56,
-            56
+            56,
+            null,
+            null
     ),
     // Cipher 23
     TLS_KRB5_WITH_3DES_EDE_CBC_MD5(
@@ -616,7 +659,9 @@ public enum Cipher {
             EncryptionLevel.HIGH,
             false,
             112,
-            168
+            168,
+            null,
+            null
     ),
     // Cipher 24
     TLS_KRB5_WITH_RC4_128_MD5(
@@ -630,7 +675,9 @@ public enum Cipher {
             EncryptionLevel.MEDIUM,
             false,
             128,
-            128
+            128,
+            null,
+            null
     ),
     // Cipher 25
     TLS_KRB5_WITH_IDEA_CBC_MD5(
@@ -644,7 +691,9 @@ public enum Cipher {
             EncryptionLevel.MEDIUM,
             false,
             128,
-            128
+            128,
+            null,
+            null
     ),
     // Cipher 26
     TLS_KRB5_EXPORT_WITH_DES_CBC_40_SHA(
@@ -658,7 +707,9 @@ public enum Cipher {
             EncryptionLevel.EXP40,
             false,
             40,
-            56
+            56,
+            null,
+            null
     ),
     // Cipher 27
     TLS_KRB5_EXPORT_WITH_RC2_CBC_40_SHA(
@@ -672,7 +723,9 @@ public enum Cipher {
             EncryptionLevel.EXP40,
             false,
             40,
-            128
+            128,
+            null,
+            null
     ),
     // Cipher 28
     TLS_KRB5_EXPORT_WITH_RC4_40_SHA(
@@ -686,7 +739,9 @@ public enum Cipher {
             EncryptionLevel.EXP40,
             false,
             40,
-            128
+            128,
+            null,
+            null
     ),
     // Cipher 29
     TLS_KRB5_EXPORT_WITH_DES_CBC_40_MD5(
@@ -700,7 +755,9 @@ public enum Cipher {
             EncryptionLevel.EXP40,
             false,
             40,
-            56
+            56,
+            null,
+            null
     ),
     // Cipher 2A
     TLS_KRB5_EXPORT_WITH_RC2_CBC_40_MD5(
@@ -714,7 +771,9 @@ public enum Cipher {
             EncryptionLevel.EXP40,
             false,
             40,
-            128
+            128,
+            null,
+            null
     ),
     // Cipher 2B
     TLS_KRB5_EXPORT_WITH_RC4_40_MD5(
@@ -728,21 +787,63 @@ public enum Cipher {
             EncryptionLevel.EXP40,
             false,
             40,
-            128
+            128,
+            null,
+            null
     ),*/
 
-    /* PSK cipher suites from RFC 4785
-     * Unsupported by both Java and OpenSSL.
+    /* PSK cipher suites from RFC 4785 */
     // Cipher 2C
-    TLS_PSK_WITH_NULL_SHA
-
+    TLS_PSK_WITH_NULL_SHA(
+            0x002c,
+            "PSK-NULL-SHA",
+            KeyExchange.PSK,
+            Authentication.PSK,
+            Encryption.eNULL,
+            MessageDigest.SHA1,
+            Protocol.TLSv1,
+            false,
+            EncryptionLevel.STRONG_NONE,
+            true,
+            0,
+            0,
+            null,
+            null
+    ),
     // Cipher 2D
-    TLS_DHE_PSK_WITH_NULL_SHA
-
+    TLS_DHE_PSK_WITH_NULL_SHA(
+            0x002d,
+            "DHE-PSK-NULL-SHA",
+            KeyExchange.DHEPSK,
+            Authentication.PSK,
+            Encryption.eNULL,
+            MessageDigest.SHA1,
+            Protocol.TLSv1,
+            false,
+            EncryptionLevel.STRONG_NONE,
+            true,
+            0,
+            0,
+            null,
+            null
+    ),
     // Cipher 2E
-    TLS_RSA_PSK_WITH_NULL_SHA
-    */
-
+    TLS_RSA_PSK_WITH_NULL_SHA(
+            0x002e,
+            "RSA-PSK-NULL-SHA",
+            KeyExchange.RSAPSK,
+            Authentication.RSA,
+            Encryption.eNULL,
+            MessageDigest.SHA1,
+            Protocol.TLSv1,
+            false,
+            EncryptionLevel.STRONG_NONE,
+            true,
+            0,
+            0,
+            null,
+            null
+    ),
     /* New AES ciphersuites */
     // Cipher 2F
     TLS_RSA_WITH_AES_128_CBC_SHA(
@@ -757,7 +858,9 @@ public enum Cipher {
             EncryptionLevel.HIGH,
             true,
             128,
-            128
+            128,
+            null,
+            null
     ),
     // Cipher 30
     TLS_DH_DSS_WITH_AES_128_CBC_SHA(
@@ -772,7 +875,9 @@ public enum Cipher {
             EncryptionLevel.HIGH,
             true,
             128,
-            128
+            128,
+            null,
+            null
     ),
     // Cipher 31
     TLS_DH_RSA_WITH_AES_128_CBC_SHA(
@@ -787,7 +892,9 @@ public enum Cipher {
             EncryptionLevel.HIGH,
             true,
             128,
-            128
+            128,
+            null,
+            null
     ),
     // Cipher 32
     TLS_DHE_DSS_WITH_AES_128_CBC_SHA(
@@ -802,7 +909,9 @@ public enum Cipher {
             EncryptionLevel.HIGH,
             true,
             128,
-            128
+            128,
+            null,
+            null
     ),
     // Cipher 33
     TLS_DHE_RSA_WITH_AES_128_CBC_SHA(
@@ -817,7 +926,9 @@ public enum Cipher {
             EncryptionLevel.HIGH,
             true,
             128,
-            128
+            128,
+            null,
+            null
     ),
     // Cipher 34
     TLS_DH_anon_WITH_AES_128_CBC_SHA(
@@ -832,7 +943,9 @@ public enum Cipher {
             EncryptionLevel.HIGH,
             true,
             128,
-            128
+            128,
+            null,
+            null
     ),
     // Cipher 35
     TLS_RSA_WITH_AES_256_CBC_SHA(
@@ -847,7 +960,9 @@ public enum Cipher {
             EncryptionLevel.HIGH,
             true,
             256,
-            256
+            256,
+            null,
+            null
     ),
     // Cipher 36
     TLS_DH_DSS_WITH_AES_256_CBC_SHA(
@@ -862,7 +977,9 @@ public enum Cipher {
             EncryptionLevel.HIGH,
             true,
             256,
-            256
+            256,
+            null,
+            null
     ),
     // Cipher 37
     TLS_DH_RSA_WITH_AES_256_CBC_SHA(
@@ -877,7 +994,9 @@ public enum Cipher {
             EncryptionLevel.HIGH,
             true,
             256,
-            256
+            256,
+            null,
+            null
     ),
     // Cipher 38
     TLS_DHE_DSS_WITH_AES_256_CBC_SHA(
@@ -892,7 +1011,9 @@ public enum Cipher {
             EncryptionLevel.HIGH,
             true,
             256,
-            256
+            256,
+            null,
+            null
     ),
     // Cipher 39
     TLS_DHE_RSA_WITH_AES_256_CBC_SHA(
@@ -907,7 +1028,9 @@ public enum Cipher {
             EncryptionLevel.HIGH,
             true,
             256,
-            256
+            256,
+            null,
+            null
     ),
     // Cipher 3A
     TLS_DH_anon_WITH_AES_256_CBC_SHA(
@@ -922,7 +1045,9 @@ public enum Cipher {
             EncryptionLevel.HIGH,
             true,
             256,
-            256
+            256,
+            null,
+            null
     ),
     /* TLS v1.2 ciphersuites */
     // Cipher 3B
@@ -938,7 +1063,9 @@ public enum Cipher {
             EncryptionLevel.STRONG_NONE,
             true,
             0,
-            0
+            0,
+            null,
+            null
     ),
     // Cipher 3C
     TLS_RSA_WITH_AES_128_CBC_SHA256(
@@ -953,7 +1080,9 @@ public enum Cipher {
             EncryptionLevel.HIGH,
             true,
             128,
-            128
+            128,
+            null,
+            null
     ),
     // Cipher 3D
     TLS_RSA_WITH_AES_256_CBC_SHA256(
@@ -968,7 +1097,9 @@ public enum Cipher {
             EncryptionLevel.HIGH,
             true,
             256,
-            256
+            256,
+            null,
+            null
     ),
     // Cipher 3E
     TLS_DH_DSS_WITH_AES_128_CBC_SHA256(
@@ -983,7 +1114,9 @@ public enum Cipher {
             EncryptionLevel.HIGH,
             true,
             128,
-            128
+            128,
+            null,
+            null
     ),
     // Cipher 3F
     TLS_DH_RSA_WITH_AES_128_CBC_SHA256(
@@ -998,7 +1131,9 @@ public enum Cipher {
             EncryptionLevel.HIGH,
             true,
             128,
-            128
+            128,
+            null,
+            null
     ),
     // Cipher 40
     TLS_DHE_DSS_WITH_AES_128_CBC_SHA256(
@@ -1013,7 +1148,9 @@ public enum Cipher {
             EncryptionLevel.HIGH,
             true,
             128,
-            128
+            128,
+            null,
+            null
     ),
     /* Camellia ciphersuites from RFC4132 (
             128-bit portion) */
@@ -1030,7 +1167,9 @@ public enum Cipher {
             EncryptionLevel.HIGH,
             false,
             128,
-            128
+            128,
+            null,
+            null
     ),
     // Cipher 42
     TLS_DH_DSS_WITH_CAMELLIA_128_CBC_SHA(
@@ -1045,7 +1184,9 @@ public enum Cipher {
             EncryptionLevel.HIGH,
             false,
             128,
-            128
+            128,
+            null,
+            null
     ),
     // Cipher 43
     TLS_DH_RSA_WITH_CAMELLIA_128_CBC_SHA(
@@ -1060,7 +1201,9 @@ public enum Cipher {
             EncryptionLevel.HIGH,
             false,
             128,
-            128
+            128,
+            null,
+            null
     ),
     // Cipher 44
     TLS_DHE_DSS_WITH_CAMELLIA_128_CBC_SHA(
@@ -1075,7 +1218,9 @@ public enum Cipher {
             EncryptionLevel.HIGH,
             false,
             128,
-            128
+            128,
+            null,
+            null
     ),
     // Cipher 45
     TLS_DHE_RSA_WITH_CAMELLIA_128_CBC_SHA(
@@ -1090,7 +1235,9 @@ public enum Cipher {
             EncryptionLevel.HIGH,
             false,
             128,
-            128
+            128,
+            null,
+            null
     ),
     // Cipher 46
     TLS_DH_anon_WITH_CAMELLIA_128_CBC_SHA(
@@ -1105,10 +1252,13 @@ public enum Cipher {
             EncryptionLevel.HIGH,
             false,
             128,
-            128
+            128,
+            null,
+            null
     ),
-
-    /* Experimental (and now expired) TLSv1 versions of SSLv3 ciphers. */
+    /* Experimental (and now expired) TLSv1 versions of SSLv3 ciphers.
+     * Unsupported by Java and OpenSSL 1.1.x onwards. Some earlier OpenSSL
+     * versions do support these. */
     // Cipher 60
     TLS_RSA_EXPORT1024_WITH_RC4_56_MD5(
             0x0060,
@@ -1123,7 +1273,8 @@ public enum Cipher {
             false,
             56,
             128,
-            "SSL_RSA_EXPORT1024_WITH_RC4_56_MD5"
+            new String[] {"SSL_RSA_EXPORT1024_WITH_RC4_56_MD5"},
+            null
     ),
     // Cipher 61
     TLS_RSA_EXPORT1024_WITH_RC2_CBC_56_MD5(
@@ -1139,7 +1290,8 @@ public enum Cipher {
             false,
             56,
             128,
-            "SSL_RSA_EXPORT1024_WITH_RC2_CBC_56_MD"
+            new String[] {"SSL_RSA_EXPORT1024_WITH_RC2_CBC_56_MD"},
+            null
     ),
     // Cipher 62
     TLS_RSA_EXPORT1024_WITH_DES_CBC_SHA(
@@ -1155,7 +1307,8 @@ public enum Cipher {
             false,
             56,
             56,
-            "SSL_RSA_EXPORT1024_WITH_DES_CBC_SHA"
+            new String[] {"SSL_RSA_EXPORT1024_WITH_DES_CBC_SHA"},
+            null
     ),
     // Cipher 63
     TLS_DHE_DSS_EXPORT1024_WITH_DES_CBC_SHA(
@@ -1171,7 +1324,8 @@ public enum Cipher {
             false,
             56,
             56,
-            "SSL_DHE_DSS_EXPORT1024_WITH_DES_CBC_SHA"
+            new String[] {"SSL_DHE_DSS_EXPORT1024_WITH_DES_CBC_SHA"},
+            null
     ),
     // Cipher 64
     TLS_RSA_EXPORT1024_WITH_RC4_56_SHA(
@@ -1187,7 +1341,8 @@ public enum Cipher {
             false,
             56,
             128,
-            "SSL_RSA_EXPORT1024_WITH_RC4_56_SHA"
+            new String[] {"SSL_RSA_EXPORT1024_WITH_RC4_56_SHA"},
+            null
     ),
     // Cipher 65
     TLS_DHE_DSS_EXPORT1024_WITH_RC4_56_SHA(
@@ -1203,7 +1358,8 @@ public enum Cipher {
             false,
             56,
             128,
-            "SSL_DHE_DSS_EXPORT1024_WITH_RC4_56_SHA"
+            new String[] {"SSL_DHE_DSS_EXPORT1024_WITH_RC4_56_SHA"},
+            null
     ),
     // Cipher 66
     TLS_DHE_DSS_WITH_RC4_128_SHA(
@@ -1219,7 +1375,8 @@ public enum Cipher {
             false,
             128,
             128,
-            "SSL_DHE_DSS_WITH_RC4_128_SHA"
+            new String[] {"SSL_DHE_DSS_WITH_RC4_128_SHA"},
+            null
     ),
     /* TLS v1.2 ciphersuites */
     // Cipher 67
@@ -1235,7 +1392,9 @@ public enum Cipher {
             EncryptionLevel.HIGH,
             true,
             128,
-            128
+            128,
+            null,
+            null
     ),
     // Cipher 68
     TLS_DH_DSS_WITH_AES_256_CBC_SHA256(
@@ -1250,7 +1409,9 @@ public enum Cipher {
             EncryptionLevel.HIGH,
             true,
             256,
-            256
+            256,
+            null,
+            null
     ),
     // Cipher 69
     TLS_DH_RSA_WITH_AES_256_CBC_SHA256(
@@ -1265,7 +1426,9 @@ public enum Cipher {
             EncryptionLevel.HIGH,
             true,
             256,
-            256
+            256,
+            null,
+            null
     ),
     // Cipher 6A
     TLS_DHE_DSS_WITH_AES_256_CBC_SHA256(
@@ -1280,7 +1443,9 @@ public enum Cipher {
             EncryptionLevel.HIGH,
             true,
             256,
-            256
+            256,
+            null,
+            null
     ),
     // Cipher 6B
     TLS_DHE_RSA_WITH_AES_256_CBC_SHA256(
@@ -1295,7 +1460,9 @@ public enum Cipher {
             EncryptionLevel.HIGH,
             true,
             256,
-            256
+            256,
+            null,
+            null
     ),
     // Cipher 6C
     TLS_DH_anon_WITH_AES_128_CBC_SHA256(
@@ -1310,7 +1477,9 @@ public enum Cipher {
             EncryptionLevel.HIGH,
             true,
             128,
-            128
+            128,
+            null,
+            null
     ),
     // Cipher 6D
     TLS_DH_anon_WITH_AES_256_CBC_SHA256(
@@ -1325,7 +1494,9 @@ public enum Cipher {
             EncryptionLevel.HIGH,
             true,
             256,
-            256
+            256,
+            null,
+            null
     ),
     /* GOST Ciphersuites. Unsupported by Java. OpenSSl lists them with IDs
      * 0x3000080 to 0x3000083 */
@@ -1342,7 +1513,9 @@ public enum Cipher {
             EncryptionLevel.HIGH,
             false,
             256,
-            256
+            256,
+            null,
+            null
     ),
     // Cipher 81
     TLS_GOSTR341001_WITH_28147_CNT_IMIT(
@@ -1356,7 +1529,9 @@ public enum Cipher {
             EncryptionLevel.HIGH,
             false,
             256,
-            256
+            256,
+            null,
+            null
     ),
     // Cipher 82
     TLS_GOSTR341094_WITH_NULL_GOSTR3411(
@@ -1370,7 +1545,9 @@ public enum Cipher {
             EncryptionLevel.STRONG_NONE,
             false,
             0,
-            0
+            0,
+            null,
+            null
     ),
     // Cipher 83
     TLS_GOSTR341001_WITH_NULL_GOSTR3411(
@@ -1384,7 +1561,9 @@ public enum Cipher {
             EncryptionLevel.STRONG_NONE,
             false,
             0,
-            0
+            0,
+            null,
+            null
     ),*/
     /* Camellia ciphersuites from RFC4132 (
             256-bit portion) */
@@ -1401,7 +1580,9 @@ public enum Cipher {
             EncryptionLevel.HIGH,
             false,
             256,
-            256
+            256,
+            null,
+            null
     ),
     // Cipher 85
     TLS_DH_DSS_WITH_CAMELLIA_256_CBC_SHA(
@@ -1416,7 +1597,9 @@ public enum Cipher {
             EncryptionLevel.HIGH,
             false,
             256,
-            256
+            256,
+            null,
+            null
     ),
     // Cipher 86
     TLS_DH_RSA_WITH_CAMELLIA_256_CBC_SHA(
@@ -1431,7 +1614,9 @@ public enum Cipher {
             EncryptionLevel.HIGH,
             false,
             256,
-            256
+            256,
+            null,
+            null
     ),
     // Cipher 87
     TLS_DHE_DSS_WITH_CAMELLIA_256_CBC_SHA(
@@ -1446,7 +1631,9 @@ public enum Cipher {
             EncryptionLevel.HIGH,
             false,
             256,
-            256
+            256,
+            null,
+            null
     ),
     // Cipher 88
     TLS_DHE_RSA_WITH_CAMELLIA_256_CBC_SHA(
@@ -1461,7 +1648,9 @@ public enum Cipher {
             EncryptionLevel.HIGH,
             false,
             256,
-            256
+            256,
+            null,
+            null
     ),
     // Cipher 89
     TLS_DH_anon_WITH_CAMELLIA_256_CBC_SHA(
@@ -1476,7 +1665,9 @@ public enum Cipher {
             EncryptionLevel.HIGH,
             false,
             256,
-            256
+            256,
+            null,
+            null
     ),
     // Cipher 8A
     TLS_PSK_WITH_RC4_128_SHA(
@@ -1491,7 +1682,9 @@ public enum Cipher {
             EncryptionLevel.MEDIUM,
             false,
             128,
-            128
+            128,
+            null,
+            null
     ),
     // Cipher 8B
     TLS_PSK_WITH_3DES_EDE_CBC_SHA(
@@ -1506,7 +1699,9 @@ public enum Cipher {
             EncryptionLevel.HIGH,
             true,
             112,
-            168
+            168,
+            null,
+            null
     ),
     // Cipher 8C
     TLS_PSK_WITH_AES_128_CBC_SHA(
@@ -1521,7 +1716,9 @@ public enum Cipher {
             EncryptionLevel.HIGH,
             true,
             128,
-            128
+            128,
+            null,
+            null
     ),
     // Cipher 8D
     TLS_PSK_WITH_AES_256_CBC_SHA(
@@ -1536,13 +1733,146 @@ public enum Cipher {
             EncryptionLevel.HIGH,
             true,
             256,
-            256
+            256,
+            null,
+            null
     ),
-
-    /* PSK ciphers 0x008E to 0x0095
-     * Unsupported by both Java and OpenSSL
-     */
-
+    // Cipher 8E
+    TLS_DHE_PSK_WITH_RC4_128_SHA(
+            0x008E,
+            "DHE-PSK-RC4-SHA",
+            KeyExchange.DHEPSK,
+            Authentication.PSK,
+            Encryption.RC4,
+            MessageDigest.SHA1,
+            Protocol.TLSv1,
+            false,
+            EncryptionLevel.MEDIUM,
+            false,
+            128,
+            128,
+            null,
+            null
+    ),
+    // Cipher 8F
+    TLS_DHE_PSK_WITH_3DES_EDE_CBC_SHA(
+            0x008F,
+            "DHE-PSK-3DES-EDE-CBC-SHA",
+            KeyExchange.DHEPSK,
+            Authentication.PSK,
+            Encryption.TRIPLE_DES,
+            MessageDigest.SHA1,
+            Protocol.TLSv1,
+            false,
+            EncryptionLevel.HIGH,
+            true,
+            112,
+            168,
+            null,
+            null
+    ),
+    // Cipher 90
+    TLS_DHE_PSK_WITH_AES_128_CBC_SHA(
+            0x0090,
+            "DHE-PSK-AES128-CBC-SHA",
+            KeyExchange.DHEPSK,
+            Authentication.PSK,
+            Encryption.AES128,
+            MessageDigest.SHA1,
+            Protocol.TLSv1,
+            false,
+            EncryptionLevel.HIGH,
+            true,
+            128,
+            128,
+            null,
+            null
+    ),
+    // Cipher 91
+    TLS_DHE_PSK_WITH_AES_256_CBC_SHA(
+            0x0091,
+            "DHE-PSK-AES256-CBC-SHA",
+            KeyExchange.DHEPSK,
+            Authentication.PSK,
+            Encryption.AES256,
+            MessageDigest.SHA1,
+            Protocol.TLSv1,
+            false,
+            EncryptionLevel.HIGH,
+            true,
+            256,
+            256,
+            null,
+            null
+    ),
+    // Cipher 92
+    TLS_RSA_PSK_WITH_RC4_128_SHA(
+            0x0092,
+            "RSA-PSK-RC4-SHA",
+            KeyExchange.RSAPSK,
+            Authentication.RSA,
+            Encryption.RC4,
+            MessageDigest.SHA1,
+            Protocol.TLSv1,
+            false,
+            EncryptionLevel.MEDIUM,
+            false,
+            128,
+            128,
+            null,
+            null
+    ),
+    // Cipher 93
+    TLS_RSA_PSK_WITH_3DES_EDE_CBC_SHA(
+            0x0093,
+            "RSA-PSK-3DES-EDE-CBC-SHA",
+            KeyExchange.RSAPSK,
+            Authentication.RSA,
+            Encryption.TRIPLE_DES,
+            MessageDigest.SHA1,
+            Protocol.TLSv1,
+            false,
+            EncryptionLevel.HIGH,
+            true,
+            112,
+            168,
+            null,
+            null
+    ),
+    // Cipher 94
+    TLS_RSA_PSK_WITH_AES_128_CBC_SHA(
+            0x0094,
+            "RSA-PSK-AES128-CBC-SHA",
+            KeyExchange.RSAPSK,
+            Authentication.RSA,
+            Encryption.AES128,
+            MessageDigest.SHA1,
+            Protocol.TLSv1,
+            false,
+            EncryptionLevel.HIGH,
+            true,
+            128,
+            128,
+            null,
+            null
+    ),
+    // Cipher 95
+    TLS_RSA_PSK_WITH_AES_256_CBC_SHA(
+            0x0095,
+            "RSA-PSK-AES256-CBC-SHA",
+            KeyExchange.RSAPSK,
+            Authentication.RSA,
+            Encryption.AES256,
+            MessageDigest.SHA1,
+            Protocol.TLSv1,
+            false,
+            EncryptionLevel.HIGH,
+            true,
+            256,
+            256,
+            null,
+            null
+    ),
     /* SEED ciphersuites from RFC4162 */
     // Cipher 96
     TLS_RSA_WITH_SEED_CBC_SHA(
@@ -1557,7 +1887,9 @@ public enum Cipher {
             EncryptionLevel.MEDIUM,
             false,
             128,
-            128
+            128,
+            null,
+            null
     ),
     // Cipher 97
     TLS_DH_DSS_WITH_SEED_CBC_SHA(
@@ -1572,7 +1904,9 @@ public enum Cipher {
             EncryptionLevel.MEDIUM,
             false,
             128,
-            128
+            128,
+            null,
+            null
     ),
     // Cipher 98
     TLS_DH_RSA_WITH_SEED_CBC_SHA(
@@ -1587,7 +1921,9 @@ public enum Cipher {
             EncryptionLevel.MEDIUM,
             false,
             128,
-            128
+            128,
+            null,
+            null
     ),
     // Cipher 99
     TLS_DHE_DSS_WITH_SEED_CBC_SHA(
@@ -1602,7 +1938,9 @@ public enum Cipher {
             EncryptionLevel.MEDIUM,
             false,
             128,
-            128
+            128,
+            null,
+            null
     ),
     // Cipher 9A
     TLS_DHE_RSA_WITH_SEED_CBC_SHA(
@@ -1617,7 +1955,9 @@ public enum Cipher {
             EncryptionLevel.MEDIUM,
             false,
             128,
-            128
+            128,
+            null,
+            null
     ),
     // Cipher 9B
     TLS_DH_anon_WITH_SEED_CBC_SHA(
@@ -1632,7 +1972,9 @@ public enum Cipher {
             EncryptionLevel.MEDIUM,
             false,
             128,
-            128
+            128,
+            null,
+            null
     ),
     /* GCM ciphersuites from RFC5288 */
     // Cipher 9C
@@ -1648,7 +1990,9 @@ public enum Cipher {
             EncryptionLevel.HIGH,
             true,
             128,
-            128
+            128,
+            null,
+            null
     ),
     // Cipher 9D
     TLS_RSA_WITH_AES_256_GCM_SHA384(
@@ -1663,7 +2007,9 @@ public enum Cipher {
             EncryptionLevel.HIGH,
             true,
             256,
-            256
+            256,
+            null,
+            null
     ),
     // Cipher 9E
     TLS_DHE_RSA_WITH_AES_128_GCM_SHA256(
@@ -1678,7 +2024,9 @@ public enum Cipher {
             EncryptionLevel.HIGH,
             true,
             128,
-            128
+            128,
+            null,
+            null
     ),
     // Cipher 9F
     TLS_DHE_RSA_WITH_AES_256_GCM_SHA384(
@@ -1693,7 +2041,9 @@ public enum Cipher {
             EncryptionLevel.HIGH,
             true,
             256,
-            256
+            256,
+            null,
+            null
     ),
     // Cipher A0
     TLS_DH_RSA_WITH_AES_128_GCM_SHA256(
@@ -1708,7 +2058,9 @@ public enum Cipher {
             EncryptionLevel.HIGH,
             true,
             128,
-            128
+            128,
+            null,
+            null
     ),
     // Cipher A1
     TLS_DH_RSA_WITH_AES_256_GCM_SHA384(
@@ -1723,7 +2075,9 @@ public enum Cipher {
             EncryptionLevel.HIGH,
             true,
             256,
-            256
+            256,
+            null,
+            null
     ),
     // Cipher A2
     TLS_DHE_DSS_WITH_AES_128_GCM_SHA256(
@@ -1738,7 +2092,9 @@ public enum Cipher {
             EncryptionLevel.HIGH,
             true,
             128,
-            128
+            128,
+            null,
+            null
     ),
     // Cipher A3
     TLS_DHE_DSS_WITH_AES_256_GCM_SHA384(
@@ -1753,7 +2109,9 @@ public enum Cipher {
             EncryptionLevel.HIGH,
             true,
             256,
-            256
+            256,
+            null,
+            null
     ),
     // Cipher A4
     TLS_DH_DSS_WITH_AES_128_GCM_SHA256(
@@ -1768,7 +2126,9 @@ public enum Cipher {
             EncryptionLevel.HIGH,
             true,
             128,
-            128
+            128,
+            null,
+            null
     ),
     // Cipher A5
     TLS_DH_DSS_WITH_AES_256_GCM_SHA384(
@@ -1783,7 +2143,9 @@ public enum Cipher {
             EncryptionLevel.HIGH,
             true,
             256,
-            256
+            256,
+            null,
+            null
     ),
     // Cipher A6
     TLS_DH_anon_WITH_AES_128_GCM_SHA256(
@@ -1798,7 +2160,9 @@ public enum Cipher {
             EncryptionLevel.HIGH,
             true,
             128,
-            128
+            128,
+            null,
+            null
     ),
     // Cipher A7
     TLS_DH_anon_WITH_AES_256_GCM_SHA384(
@@ -1813,7 +2177,9 @@ public enum Cipher {
             EncryptionLevel.HIGH,
             true,
             256,
-            256
+            256,
+            null,
+            null
     ),
     // Cipher A8
     TLS_PSK_WITH_AES_128_GCM_SHA256(
@@ -1828,7 +2194,9 @@ public enum Cipher {
             EncryptionLevel.HIGH,
             true,
             128,
-            128
+            128,
+            null,
+            null
     ),
     // Cipher A9
     TLS_PSK_WITH_AES_256_GCM_SHA384(
@@ -1843,12 +2211,282 @@ public enum Cipher {
             EncryptionLevel.HIGH,
             true,
             256,
-            256
+            256,
+            null,
+            null
     ),
-
-    /* PSK ciphers 0x00AA to 0x00B9
-     * Unsupported by both Java and OpenSSL
-     */
+    // Cipher AA
+    TLS_DHE_PSK_WITH_AES_128_GCM_SHA256(
+            0x00AA,
+            "DHE-PSK-AES128-GCM-SHA256",
+            KeyExchange.DHEPSK,
+            Authentication.PSK,
+            Encryption.AES128GCM,
+            MessageDigest.AEAD,
+            Protocol.TLSv1_2,
+            false,
+            EncryptionLevel.HIGH,
+            true,
+            128,
+            128,
+            null,
+            null
+    ),
+    // Cipher AB
+    TLS_DHE_PSK_WITH_AES_256_GCM_SHA384(
+            0x00AB,
+            "DHE-PSK-AES256-GCM-SHA384",
+            KeyExchange.DHEPSK,
+            Authentication.PSK,
+            Encryption.AES256GCM,
+            MessageDigest.AEAD,
+            Protocol.TLSv1_2,
+            false,
+            EncryptionLevel.HIGH,
+            true,
+            256,
+            256,
+            null,
+            null
+    ),
+    // Cipher AC
+    TLS_RSA_PSK_WITH_AES_128_GCM_SHA256(
+            0x00AC,
+            "RSA-PSK-AES128-GCM-SHA256",
+            KeyExchange.RSAPSK,
+            Authentication.RSA,
+            Encryption.AES128GCM,
+            MessageDigest.AEAD,
+            Protocol.TLSv1_2,
+            false,
+            EncryptionLevel.HIGH,
+            true,
+            128,
+            128,
+            null,
+            null
+    ),
+    // Cipher AD
+    TLS_RSA_PSK_WITH_AES_256_GCM_SHA384(
+            0x00AD,
+            "RSA-PSK-AES256-GCM-SHA384",
+            KeyExchange.RSAPSK,
+            Authentication.RSA,
+            Encryption.AES256GCM,
+            MessageDigest.AEAD,
+            Protocol.TLSv1_2,
+            false,
+            EncryptionLevel.HIGH,
+            true,
+            256,
+            256,
+            null,
+            null
+    ),
+    // Cipher AE
+    TLS_PSK_WITH_AES_128_CBC_SHA256    (
+            0x00AE,
+            "PSK-AES128-CBC-SHA256",
+            KeyExchange.PSK,
+            Authentication.PSK,
+            Encryption.AES128,
+            MessageDigest.SHA256,
+            Protocol.TLSv1,
+            false,
+            EncryptionLevel.HIGH,
+            true,
+            128,
+            128,
+            null,
+            null
+    ),
+    // Cipher AF
+    TLS_PSK_WITH_AES_256_CBC_SHA384    (
+            0x00AF,
+            "PSK-AES256-CBC-SHA384",
+            KeyExchange.PSK,
+            Authentication.PSK,
+            Encryption.AES256,
+            MessageDigest.SHA384,
+            Protocol.TLSv1,
+            false,
+            EncryptionLevel.HIGH,
+            true,
+            256,
+            256,
+            null,
+            null
+    ),
+    // Cipher B0
+    TLS_PSK_WITH_NULL_SHA256           (
+            0x00B0,
+            "PSK-NULL-SHA256",
+            KeyExchange.PSK,
+            Authentication.PSK,
+            Encryption.eNULL,
+            MessageDigest.SHA256,
+            Protocol.TLSv1,
+            false,
+            EncryptionLevel.STRONG_NONE,
+            true,
+            0,
+            0,
+            null,
+            null
+    ),
+    // Cipher B1
+    TLS_PSK_WITH_NULL_SHA384           (
+            0x00B1,
+            "PSK-NULL-SHA384",
+            KeyExchange.PSK,
+            Authentication.PSK,
+            Encryption.eNULL,
+            MessageDigest.SHA384,
+            Protocol.TLSv1,
+            false,
+            EncryptionLevel.STRONG_NONE,
+            true,
+            0,
+            0,
+            null,
+            null
+    ),
+    // Cipher B2
+    TLS_DHE_PSK_WITH_AES_128_CBC_SHA256(
+            0x00B2,
+            "DHE-PSK-AES128-CBC-SHA256",
+            KeyExchange.DHEPSK,
+            Authentication.PSK,
+            Encryption.AES128,
+            MessageDigest.SHA256,
+            Protocol.TLSv1,
+            false,
+            EncryptionLevel.HIGH,
+            true,
+            128,
+            128,
+            null,
+            null
+    ),
+    // Cipher B3
+    TLS_DHE_PSK_WITH_AES_256_CBC_SHA384(
+            0x00B3,
+            "DHE-PSK-AES256-CBC-SHA384",
+            KeyExchange.DHEPSK,
+            Authentication.PSK,
+            Encryption.AES256,
+            MessageDigest.SHA384,
+            Protocol.TLSv1,
+            false,
+            EncryptionLevel.HIGH,
+            true,
+            256,
+            256,
+            null,
+            null
+    ),
+    // Cipher B4
+    TLS_DHE_PSK_WITH_NULL_SHA256       (
+            0x00B4,
+            "DHE-PSK-NULL-SHA256",
+            KeyExchange.DHEPSK,
+            Authentication.PSK,
+            Encryption.eNULL,
+            MessageDigest.SHA256,
+            Protocol.TLSv1,
+            false,
+            EncryptionLevel.STRONG_NONE,
+            true,
+            0,
+            0,
+            null,
+            null
+    ),
+    // Cipher B5
+    TLS_DHE_PSK_WITH_NULL_SHA384       (
+            0x00B5,
+            "DHE-PSK-NULL-SHA384",
+            KeyExchange.DHEPSK,
+            Authentication.PSK,
+            Encryption.eNULL,
+            MessageDigest.SHA384,
+            Protocol.TLSv1,
+            false,
+            EncryptionLevel.STRONG_NONE,
+            true,
+            0,
+            0,
+            null,
+            null
+    ),
+    // Cipher B6
+    TLS_RSA_PSK_WITH_AES_128_CBC_SHA256(
+            0x00B6,
+            "RSA-PSK-AES128-CBC-SHA256",
+            KeyExchange.RSAPSK,
+            Authentication.RSA,
+            Encryption.AES128,
+            MessageDigest.SHA256,
+            Protocol.TLSv1,
+            false,
+            EncryptionLevel.HIGH,
+            true,
+            128,
+            128,
+            null,
+            null
+    ),
+    // Cipher B7
+    TLS_RSA_PSK_WITH_AES_256_CBC_SHA384(
+            0x00B7,
+            "RSA-PSK-AES256-CBC-SHA384",
+            KeyExchange.RSAPSK,
+            Authentication.RSA,
+            Encryption.AES256,
+            MessageDigest.SHA384,
+            Protocol.TLSv1,
+            false,
+            EncryptionLevel.HIGH,
+            true,
+            256,
+            256,
+            null,
+            null
+    ),
+    // Cipher B8
+    TLS_RSA_PSK_WITH_NULL_SHA256       (
+            0x00B8,
+            "RSA-PSK-NULL-SHA256",
+            KeyExchange.RSAPSK,
+            Authentication.RSA,
+            Encryption.eNULL,
+            MessageDigest.SHA256,
+            Protocol.TLSv1,
+            false,
+            EncryptionLevel.STRONG_NONE,
+            true,
+            0,
+            0,
+            null,
+            null
+    ),
+    // Cipher B9
+    TLS_RSA_PSK_WITH_NULL_SHA384       (
+            0x00B9,
+            "RSA-PSK-NULL-SHA384",
+            KeyExchange.RSAPSK,
+            Authentication.RSA,
+            Encryption.eNULL,
+            MessageDigest.SHA384,
+            Protocol.TLSv1,
+            false,
+            EncryptionLevel.STRONG_NONE,
+            true,
+            0,
+            0,
+            null,
+            null
+    ),
 
     // Cipher BA
     TLS_RSA_WITH_CAMELLIA_128_CBC_SHA256(
@@ -1863,7 +2501,9 @@ public enum Cipher {
             EncryptionLevel.HIGH,
             false,
             128,
-            128
+            128,
+            null,
+            null
     ),
     // Cipher BB
     TLS_DH_DSS_WITH_CAMELLIA_128_CBC_SHA256(
@@ -1878,7 +2518,9 @@ public enum Cipher {
             EncryptionLevel.HIGH,
             false,
             128,
-            128
+            128,
+            null,
+            null
     ),
     // Cipher BC
     TLS_DH_RSA_WITH_CAMELLIA_128_CBC_SHA256(
@@ -1893,7 +2535,9 @@ public enum Cipher {
             EncryptionLevel.HIGH,
             false,
             128,
-            128
+            128,
+            null,
+            null
     ),
     // Cipher BD
     TLS_DHE_DSS_WITH_CAMELLIA_128_CBC_SHA256(
@@ -1908,7 +2552,9 @@ public enum Cipher {
             EncryptionLevel.HIGH,
             false,
             128,
-            128
+            128,
+            null,
+            null
     ),
     // Cipher BE
     TLS_DHE_RSA_WITH_CAMELLIA_128_CBC_SHA256(
@@ -1923,7 +2569,9 @@ public enum Cipher {
             EncryptionLevel.HIGH,
             false,
             128,
-            128
+            128,
+            null,
+            null
     ),
     // Cipher BF
     TLS_DH_anon_WITH_CAMELLIA_128_CBC_SHA256(
@@ -1938,7 +2586,9 @@ public enum Cipher {
             EncryptionLevel.HIGH,
             false,
             128,
-            128
+            128,
+            null,
+            null
     ),
     // Cipher C0
     TLS_RSA_WITH_CAMELLIA_256_CBC_SHA256(
@@ -1953,7 +2603,9 @@ public enum Cipher {
             EncryptionLevel.HIGH,
             false,
             256,
-            256
+            256,
+            null,
+            null
     ),
     // Cipher C1
     TLS_DH_DSS_WITH_CAMELLIA_256_CBC_SHA256(
@@ -1968,7 +2620,9 @@ public enum Cipher {
             EncryptionLevel.HIGH,
             false,
             256,
-            256
+            256,
+            null,
+            null
     ),
     // Cipher C2
     TLS_DH_RSA_WITH_CAMELLIA_256_CBC_SHA256(
@@ -1983,7 +2637,9 @@ public enum Cipher {
             EncryptionLevel.HIGH,
             false,
             256,
-            256
+            256,
+            null,
+            null
     ),
     // Cipher C3
     TLS_DHE_DSS_WITH_CAMELLIA_256_CBC_SHA256(
@@ -1998,7 +2654,9 @@ public enum Cipher {
             EncryptionLevel.HIGH,
             false,
             256,
-            256
+            256,
+            null,
+            null
     ),
     // Cipher C4
     TLS_DHE_RSA_WITH_CAMELLIA_256_CBC_SHA256(
@@ -2013,7 +2671,9 @@ public enum Cipher {
             EncryptionLevel.HIGH,
             false,
             256,
-            256
+            256,
+            null,
+            null
     ),
     // Cipher C5
     TLS_DH_anon_WITH_CAMELLIA_256_CBC_SHA256(
@@ -2028,7 +2688,9 @@ public enum Cipher {
             EncryptionLevel.HIGH,
             false,
             256,
-            256
+            256,
+            null,
+            null
     ),
 
     /* Cipher 0x00FF  TLS_EMPTY_RENEGOTIATION_INFO_SCSV
@@ -2052,7 +2714,9 @@ public enum Cipher {
             EncryptionLevel.STRONG_NONE,
             true,
             0,
-            0
+            0,
+            null,
+            null
     ),
     // Cipher C002
     TLS_ECDH_ECDSA_WITH_RC4_128_SHA(
@@ -2067,7 +2731,9 @@ public enum Cipher {
             EncryptionLevel.MEDIUM,
             false,
             128,
-            128
+            128,
+            null,
+            null
     ),
     // Cipher C003
     TLS_ECDH_ECDSA_WITH_3DES_EDE_CBC_SHA(
@@ -2082,7 +2748,9 @@ public enum Cipher {
             EncryptionLevel.HIGH,
             true,
             112,
-            168
+            168,
+            null,
+            null
     ),
     // Cipher C004
     TLS_ECDH_ECDSA_WITH_AES_128_CBC_SHA(
@@ -2097,7 +2765,9 @@ public enum Cipher {
             EncryptionLevel.HIGH,
             true,
             128,
-            128
+            128,
+            null,
+            null
     ),
     // Cipher C005
     TLS_ECDH_ECDSA_WITH_AES_256_CBC_SHA(
@@ -2112,7 +2782,9 @@ public enum Cipher {
             EncryptionLevel.HIGH,
             true,
             256,
-            256
+            256,
+            null,
+            null
     ),
     // Cipher C006
     TLS_ECDHE_ECDSA_WITH_NULL_SHA(
@@ -2127,7 +2799,9 @@ public enum Cipher {
             EncryptionLevel.STRONG_NONE,
             true,
             0,
-            0
+            0,
+            null,
+            null
     ),
     // Cipher C007
     TLS_ECDHE_ECDSA_WITH_RC4_128_SHA(
@@ -2142,7 +2816,9 @@ public enum Cipher {
             EncryptionLevel.MEDIUM,
             false,
             128,
-            128
+            128,
+            null,
+            null
     ),
     // Cipher C008
     TLS_ECDHE_ECDSA_WITH_3DES_EDE_CBC_SHA(
@@ -2157,7 +2833,9 @@ public enum Cipher {
             EncryptionLevel.HIGH,
             true,
             112,
-            168
+            168,
+            null,
+            null
     ),
     // Cipher C009
     TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA(
@@ -2172,7 +2850,9 @@ public enum Cipher {
             EncryptionLevel.HIGH,
             true,
             128,
-            128
+            128,
+            null,
+            null
     ),
     // Cipher C00A
     TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA(
@@ -2187,7 +2867,9 @@ public enum Cipher {
             EncryptionLevel.HIGH,
             true,
             256,
-            256
+            256,
+            null,
+            null
     ),
     // Cipher C00B
     TLS_ECDH_RSA_WITH_NULL_SHA(
@@ -2202,7 +2884,9 @@ public enum Cipher {
             EncryptionLevel.STRONG_NONE,
             true,
             0,
-            0
+            0,
+            null,
+            null
     ),
     // Cipher C00C
     TLS_ECDH_RSA_WITH_RC4_128_SHA(
@@ -2217,7 +2901,9 @@ public enum Cipher {
             EncryptionLevel.MEDIUM,
             false,
             128,
-            128
+            128,
+            null,
+            null
     ),
     // Cipher C00D
     TLS_ECDH_RSA_WITH_3DES_EDE_CBC_SHA(
@@ -2232,7 +2918,9 @@ public enum Cipher {
             EncryptionLevel.HIGH,
             true,
             112,
-            168
+            168,
+            null,
+            null
     ),
     // Cipher C00E
     TLS_ECDH_RSA_WITH_AES_128_CBC_SHA(
@@ -2247,7 +2935,9 @@ public enum Cipher {
             EncryptionLevel.HIGH,
             true,
             128,
-            128
+            128,
+            null,
+            null
     ),
     // Cipher C00F
     TLS_ECDH_RSA_WITH_AES_256_CBC_SHA(
@@ -2262,7 +2952,9 @@ public enum Cipher {
             EncryptionLevel.HIGH,
             true,
             256,
-            256
+            256,
+            null,
+            null
     ),
     // Cipher C010
     TLS_ECDHE_RSA_WITH_NULL_SHA(
@@ -2277,7 +2969,9 @@ public enum Cipher {
             EncryptionLevel.STRONG_NONE,
             true,
             0,
-            0
+            0,
+            null,
+            null
     ),
     // Cipher C011
     TLS_ECDHE_RSA_WITH_RC4_128_SHA(
@@ -2292,7 +2986,9 @@ public enum Cipher {
             EncryptionLevel.MEDIUM,
             false,
             128,
-            128
+            128,
+            null,
+            null
     ),
     // Cipher C012
     TLS_ECDHE_RSA_WITH_3DES_EDE_CBC_SHA(
@@ -2307,7 +3003,9 @@ public enum Cipher {
             EncryptionLevel.HIGH,
             true,
             112,
-            168
+            168,
+            null,
+            null
     ),
     // Cipher C013
     TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA(
@@ -2322,7 +3020,9 @@ public enum Cipher {
             EncryptionLevel.HIGH,
             true,
             128,
-            128
+            128,
+            null,
+            null
     ),
     // Cipher C014
     TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA(
@@ -2337,7 +3037,9 @@ public enum Cipher {
             EncryptionLevel.HIGH,
             true,
             256,
-            256
+            256,
+            null,
+            null
     ),
     // Cipher C015
     TLS_ECDH_anon_WITH_NULL_SHA(
@@ -2352,7 +3054,9 @@ public enum Cipher {
             EncryptionLevel.STRONG_NONE,
             true,
             0,
-            0
+            0,
+            null,
+            null
     ),
     // Cipher C016
     TLS_ECDH_anon_WITH_RC4_128_SHA(
@@ -2367,7 +3071,9 @@ public enum Cipher {
             EncryptionLevel.MEDIUM,
             false,
             128,
-            128
+            128,
+            null,
+            null
     ),
     // Cipher C017
     TLS_ECDH_anon_WITH_3DES_EDE_CBC_SHA(
@@ -2382,7 +3088,9 @@ public enum Cipher {
             EncryptionLevel.HIGH,
             true,
             112,
-            168
+            168,
+            null,
+            null
     ),
     // Cipher C018
     TLS_ECDH_anon_WITH_AES_128_CBC_SHA(
@@ -2397,7 +3105,9 @@ public enum Cipher {
             EncryptionLevel.HIGH,
             true,
             128,
-            128
+            128,
+            null,
+            null
     ),
     // Cipher C019
     TLS_ECDH_anon_WITH_AES_256_CBC_SHA(
@@ -2412,7 +3122,9 @@ public enum Cipher {
             EncryptionLevel.HIGH,
             true,
             256,
-            256
+            256,
+            null,
+            null
     ),
     /* SRP ciphersuite from RFC 5054 */
     // Cipher C01A
@@ -2428,7 +3140,9 @@ public enum Cipher {
             EncryptionLevel.HIGH,
             false,
             112,
-            168
+            168,
+            null,
+            null
     ),
     // Cipher C01B
     TLS_SRP_SHA_RSA_WITH_3DES_EDE_CBC_SHA(
@@ -2443,7 +3157,9 @@ public enum Cipher {
             EncryptionLevel.HIGH,
             false,
             112,
-            168
+            168,
+            null,
+            null
     ),
     // Cipher C01C
     TLS_SRP_SHA_DSS_WITH_3DES_EDE_CBC_SHA(
@@ -2458,7 +3174,9 @@ public enum Cipher {
             EncryptionLevel.HIGH,
             false,
             112,
-            168
+            168,
+            null,
+            null
     ),
     // Cipher C01D
     TLS_SRP_SHA_WITH_AES_128_CBC_SHA(
@@ -2473,7 +3191,9 @@ public enum Cipher {
             EncryptionLevel.HIGH,
             false,
             128,
-            128
+            128,
+            null,
+            null
     ),
     // Cipher C01E
     TLS_SRP_SHA_RSA_WITH_AES_128_CBC_SHA(
@@ -2488,7 +3208,9 @@ public enum Cipher {
             EncryptionLevel.HIGH,
             false,
             128,
-            128
+            128,
+            null,
+            null
     ),
     // Cipher C01F
     TLS_SRP_SHA_DSS_WITH_AES_128_CBC_SHA(
@@ -2503,7 +3225,9 @@ public enum Cipher {
             EncryptionLevel.HIGH,
             false,
             128,
-            128
+            128,
+            null,
+            null
     ),
     // Cipher C020
     TLS_SRP_SHA_WITH_AES_256_CBC_SHA(
@@ -2518,7 +3242,9 @@ public enum Cipher {
             EncryptionLevel.HIGH,
             false,
             256,
-            256
+            256,
+            null,
+            null
     ),
     // Cipher C021
     TLS_SRP_SHA_RSA_WITH_AES_256_CBC_SHA(
@@ -2533,7 +3259,9 @@ public enum Cipher {
             EncryptionLevel.HIGH,
             false,
             256,
-            256
+            256,
+            null,
+            null
     ),
     // Cipher C022
     TLS_SRP_SHA_DSS_WITH_AES_256_CBC_SHA(
@@ -2548,7 +3276,9 @@ public enum Cipher {
             EncryptionLevel.HIGH,
             false,
             256,
-            256
+            256,
+            null,
+            null
     ),
     /* HMAC based TLS v1.2 ciphersuites from RFC5289 */
     // Cipher C023
@@ -2564,7 +3294,9 @@ public enum Cipher {
             EncryptionLevel.HIGH,
             true,
             128,
-            128
+            128,
+            null,
+            null
     ),
     // Cipher C024
     TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA384(
@@ -2579,7 +3311,9 @@ public enum Cipher {
             EncryptionLevel.HIGH,
             true,
             256,
-            256
+            256,
+            null,
+            null
     ),
     // Cipher C025
     TLS_ECDH_ECDSA_WITH_AES_128_CBC_SHA256(
@@ -2594,7 +3328,9 @@ public enum Cipher {
             EncryptionLevel.HIGH,
             true,
             128,
-            128
+            128,
+            null,
+            null
     ),
     // Cipher C026
     TLS_ECDH_ECDSA_WITH_AES_256_CBC_SHA384(
@@ -2609,7 +3345,9 @@ public enum Cipher {
             EncryptionLevel.HIGH,
             true,
             256,
-            256
+            256,
+            null,
+            null
     ),
     // Cipher C027
     TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256(
@@ -2624,7 +3362,9 @@ public enum Cipher {
             EncryptionLevel.HIGH,
             true,
             128,
-            128
+            128,
+            null,
+            null
     ),
     // Cipher C028
     TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384(
@@ -2639,7 +3379,9 @@ public enum Cipher {
             EncryptionLevel.HIGH,
             true,
             256,
-            256
+            256,
+            null,
+            null
     ),
     // Cipher C029
     TLS_ECDH_RSA_WITH_AES_128_CBC_SHA256(
@@ -2654,7 +3396,9 @@ public enum Cipher {
             EncryptionLevel.HIGH,
             true,
             128,
-            128
+            128,
+            null,
+            null
     ),
     // Cipher C02A
     TLS_ECDH_RSA_WITH_AES_256_CBC_SHA384(
@@ -2669,7 +3413,9 @@ public enum Cipher {
             EncryptionLevel.HIGH,
             true,
             256,
-            256
+            256,
+            null,
+            null
     ),
     /* GCM based TLS v1.2 ciphersuites from RFC5289 */
     // Cipher C02B
@@ -2685,7 +3431,9 @@ public enum Cipher {
             EncryptionLevel.HIGH,
             true,
             128,
-            128
+            128,
+            null,
+            null
     ),
     // Cipher C02C
     TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384(
@@ -2700,7 +3448,9 @@ public enum Cipher {
             EncryptionLevel.HIGH,
             true,
             256,
-            256
+            256,
+            null,
+            null
     ),
     // Cipher C02D
     TLS_ECDH_ECDSA_WITH_AES_128_GCM_SHA256(
@@ -2715,7 +3465,9 @@ public enum Cipher {
             EncryptionLevel.HIGH,
             true,
             128,
-            128
+            128,
+            null,
+            null
     ),
     // Cipher C02E
     TLS_ECDH_ECDSA_WITH_AES_256_GCM_SHA384(
@@ -2730,7 +3482,9 @@ public enum Cipher {
             EncryptionLevel.HIGH,
             true,
             256,
-            256
+            256,
+            null,
+            null
     ),
     // Cipher C02F
     TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256(
@@ -2745,7 +3499,9 @@ public enum Cipher {
             EncryptionLevel.HIGH,
             true,
             128,
-            128
+            128,
+            null,
+            null
     ),
     // Cipher C030
     TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384(
@@ -2760,7 +3516,9 @@ public enum Cipher {
             EncryptionLevel.HIGH,
             true,
             256,
-            256
+            256,
+            null,
+            null
     ),
     // Cipher C031
     TLS_ECDH_RSA_WITH_AES_128_GCM_SHA256(
@@ -2775,7 +3533,9 @@ public enum Cipher {
             EncryptionLevel.HIGH,
             true,
             128,
-            128
+            128,
+            null,
+            null
     ),
     // Cipher C032
     TLS_ECDH_RSA_WITH_AES_256_GCM_SHA384(
@@ -2790,12 +3550,159 @@ public enum Cipher {
             EncryptionLevel.HIGH,
             true,
             256,
-            256
+            256,
+            null,
+            null
+    ),
+    // Cipher C033
+    TLS_ECDHE_PSK_WITH_RC4_128_SHA(
+            0xC033,
+            "ECDHE-PSK-RC4-SHA",
+            KeyExchange.ECDHEPSK,
+            Authentication.PSK,
+            Encryption.RC4,
+            MessageDigest.SHA1,
+            Protocol.TLSv1,
+            false,
+            EncryptionLevel.MEDIUM,
+            false,
+            128,
+            128,
+            null,
+            null
+    ),
+    // Cipher C034
+    TLS_ECDHE_PSK_WITH_3DES_EDE_CBC_SHA(
+            0xC034,
+            "ECDHE-PSK-3DES-EDE-CBC-SHA",
+            KeyExchange.ECDHEPSK,
+            Authentication.PSK,
+            Encryption.TRIPLE_DES,
+            MessageDigest.SHA1,
+            Protocol.TLSv1,
+            false,
+            EncryptionLevel.HIGH,
+            true,
+            112,
+            168,
+            null,
+            null
+    ),
+    // Cipher C035
+    TLS_ECDHE_PSK_WITH_AES_128_CBC_SHA(
+            0xC035,
+            "ECDHE-PSK-AES128-CBC-SHA",
+            KeyExchange.ECDHEPSK,
+            Authentication.PSK,
+            Encryption.AES128,
+            MessageDigest.SHA1,
+            Protocol.TLSv1,
+            false,
+            EncryptionLevel.HIGH,
+            true,
+            128,
+            128,
+            null,
+            null
+    ),
+    // Cipher C036
+    TLS_ECDHE_PSK_WITH_AES_256_CBC_SHA(
+            0xC036,
+            "ECDHE-PSK-AES256-CBC-SHA",
+            KeyExchange.ECDHEPSK,
+            Authentication.PSK,
+            Encryption.AES256,
+            MessageDigest.SHA1,
+            Protocol.TLSv1,
+            false,
+            EncryptionLevel.HIGH,
+            true,
+            256,
+            256,
+            null,
+            null
     ),
 
-    /* PSK ciphers 0xC033 to 0xC03B
-     * Unsupported by both Java and OpenSSL
-     */
+    TLS_ECDHE_PSK_WITH_AES_128_CBC_SHA256(
+            0xC037,
+            "ECDHE-PSK-AES128-CBC-SHA256",
+            KeyExchange.ECDHEPSK,
+            Authentication.PSK,
+            Encryption.AES128,
+            MessageDigest.SHA256,
+            Protocol.TLSv1,
+            false,
+            EncryptionLevel.HIGH,
+            true,
+            128,
+            128,
+            null,
+            null
+    ),
+    TLS_ECDHE_PSK_WITH_AES_256_CBC_SHA384(
+            0xC038,
+            "ECDHE-PSK-AES256-CBC-SHA384",
+            KeyExchange.ECDHEPSK,
+            Authentication.PSK,
+            Encryption.AES256,
+            MessageDigest.SHA384,
+            Protocol.TLSv1,
+            false,
+            EncryptionLevel.HIGH,
+            true,
+            256,
+            256,
+            null,
+            null
+    ),
+    TLS_ECDHE_PSK_WITH_NULL_SHA(
+            0xC039,
+            "ECDHE-PSK-NULL-SHA",
+            KeyExchange.ECDHEPSK,
+            Authentication.PSK,
+            Encryption.eNULL,
+            MessageDigest.SHA1,
+            Protocol.TLSv1,
+            false,
+            EncryptionLevel.STRONG_NONE,
+            true,
+            0,
+            0,
+            null,
+            null
+    ),
+    TLS_ECDHE_PSK_WITH_NULL_SHA256(
+            0xC03A,
+            "ECDHE-PSK-NULL-SHA256",
+            KeyExchange.ECDHEPSK,
+            Authentication.PSK,
+            Encryption.eNULL,
+            MessageDigest.SHA256,
+            Protocol.TLSv1,
+            false,
+            EncryptionLevel.STRONG_NONE,
+            true,
+            0,
+            0,
+            null,
+            null
+    ),
+    TLS_ECDHE_PSK_WITH_NULL_SHA384(
+            0xC03B,
+            "ECDHE-PSK-NULL-SHA384",
+            KeyExchange.ECDHEPSK,
+            Authentication.PSK,
+            Encryption.eNULL,
+            MessageDigest.SHA384,
+            Protocol.TLSv1,
+            false,
+            EncryptionLevel.STRONG_NONE,
+            true,
+            0,
+            0,
+            null,
+            null
+    ),
 
     /* ARIA ciphers 0xC03C to 0xC071
      * Unsupported by both Java and OpenSSL
@@ -2813,7 +3720,9 @@ public enum Cipher {
             EncryptionLevel.HIGH,
             true,
             128,
-            128
+            128,
+            null,
+            null
     ),
     // Cipher C073
     TLS_ECDHE_ECDSA_WITH_CAMELLIA_256_CBC_SHA384(
@@ -2828,7 +3737,9 @@ public enum Cipher {
             EncryptionLevel.HIGH,
             true,
             256,
-            256
+            256,
+            null,
+            null
     ),
     // Cipher C074
     TLS_ECDH_ECDSA_WITH_CAMELLIA_128_CBC_SHA256(
@@ -2843,7 +3754,9 @@ public enum Cipher {
             EncryptionLevel.HIGH,
             true,
             128,
-            128
+            128,
+            null,
+            null
     ),
     // Cipher C075
     TLS_ECDH_ECDSA_WITH_CAMELLIA_256_CBC_SHA384(
@@ -2858,7 +3771,9 @@ public enum Cipher {
             EncryptionLevel.HIGH,
             true,
             256,
-            256
+            256,
+            null,
+            null
     ),
     // Cipher C076
     TLS_ECDHE_RSA_WITH_CAMELLIA_128_CBC_SHA256(
@@ -2873,7 +3788,9 @@ public enum Cipher {
             EncryptionLevel.HIGH,
             true,
             128,
-            128
+            128,
+            null,
+            null
     ),
     // Cipher C077
     TLS_ECDHE_RSA_WITH_CAMELLIA_256_CBC_SHA384(
@@ -2888,7 +3805,9 @@ public enum Cipher {
             EncryptionLevel.HIGH,
             true,
             256,
-            256
+            256,
+            null,
+            null
     ),
     // Cipher C078
     TLS_ECDH_RSA_WITH_CAMELLIA_128_CBC_SHA256(
@@ -2903,7 +3822,9 @@ public enum Cipher {
             EncryptionLevel.HIGH,
             true,
             128,
-            128
+            128,
+            null,
+            null
     ),
     // Cipher C079
     TLS_ECDH_RSA_WITH_CAMELLIA_256_CBC_SHA384(
@@ -2918,7 +3839,146 @@ public enum Cipher {
             EncryptionLevel.HIGH,
             true,
             256,
-            256
+            256,
+            null,
+            null
+    ),
+
+    // Cipher C094
+    TLS_PSK_WITH_CAMELLIA_128_CBC_SHA256(
+            0xC094,
+            "PSK-CAMELLIA128-SHA256",
+            KeyExchange.PSK,
+            Authentication.PSK,
+            Encryption.CAMELLIA128,
+            MessageDigest.SHA256,
+            Protocol.TLSv1,
+            false,
+            EncryptionLevel.HIGH,
+            false,
+            128,
+            128,
+            null,
+            null
+    ),
+    // Cipher C095
+    TLS_PSK_WITH_CAMELLIA_256_CBC_SHA384(
+            0xC095,
+            "PSK-CAMELLIA256-SHA384",
+            KeyExchange.PSK,
+            Authentication.PSK,
+            Encryption.CAMELLIA256,
+            MessageDigest.SHA384,
+            Protocol.TLSv1,
+            false,
+            EncryptionLevel.HIGH,
+            false,
+            256,
+            256,
+            null,
+            null
+    ),
+    // Cipher C096
+    TLS_DHE_PSK_WITH_CAMELLIA_128_CBC_SHA256(
+            0xC096,
+            "DHE-PSK-CAMELLIA128-SHA256",
+            KeyExchange.DHEPSK,
+            Authentication.PSK,
+            Encryption.CAMELLIA128,
+            MessageDigest.SHA256,
+            Protocol.TLSv1,
+            false,
+            EncryptionLevel.HIGH,
+            false,
+            128,
+            128,
+            null,
+            null
+    ),
+    // Cipher C097
+    TLS_DHE_PSK_WITH_CAMELLIA_256_CBC_SHA384(
+            0xC097,
+            "DHE-PSK-CAMELLIA256-SHA384",
+            KeyExchange.DHEPSK,
+            Authentication.PSK,
+            Encryption.CAMELLIA256,
+            MessageDigest.SHA384,
+            Protocol.TLSv1,
+            false,
+            EncryptionLevel.HIGH,
+            false,
+            256,
+            256,
+            null,
+            null
+    ),
+    // Cipher C098
+    TLS_RSA_PSK_WITH_CAMELLIA_128_CBC_SHA256(
+            0xC098,
+            "RSA-PSK-CAMELLIA128-SHA256",
+            KeyExchange.RSAPSK,
+            Authentication.RSA,
+            Encryption.CAMELLIA128,
+            MessageDigest.SHA256,
+            Protocol.TLSv1,
+            false,
+            EncryptionLevel.HIGH,
+            false,
+            128,
+            128,
+            null,
+            null
+    ),
+    // Cipher C099
+    TLS_RSA_PSK_WITH_CAMELLIA_256_CBC_SHA384(
+            0xC099,
+            "RSA-PSK-CAMELLIA256-SHA384",
+            KeyExchange.RSAPSK,
+            Authentication.RSA,
+            Encryption.CAMELLIA256,
+            MessageDigest.SHA384,
+            Protocol.TLSv1,
+            false,
+            EncryptionLevel.HIGH,
+            false,
+            256,
+            256,
+            null,
+            null
+    ),
+    // Cipher C09A
+    TLS_ECDHE_PSK_WITH_CAMELLIA_128_CBC_SHA256(
+            0xC09A,
+            "ECDHE-PSK-CAMELLIA128-SHA256",
+            KeyExchange.ECDHEPSK,
+            Authentication.PSK,
+            Encryption.CAMELLIA128,
+            MessageDigest.SHA256,
+            Protocol.TLSv1,
+            false,
+            EncryptionLevel.HIGH,
+            false,
+            128,
+            128,
+            null,
+            null
+    ),
+    // Cipher C09B
+    TLS_ECDHE_PSK_WITH_CAMELLIA_256_CBC_SHA384(
+            0xC09B,
+            "ECDHE-PSK-CAMELLIA256-SHA384",
+            KeyExchange.ECDHEPSK,
+            Authentication.PSK,
+            Encryption.CAMELLIA256,
+            MessageDigest.SHA384,
+            Protocol.TLSv1,
+            false,
+            EncryptionLevel.HIGH,
+            false,
+            256,
+            256,
+            null,
+            null
     ),
 
     // Cipher 0x010080 (SSLv2)
@@ -2935,7 +3995,9 @@ public enum Cipher {
             EncryptionLevel.MEDIUM,
             false,
             128,
-            128
+            128,
+            null,
+            null
     ),
     // Cipher 0x020080 (SSLv2)
     SSL2_RC4_128_EXPORT40_WITH_MD5(
@@ -2951,13 +4013,14 @@ public enum Cipher {
             false,
             40,
             128,
-            "SSL_RC4_128_EXPORT40_WITH_MD5"
+            new String[] {"SSL_RC4_128_EXPORT40_WITH_MD5"},
+            null
     ),
     // Cipher 0x030080 (SSLv2)
     // RC2_128_CBC_WITH_MD5
     SSL_CK_RC2_128_CBC_WITH_MD5(
             -1,
-            "RC2-CBC-MD5",
+            "RC2-MD5",
             KeyExchange.RSA,
             Authentication.RSA,
             Encryption.RC2,
@@ -2967,7 +4030,9 @@ public enum Cipher {
             EncryptionLevel.MEDIUM,
             false,
             128,
-            128
+            128,
+            null,
+            null
     ),
     // Cipher 0x040080 (SSLv2)
     // RC2_128_CBC_EXPORT40_WITH_MD5
@@ -2983,7 +4048,9 @@ public enum Cipher {
             EncryptionLevel.EXP40,
             false,
             40,
-            128
+            128,
+            null,
+            null
     ),
     // Cipher 0x050080 (SSLv2)
     // IDEA_128_CBC_WITH_MD5
@@ -2999,7 +4066,8 @@ public enum Cipher {
             false,
             128,
             128,
-            "SSL_CK_IDEA_128_CBC_WITH_MD5"
+            new String[] {"SSL_CK_IDEA_128_CBC_WITH_MD5"},
+            null
     ),
     // Cipher 0x060040 (SSLv2)
     // DES_64_CBC_WITH_MD5
@@ -3016,7 +4084,8 @@ public enum Cipher {
             false,
             56,
             56,
-            "SSL_CK_DES_64_CBC_WITH_MD5"
+            new String[] {"SSL_CK_DES_64_CBC_WITH_MD5"},
+            null
     ),
     // Cipher 0x0700C0 (SSLv2)
     // DES_192_EDE3_CBC_WITH_MD5
@@ -3033,7 +4102,8 @@ public enum Cipher {
             false,
             112,
             168,
-            "SSL_CK_DES_192_EDE3_CBC_WITH_MD5"
+            new String[] {"SSL_CK_DES_192_EDE3_CBC_WITH_MD5"},
+            null
     );
 
     /* TEMP_GOST_TLS*/
@@ -3094,6 +4164,7 @@ public enum Cipher {
 
     private final int id;
     private final String openSSLAlias;
+    private final Set<String> openSSLAltNames;
     private final Set<String> jsseNames;
     private final KeyExchange kx;
     private final Authentication au;
@@ -3114,15 +4185,23 @@ public enum Cipher {
 
     private Cipher(int id, String openSSLAlias, KeyExchange kx, Authentication au, Encryption enc,
             MessageDigest mac, Protocol protocol, boolean export, EncryptionLevel level,
-            boolean fipsCompatible, int strength_bits, int alg_bits, String... jsseAltNames) {
+            boolean fipsCompatible, int strength_bits, int alg_bits, String[] jsseAltNames,
+            String[] openSSlAltNames) {
         this.id = id;
         this.openSSLAlias = openSSLAlias;
-        Set<String> names = new HashSet<>();
-        if (jsseAltNames != null) {
-            names.addAll(Arrays.asList(jsseAltNames));
+        if (openSSlAltNames != null && openSSlAltNames.length != 0) {
+            Set<String> altNames = new HashSet<>();
+            altNames.addAll(Arrays.asList(openSSlAltNames));
+            this.openSSLAltNames = Collections.unmodifiableSet(altNames);
+        } else {
+            this.openSSLAltNames = Collections.emptySet();
         }
-        names.add(name());
-        this.jsseNames = Collections.unmodifiableSet(names);
+        Set<String> jsseNames = new HashSet<>();
+        if (jsseAltNames != null && jsseAltNames.length != 0) {
+            jsseNames.addAll(Arrays.asList(jsseAltNames));
+        }
+        jsseNames.add(name());
+        this.jsseNames = Collections.unmodifiableSet(jsseNames);
         this.kx = kx;
         this.au = au;
         this.enc = enc;
@@ -3141,6 +4220,10 @@ public enum Cipher {
 
     public String getOpenSSLAlias() {
         return openSSLAlias;
+    }
+
+    public Set<String> getOpenSSLAltNames() {
+        return openSSLAltNames;
     }
 
     public Set<String> getJsseNames() {

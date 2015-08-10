@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -28,6 +29,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.juli.logging.Log;
+import org.apache.juli.logging.LogFactory;
 import org.apache.tomcat.util.net.Constants;
 import org.apache.tomcat.util.res.StringManager;
 
@@ -36,8 +39,7 @@ import org.apache.tomcat.util.res.StringManager;
  */
 public class OpenSSLCipherConfigurationParser {
 
-    private static final org.apache.juli.logging.Log log =
-            org.apache.juli.logging.LogFactory.getLog(OpenSSLCipherConfigurationParser.class);
+    private static final Log log = LogFactory.getLog(OpenSSLCipherConfigurationParser.class);
     private static final StringManager sm =
             StringManager.getManager("org.apache.tomcat.util.net.jsse.res");
 
@@ -357,6 +359,8 @@ public class OpenSSLCipherConfigurationParser {
     private static final String ALL = "ALL";
     private static final String COMPLEMENTOFALL = "COMPLEMENTOFALL";
 
+    private static final Map<String,String> jsseToOpenSSL = new HashMap<>();
+
     private static final void init() {
 
         for (Cipher cipher : Cipher.values()) {
@@ -369,6 +373,23 @@ public class OpenSSLCipherConfigurationParser {
                 aliases.put(alias, list);
             }
             aliases.put(cipher.name(), Collections.singletonList(cipher));
+
+            for (String openSSlAltName : cipher.getOpenSSLAltNames()) {
+                if (aliases.containsKey(openSSlAltName)) {
+                    aliases.get(openSSlAltName).add(cipher);
+                } else {
+                    List<Cipher> list = new ArrayList<>();
+                    list.add(cipher);
+                    aliases.put(openSSlAltName, list);
+                }
+
+            }
+
+            jsseToOpenSSL.put(cipher.name(), cipher.getOpenSSLAlias());
+            Set<String> jsseNames = cipher.getJsseNames();
+            for (String jsseName : jsseNames) {
+                jsseToOpenSSL.put(jsseName, cipher.getOpenSSLAlias());
+            }
         }
         List<Cipher> allCiphersList = Arrays.asList(Cipher.values());
         Collections.reverse(allCiphersList);
@@ -457,20 +478,19 @@ public class OpenSSLCipherConfigurationParser {
         addListAlias(kGOST, filterByKeyExchange(allCiphers, Collections.singleton(KeyExchange.GOST)));
         addListAlias(GOST94, filterByMessageDigest(allCiphers, Collections.singleton(MessageDigest.GOST94)));
         addListAlias(GOST89MAC, filterByMessageDigest(allCiphers, Collections.singleton(MessageDigest.GOST89MAC)));
-        addListAlias(PSK, filter(allCiphers, null, Collections.singleton(KeyExchange.PSK), Collections.singleton(Authentication.PSK), null, null, null));
+        addListAlias(PSK, filter(allCiphers, null, new HashSet<>(Arrays.asList(KeyExchange.PSK, KeyExchange.RSAPSK, KeyExchange.DHEPSK, KeyExchange.ECDHEPSK)), Collections.singleton(Authentication.PSK), null, null, null));
         addListAlias(KRB5, filter(allCiphers, null, Collections.singleton(KeyExchange.KRB5), Collections.singleton(Authentication.KRB5), null, null, null));
         addListAlias(aSRP, filterByAuthentication(allCiphers, Collections.singleton(Authentication.SRP)));
         addListAlias(kSRP, filterByKeyExchange(allCiphers, Collections.singleton(KeyExchange.SRP)));
         addListAlias(SRP, filterByKeyExchange(allCiphers, Collections.singleton(KeyExchange.SRP)));
         initialized = true;
         // Despite what the OpenSSL docs say, DEFAULT also excludes SSLv2
-        addListAlias(DEFAULT, parse("ALL:!EXPORT:!eNULL:!aNULL:!SSLv2"));
+        addListAlias(DEFAULT, parse("ALL:!eNULL:!aNULL:!SSLv2"));
         // COMPLEMENTOFDEFAULT is also not exactly as defined by the docs
         Set<Cipher> complementOfDefault = filterByKeyExchange(all, new HashSet<>(Arrays.asList(KeyExchange.EDH,KeyExchange.EECDH)));
         complementOfDefault = filterByAuthentication(complementOfDefault, Collections.singleton(Authentication.aNULL));
         complementOfDefault.removeAll(aliases.get(eNULL));
         complementOfDefault.addAll(aliases.get(Constants.SSL_PROTO_SSLv2));
-        complementOfDefault.addAll(aliases.get(EXPORT));
         addListAlias(COMPLEMENTOFDEFAULT, complementOfDefault);
     }
 
@@ -621,7 +641,7 @@ public class OpenSSLCipherConfigurationParser {
         return result;
     }
 
-    static LinkedHashSet<Cipher> parse(String expression) {
+    public static LinkedHashSet<Cipher> parse(String expression) {
         if (!initialized) {
             init();
         }
@@ -668,7 +688,7 @@ public class OpenSSLCipherConfigurationParser {
         return defaultSort(ciphers);
     }
 
-    static List<String> convertForJSSE(Collection<Cipher> ciphers) {
+    public static List<String> convertForJSSE(Collection<Cipher> ciphers) {
         List<String> result = new ArrayList<>(ciphers.size());
         for (Cipher cipher : ciphers) {
             result.addAll(cipher.getJsseNames());
@@ -687,6 +707,13 @@ public class OpenSSLCipherConfigurationParser {
      */
     public static List<String> parseExpression(String expression) {
         return convertForJSSE(parse(expression));
+    }
+
+    public static String jsseToOpenSSL(String cipher) {
+        if (!initialized) {
+            init();
+        }
+        return jsseToOpenSSL.get(cipher);
     }
 
     static String displayResult(Collection<Cipher> ciphers, boolean useJSSEFormat, String separator) {
