@@ -23,16 +23,10 @@ import java.util.List;
 import java.util.Set;
 
 import org.junit.Assert;
-import org.junit.Assume;
-import org.junit.Before;
 import org.junit.Test;
 
 public class TestCipher {
 
-    @Before
-    public void checkVersion() {
-        Assume.assumeTrue(TesterOpenSSL.IS_EXPECTED_VERSION);
-    }
 
     /*
      * Checks that every cipher suite returned by OpenSSL is mapped to at least
@@ -43,6 +37,7 @@ public class TestCipher {
     public void testAllOpenSSLCiphersMapped() throws Exception {
         Set<String> openSSLCipherSuites = TesterOpenSSL.getOpenSSLCiphersAsSet("ALL:eNULL");
 
+        StringBuilder errors = new StringBuilder();
         for (String openSSLCipherSuite : openSSLCipherSuites) {
             List<String> jsseCipherSuites =
                     OpenSSLCipherConfigurationParser.parseExpression(openSSLCipherSuite);
@@ -52,21 +47,22 @@ public class TestCipher {
                 for (String jsseCipherSuite : jsseCipherSuites) {
                     if (jsseImpl.getStandardNames().contains(jsseCipherSuite)) {
                         found = true;
-                        Assert.assertFalse("Mapping found in " + jsseImpl.getVendor() +
+                        if (jsseImpl.getOpenSslUnmapped().contains(openSSLCipherSuite)) {
+                            errors.append("Mapping found in " + jsseImpl.getVendor() +
                                 "'s JSSE implementation for " + openSSLCipherSuite +
-                                " when none was expected",
-                                jsseImpl.getOpenSslUnmapped().contains(openSSLCipherSuite));
+                                " when none was expected\n");
+                        }
                         break;
                     }
                 }
-                if (!found) {
-                    Assert.assertTrue("No mapping found in " + jsseImpl.getVendor() +
+                if (!found && !jsseImpl.getOpenSslUnmapped().contains(openSSLCipherSuite)) {
+                    errors.append("No mapping found in " + jsseImpl.getVendor() +
                             "'s JSSE implementation for " + openSSLCipherSuite +
-                            " when one was expected",
-                            jsseImpl.getOpenSslUnmapped().contains(openSSLCipherSuite));
+                            " when one was expected\n");
                 }
             }
         }
+        Assert.assertTrue(errors.toString(), errors.length() == 0);
     }
 
 
@@ -77,49 +73,17 @@ public class TestCipher {
      */
     @Test
     public void testOpenSSLCipherAvailability() throws Exception {
-        Set<String> availableCipherSuites = TesterOpenSSL.getOpenSSLCiphersAsSet("ALL:eNULL");
+        // OpenSSL 0.9.8 does not include aNULL or eNULL in all.
+        // OpenSSL does not include ECDH/ECDHE ciphers in all and there is no
+        //         EC alias. Use aRSA.
+        // OpenSSL 1.0.0 onwards does not include eNULL in all.
+        Set<String> availableCipherSuites = TesterOpenSSL.getOpenSSLCiphersAsSet("ALL:eNULL:aNULL:aRSA");
         Set<String> expectedCipherSuites = new HashSet<>();
         for (Cipher cipher : Cipher.values()) {
-            String openSSLAlias = cipher.getOpenSSLAlias();
-            // OpenSSL does not implement any FORTEZZA algorithms so exclude
-            // them from the expected list
-            if (openSSLAlias.contains("FZA")) {
+            if (TesterOpenSSL.OPENSSL_UNIMPLEMENTED_CIPHERS.contains(cipher)) {
                 continue;
             }
-            // GOST algorithms are not enabled by default and no JSSE
-            // implementation supports them so exclude them from the expected
-            // list
-            if (openSSLAlias.contains("GOST")) {
-                continue;
-            }
-            // OpenSSL does not enable the experimental EXP1024 and
-            // DHE-DSS-RC4-SHA cipher suites unless the source is explicitly
-            // patched so exclude them from the expected list
-            if (openSSLAlias.contains("EXP1024")) {
-                continue;
-            }
-            if (openSSLAlias.contains("DHE-DSS-RC4-SHA")) {
-                continue;
-            }
-            // OpenSSL removed (broken) support for EXP-DH-RSA-DES-CBC-SHA
-            // and EXP-DH-DSS-DES-CBC-SHA on 2015-05-23.
-            if (openSSLAlias.contains("EXP-DH-")) {
-                continue;
-            }
-            // RC2-MD5 is not referenced in the OpenSSL source so exclude it
-            // from the expected list
-            if (openSSLAlias.contains("RC2-MD5")) {
-                continue;
-            }
-            // Added in OpenSSL 1.1.0 but the 8.0.x tests are configured for
-            // 1.0.2
-            if (cipher.getProtocol().equals(Protocol.TLSv1_2) &&
-                    (cipher.getEnc().equals(Encryption.CAMELLIA256) ||
-                            cipher.getEnc().equals(Encryption.CAMELLIA128)||
-                            cipher.getAu().equals(Authentication.PSK))) {
-                continue;
-            }
-            expectedCipherSuites.add(openSSLAlias + "+" +
+            expectedCipherSuites.add(cipher.getOpenSSLAlias() + "+" +
                     cipher.getProtocol().getOpenSSLName());
         }
 
@@ -396,11 +360,27 @@ public class TestCipher {
             Collections.unmodifiableSet(new HashSet<>(Arrays.asList(
                     "DES-CBC-MD5+SSLv2",
                     "DES-CBC3-MD5+SSLv2",
+                    "DHE-PSK-CAMELLIA128-SHA256+SSLv3",
+                    "DHE-PSK-CAMELLIA256-SHA384+SSLv3",
+                    "ECDH-ECDSA-CAMELLIA128-SHA256+TLSv1.2",
+                    "ECDH-ECDSA-CAMELLIA256-SHA384+TLSv1.2",
+                    "ECDH-RSA-CAMELLIA128-SHA256+TLSv1.2",
+                    "ECDH-RSA-CAMELLIA256-SHA384+TLSv1.2",
+                    "ECDHE-ECDSA-CAMELLIA128-SHA256+TLSv1.2",
+                    "ECDHE-ECDSA-CAMELLIA256-SHA384+TLSv1.2",
+                    "ECDHE-PSK-CAMELLIA128-SHA256+SSLv3",
+                    "ECDHE-PSK-CAMELLIA256-SHA384+SSLv3",
+                    "ECDHE-RSA-CAMELLIA128-SHA256+TLSv1.2",
+                    "ECDHE-RSA-CAMELLIA256-SHA384+TLSv1.2",
                     "EXP-RC2-CBC-MD5+SSLv2",
                     "EXP-RC4-MD5+SSLv2",
                     "IDEA-CBC-MD5+SSLv2",
+                    "PSK-CAMELLIA128-SHA256+SSLv3",
+                    "PSK-CAMELLIA256-SHA384+SSLv3",
                     "RC2-CBC-MD5+SSLv2",
-                    "RC4-MD5+SSLv2")));
+                    "RC4-MD5+SSLv2",
+                    "RSA-PSK-CAMELLIA128-SHA256+SSLv3",
+                    "RSA-PSK-CAMELLIA256-SHA384+SSLv3")));
 
 
     /**
@@ -539,9 +519,13 @@ public class TestCipher {
             Collections.unmodifiableSet(new HashSet<>(Arrays.asList(
                     "ADH-CAMELLIA128-SHA+SSLv3",
                     "ADH-CAMELLIA256-SHA+SSLv3",
+                    "ADH-CAMELLIA128-SHA256+TLSv1.2",
+                    "ADH-CAMELLIA256-SHA256+TLSv1.2",
                     "ADH-SEED-SHA+SSLv3",
                     "CAMELLIA128-SHA+SSLv3",
                     "CAMELLIA256-SHA+SSLv3",
+                    "CAMELLIA128-SHA256+TLSv1.2",
+                    "CAMELLIA256-SHA256+TLSv1.2",
                     "DES-CBC-MD5+SSLv2",
                     "DES-CBC3-MD5+SSLv2",
                     "DH-DSS-AES128-GCM-SHA256+TLSv1.2",
@@ -551,7 +535,9 @@ public class TestCipher {
                     "DH-DSS-AES256-SHA+SSLv3",
                     "DH-DSS-AES256-SHA256+TLSv1.2",
                     "DH-DSS-CAMELLIA128-SHA+SSLv3",
+                    "DH-DSS-CAMELLIA128-SHA256+TLSv1.2",
                     "DH-DSS-CAMELLIA256-SHA+SSLv3",
+                    "DH-DSS-CAMELLIA256-SHA256+TLSv1.2",
                     "DH-DSS-DES-CBC-SHA+SSLv3",
                     "DH-DSS-DES-CBC3-SHA+SSLv3",
                     "DH-DSS-SEED-SHA+SSLv3",
@@ -562,16 +548,54 @@ public class TestCipher {
                     "DH-RSA-AES256-SHA+SSLv3",
                     "DH-RSA-AES256-SHA256+TLSv1.2",
                     "DH-RSA-CAMELLIA128-SHA+SSLv3",
+                    "DH-RSA-CAMELLIA128-SHA256+TLSv1.2",
                     "DH-RSA-CAMELLIA256-SHA+SSLv3",
+                    "DH-RSA-CAMELLIA256-SHA256+TLSv1.2",
                     "DH-RSA-DES-CBC-SHA+SSLv3",
                     "DH-RSA-DES-CBC3-SHA+SSLv3",
                     "DH-RSA-SEED-SHA+SSLv3",
                     "DHE-DSS-CAMELLIA128-SHA+SSLv3",
+                    "DHE-DSS-CAMELLIA128-SHA256+TLSv1.2",
                     "DHE-DSS-CAMELLIA256-SHA+SSLv3",
+                    "DHE-DSS-CAMELLIA256-SHA256+TLSv1.2",
                     "DHE-DSS-SEED-SHA+SSLv3",
+                    "DHE-PSK-3DES-EDE-CBC-SHA+SSLv3",
+                    "DHE-PSK-AES128-CBC-SHA+SSLv3",
+                    "DHE-PSK-AES128-CBC-SHA256+SSLv3",
+                    "DHE-PSK-AES128-GCM-SHA256+TLSv1.2",
+                    "DHE-PSK-AES256-CBC-SHA+SSLv3",
+                    "DHE-PSK-AES256-CBC-SHA384+SSLv3",
+                    "DHE-PSK-AES256-GCM-SHA384+TLSv1.2",
+                    "DHE-PSK-CAMELLIA128-SHA256+SSLv3",
+                    "DHE-PSK-CAMELLIA256-SHA384+SSLv3",
+                    "DHE-PSK-NULL-SHA+SSLv3",
+                    "DHE-PSK-NULL-SHA256+SSLv3",
+                    "DHE-PSK-NULL-SHA384+SSLv3",
+                    "DHE-PSK-RC4-SHA+SSLv3",
                     "DHE-RSA-CAMELLIA128-SHA+SSLv3",
+                    "DHE-RSA-CAMELLIA128-SHA256+TLSv1.2",
                     "DHE-RSA-CAMELLIA256-SHA+SSLv3",
+                    "DHE-RSA-CAMELLIA256-SHA256+TLSv1.2",
                     "DHE-RSA-SEED-SHA+SSLv3",
+                    "ECDH-ECDSA-CAMELLIA128-SHA256+TLSv1.2",
+                    "ECDH-ECDSA-CAMELLIA256-SHA384+TLSv1.2",
+                    "ECDH-RSA-CAMELLIA128-SHA256+TLSv1.2",
+                    "ECDH-RSA-CAMELLIA256-SHA384+TLSv1.2",
+                    "ECDHE-ECDSA-CAMELLIA128-SHA256+TLSv1.2",
+                    "ECDHE-ECDSA-CAMELLIA256-SHA384+TLSv1.2",
+                    "ECDHE-PSK-3DES-EDE-CBC-SHA+SSLv3",
+                    "ECDHE-PSK-AES128-CBC-SHA+SSLv3",
+                    "ECDHE-PSK-AES128-CBC-SHA256+SSLv3",
+                    "ECDHE-PSK-AES256-CBC-SHA+SSLv3",
+                    "ECDHE-PSK-AES256-CBC-SHA384+SSLv3",
+                    "ECDHE-PSK-CAMELLIA128-SHA256+SSLv3",
+                    "ECDHE-PSK-CAMELLIA256-SHA384+SSLv3",
+                    "ECDHE-PSK-NULL-SHA+SSLv3",
+                    "ECDHE-PSK-NULL-SHA256+SSLv3",
+                    "ECDHE-PSK-NULL-SHA384+SSLv3",
+                    "ECDHE-PSK-RC4-SHA+SSLv3",
+                    "ECDHE-RSA-CAMELLIA128-SHA256+TLSv1.2",
+                    "ECDHE-RSA-CAMELLIA256-SHA384+TLSv1.2",
                     "EXP-DH-DSS-DES-CBC-SHA+SSLv3",
                     "EXP-DH-RSA-DES-CBC-SHA+SSLv3",
                     "EXP-RC2-CBC-MD5+SSLv2",
@@ -580,10 +604,32 @@ public class TestCipher {
                     "IDEA-CBC-SHA+SSLv3",
                     "PSK-3DES-EDE-CBC-SHA+SSLv3",
                     "PSK-AES128-CBC-SHA+SSLv3",
+                    "PSK-AES128-CBC-SHA256+SSLv3",
+                    "PSK-AES128-GCM-SHA256+TLSv1.2",
                     "PSK-AES256-CBC-SHA+SSLv3",
+                    "PSK-AES256-CBC-SHA384+SSLv3",
+                    "PSK-AES256-GCM-SHA384+TLSv1.2",
+                    "PSK-CAMELLIA128-SHA256+SSLv3",
+                    "PSK-CAMELLIA256-SHA384+SSLv3",
+                    "PSK-NULL-SHA+SSLv3",
+                    "PSK-NULL-SHA256+SSLv3",
+                    "PSK-NULL-SHA384+SSLv3",
                     "PSK-RC4-SHA+SSLv3",
                     "RC2-CBC-MD5+SSLv2",
                     "RC4-MD5+SSLv2",
+                    "RSA-PSK-3DES-EDE-CBC-SHA+SSLv3",
+                    "RSA-PSK-AES128-CBC-SHA+SSLv3",
+                    "RSA-PSK-AES128-CBC-SHA256+SSLv3",
+                    "RSA-PSK-AES128-GCM-SHA256+TLSv1.2",
+                    "RSA-PSK-AES256-CBC-SHA+SSLv3",
+                    "RSA-PSK-AES256-CBC-SHA384+SSLv3",
+                    "RSA-PSK-AES256-GCM-SHA384+TLSv1.2",
+                    "RSA-PSK-CAMELLIA128-SHA256+SSLv3",
+                    "RSA-PSK-CAMELLIA256-SHA384+SSLv3",
+                    "RSA-PSK-NULL-SHA+SSLv3",
+                    "RSA-PSK-NULL-SHA256+SSLv3",
+                    "RSA-PSK-NULL-SHA384+SSLv3",
+                    "RSA-PSK-RC4-SHA+SSLv3",
                     "SEED-SHA+SSLv3",
                     "SRP-AES-128-CBC-SHA+SSLv3",
                     "SRP-AES-256-CBC-SHA+SSLv3",
