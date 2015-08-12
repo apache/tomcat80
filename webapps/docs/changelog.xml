@@ -112,6 +112,13 @@
         non-container threads could result in a previous dispatch interfering
         with a subsequent start. (markt)
       </fix>
+      <fix>
+        <bug>58228</bug>: Make behaviour of
+        <code>ServletContext.getResource()</code> and
+        <code>ServletContext.getResourceAsStream()</code> consistent with each
+        other and the expected behaviour of the GET_RESOURCE_REQUIRE_SLASH
+        system property. (markt)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Coyote">
