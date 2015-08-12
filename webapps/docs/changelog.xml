@@ -119,6 +119,12 @@
         other and the expected behaviour of the GET_RESOURCE_REQUIRE_SLASH
         system property. (markt)
       </fix>
+      <fix>
+        <bug>58230</bug>: Fix input stream corruption if non-blocking I/O is
+        used and the first read is made immediately after the switch to async
+        mode rather than in response to <code>onDataAvaiable()</code> and that
+        read does not read all the avaiable data. (markt)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Coyote">
