@@ -103,7 +103,7 @@
       <fix>
         <bug>58192</bug>: Correct a regression in the previous fix for
         <bug>58023</bug>. Ensure that classes are associated with their manifest
-        even if the class file is frist read (and cached) without the manifest.
+        even if the class file is first read (and cached) without the manifest.
         (markt)
       </fix>
       <fix>
@@ -123,7 +123,7 @@
         <bug>58230</bug>: Fix input stream corruption if non-blocking I/O is
         used and the first read is made immediately after the switch to async
         mode rather than in response to <code>onDataAvaiable()</code> and that
-        read does not read all the avaiable data. (markt)
+        read does not read all the available data. (markt)
       </fix>
     </changelog>
   </subsection>
@@ -173,7 +173,7 @@
       </fix>
       <fix>
         Following on from the fix for <bug>58178</bug>, expressions in a tag
-        file should use the tag file&apos;s improts rather than those of the
+        file should use the tag file&apos;s imports rather than those of the
         containing page. (markt)
       </fix>
     </changelog>
@@ -183,6 +183,12 @@
       <fix>
         <bug>58166</bug>: Allow applications to send close codes in the range
         3000-4999 inclusive. (markt)
+      </fix>
+      <fix>
+        <bug>58232</bug>: Avoid possible NPE when adding endpoints
+        programmatically to the
+        <code>javax.websocket.server.ServerContainer</code>.
+        Based on a patch provided by bastian.(violetagg)
       </fix>
     </changelog>
   </subsection>
