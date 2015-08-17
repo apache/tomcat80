@@ -125,6 +125,10 @@
         mode rather than in response to <code>onDataAvaiable()</code> and that
         read does not read all the available data. (markt)
       </fix>
+      <fix>
+        Ensure that <code>log4javascript*.jar</code> was not excluded from the
+        standard JAR scanning by default. (markt)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Coyote">
