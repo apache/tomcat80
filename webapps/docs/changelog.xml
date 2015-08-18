@@ -45,6 +45,14 @@
   issues do not "pop up" wrt. others).
 -->
 <section name="Tomcat 8.0.26 (markt)" rtext="in development">
+  <subsection name="Web applications">
+    <changelog>
+      <add>
+        <bug>58255</bug>: Document the Semaphore valve. Patch provided by
+        Kyohei Nakamura. (markt)
+      </add>
+    </changelog>
+  </subsection>
 </section>
 <section name="Tomcat 8.0.25 (markt)" rtext="release vote in progress">
   <subsection name="Catalina">
