@@ -45,6 +45,14 @@
   issues do not "pop up" wrt. others).
 -->
 <section name="Tomcat 8.0.27 (markt)" rtext="in development">
+  <subsection name="jdbc-pool">
+    <changelog>
+      <fix>
+        Make sure the pool has been properly configured when attributes that
+        related to the pool size are changed via JMX. (kfujino)
+      </fix>
+    </changelog>
+  </subsection>
 </section>
 <section name="Tomcat 8.0.26 (markt)" rtext="2015-08-21">
   <subsection name="Web applications">
