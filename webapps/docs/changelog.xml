@@ -54,13 +54,22 @@
       <fix>
         <bug>58320</bug>: Fix concurrent access of request attributes which is
         possible during asynchronous processing. (markt)
-      </fix> 
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Coyote">
     <changelog>
       <fix>
         Correct some edge cases in <code>RequestUtil.normalize()</code>. (markt)
+      </fix>
+    </changelog>
+  </subsection>
+  <subsection name="Jasper">
+    <changelog>
+      <fix>
+        <bug>58327</bug>: Cache the expression string for value expression
+        literals since it is frequently used and may be expensive to evaluate.
+        Patch provided by Andreas Kohn. (markt)
       </fix>
     </changelog>
   </subsection>
