@@ -78,6 +78,7 @@ import org.apache.juli.WebappProperties;
 import org.apache.tomcat.InstrumentableClassLoader;
 import org.apache.tomcat.util.ExceptionUtils;
 import org.apache.tomcat.util.IntrospectionUtils;
+import org.apache.tomcat.util.compat.JreVendor;
 import org.apache.tomcat.util.res.StringManager;
 
 /**
@@ -2386,7 +2387,7 @@ public abstract class WebappClassLoaderBase extends URLClassLoader
                     "webappClassLoader.clearReferencesResourceBundlesFail",
                     getContextName()), e);
         } catch (NoSuchFieldException e) {
-            if (Globals.IS_ORACLE_JVM) {
+            if (JreVendor.IS_ORACLE_JVM) {
                 log.warn(sm.getString(
                         "webappClassLoader.clearReferencesResourceBundlesFail",
                         getContextName()), e);
