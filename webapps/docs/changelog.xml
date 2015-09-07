@@ -67,6 +67,12 @@
   <subsection name="Jasper">
     <changelog>
       <fix>
+        <bug>58296</bug>: Fix a memory leak in the JSP unloading feature that
+        meant that using a value other than <code>-1</code> for
+        <code>maxLoadedJsps</code> triggered a memory leak once the limit was
+        reached. (markt)
+      </fix>
+      <fix>
         <bug>58327</bug>: Cache the expression string for value expression
         literals since it is frequently used and may be expensive to evaluate.
         Patch provided by Andreas Kohn. (markt)
