@@ -148,6 +148,18 @@
       </fix>
     </changelog>
   </subsection>
+  <subsection name="Other">
+    <changelog>
+      <fix>
+        Ensure logging works for all tests in a class rather than just the first
+        one executed. (markt)
+      </fix>
+      <add>
+        <bug>58344</bug>: Add build properties to enable tests to be executed
+        against alternative binaries. Based on a patch by Petr Sumbera. (markt)
+      </add>
+    </changelog>
+  </subsection>
 </section>
 <section name="Tomcat 8.0.26 (markt)" rtext="2015-08-21">
   <subsection name="Web applications">
