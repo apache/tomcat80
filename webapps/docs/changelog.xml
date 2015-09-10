@@ -61,6 +61,11 @@
         <bug>58320</bug>: Fix concurrent access of request attributes which is
         possible during asynchronous processing. (markt)
       </fix>
+      <fix>
+        <bug>58352</bug>: Always trigger a thread dump if Tomcat fails to stop
+        gracefully from <code>catalina.sh</code> even if using
+        <code>-force</code>. Patch provided by  Alexandre Garnier. (markt)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Coyote">
