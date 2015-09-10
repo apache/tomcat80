@@ -96,6 +96,10 @@
         literals since it is frequently used and may be expensive to evaluate.
         Patch provided by Andreas Kohn. (markt)
       </fix>
+      <fix>
+        <bug>58340</bug>: Improve error reporting for tag files packaged in
+        JARs. (markt)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Cluster">
