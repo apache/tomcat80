@@ -587,6 +587,15 @@ public class InternalAprInputBuffer extends AbstractInputBuffer<Long> {
             lastValid = pos + nRead;
         } else if (-nRead == Status.EAGAIN) {
             return false;
+        } else if (-nRead == Status.APR_EGENERAL && wrapper.isSecure()) {
+            // Not entirely sure why this is necessary. Testing to date has not
+            // identified any issues with this but log it so it can be tracked
+            // if it is suspected of causing issues in the future.
+            if (log.isDebugEnabled()) {
+                log.debug(sm.getString("iib.apr.sslGeneralError",
+                        Long.valueOf(socket), wrapper));
+            }
+            return false;
         } else if ((-nRead) == Status.ETIMEDOUT || (-nRead) == Status.TIMEUP) {
             if (block) {
                 throw new SocketTimeoutException(
