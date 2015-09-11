@@ -52,16 +52,16 @@ public class SecureNio2Channel extends Nio2Channel  {
     protected SSLEngine sslEngine;
     protected final Nio2Endpoint endpoint;
 
-    protected boolean handshakeComplete;
-    protected HandshakeStatus handshakeStatus; //gets set by handshake
+    private volatile boolean handshakeComplete;
+    private volatile HandshakeStatus handshakeStatus; //gets set by handshake
 
     protected boolean closed;
     protected boolean closing;
     protected volatile boolean readPending;
     protected volatile boolean writePending;
 
-    private CompletionHandler<Integer, SocketWrapper<Nio2Channel>> handshakeReadCompletionHandler;
-    private CompletionHandler<Integer, SocketWrapper<Nio2Channel>> handshakeWriteCompletionHandler;
+    private final CompletionHandler<Integer, SocketWrapper<Nio2Channel>> handshakeReadCompletionHandler;
+    private final CompletionHandler<Integer, SocketWrapper<Nio2Channel>> handshakeWriteCompletionHandler;
 
     public SecureNio2Channel(SSLEngine engine, ApplicationBufferHandler bufHandler,
             Nio2Endpoint endpoint0) {
