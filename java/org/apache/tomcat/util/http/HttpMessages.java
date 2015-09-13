@@ -69,26 +69,34 @@ public class HttpMessages {
         // Does HTTP requires/allow international messages or
         // are pre-defined? The user doesn't see them most of the time
         switch( status ) {
-        case 200:
-            if(st_200 == null ) {
-                st_200 = sm.getString("sc.200");
+        case 200: {
+            String s = st_200;
+            if(s == null ) {
+                st_200 = s = sm.getString("sc.200");
             }
-            return st_200;
-        case 302:
-            if(st_302 == null ) {
-                st_302 = sm.getString("sc.302");
+            return s;
+        }
+        case 302: {
+            String s = st_302;
+            if(s == null ) {
+                st_302 = s = sm.getString("sc.302");
             }
-            return st_302;
-        case 400:
-            if(st_400 == null ) {
-                st_400 = sm.getString("sc.400");
+            return s;
+        }
+        case 400: {
+            String s = st_400;
+            if(s == null ) {
+                st_400 = s = sm.getString("sc.400");
             }
-            return st_400;
-        case 404:
-            if(st_404 == null ) {
-                st_404 = sm.getString("sc.404");
+            return s;
+        }
+        case 404: {
+            String s = st_404;
+            if(s == null ) {
+                st_404 = s = sm.getString("sc.404");
             }
-            return st_404;
+            return s;
+        }
         }
         return sm.getString("sc."+ status);
     }

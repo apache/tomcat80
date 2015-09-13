@@ -92,6 +92,10 @@
         Minor clean-up in NIO2 SSL handshake code to address some theoretical
         concurrency issues. (markt)
       </scode>
+      <fix>
+        <bug>58367</bug>: Fix a rare data race in the code the obtains the
+        reason phrase for a given HTTP response code. (markt)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Jasper">
