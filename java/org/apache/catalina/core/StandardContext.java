@@ -2345,7 +2345,7 @@ public class StandardContext extends ContainerBase
         try {
             if (getState().isAvailable()) {
                 throw new IllegalStateException
-                    (sm.getString("standardContext.resources.started"));
+                    (sm.getString("standardContext.resourcesStart"));
             }
 
             oldResources = this.resources;
