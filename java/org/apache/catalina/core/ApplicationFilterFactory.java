@@ -36,25 +36,8 @@ import org.apache.tomcat.util.descriptor.web.FilterMap;
  */
 public final class ApplicationFilterFactory {
 
-    private static ApplicationFilterFactory factory = null;
-
-
     private ApplicationFilterFactory() {
-        // Prevent instantiation outside of the getInstanceMethod().
-    }
-
-
-    // --------------------------------------------------------- Public Methods
-
-
-    /**
-     * Return the factory instance.
-     */
-    public static ApplicationFilterFactory getInstance() {
-        if (factory == null) {
-            factory = new ApplicationFilterFactory();
-        }
-        return factory;
+        // Prevent instance creation. This is a utility class.
     }
 
 
@@ -65,8 +48,9 @@ public final class ApplicationFilterFactory {
      *
      * @param request The servlet request we are processing
      * @param servlet The servlet instance to be wrapped
+
      */
-    public ApplicationFilterChain createFilterChain
+    public static ApplicationFilterChain createFilterChain
         (ServletRequest request, Wrapper wrapper, Servlet servlet) {
 
         // get the dispatcher type
@@ -207,7 +191,7 @@ public final class ApplicationFilterFactory {
      * @param filterMap Filter mapping being checked
      * @param requestPath Context-relative request path of this request
      */
-    private boolean matchFiltersURL(FilterMap filterMap, String requestPath) {
+    private static boolean matchFiltersURL(FilterMap filterMap, String requestPath) {
 
         // Check the specific "*" special URL pattern, which also matches
         // named dispatches
@@ -240,7 +224,7 @@ public final class ApplicationFilterFactory {
      * @param testPath URL mapping being checked
      * @param requestPath Context-relative request path of this request
      */
-    private boolean matchFiltersURL(String testPath, String requestPath) {
+    private static boolean matchFiltersURL(String testPath, String requestPath) {
 
         if (testPath == null)
             return (false);
@@ -291,7 +275,7 @@ public final class ApplicationFilterFactory {
      * @param filterMap Filter mapping being checked
      * @param servletName Servlet name being checked
      */
-    private boolean matchFiltersServlet(FilterMap filterMap,
+    private static boolean matchFiltersServlet(FilterMap filterMap,
                                         String servletName) {
 
         if (servletName == null) {
@@ -317,7 +301,7 @@ public final class ApplicationFilterFactory {
      * Convenience method which returns true if  the dispatcher type
      * matches the dispatcher types specified in the FilterMap
      */
-    private boolean matchDispatcher(FilterMap filterMap, DispatcherType type) {
+    private static boolean matchDispatcher(FilterMap filterMap, DispatcherType type) {
         switch (type) {
             case FORWARD :
                 if ((filterMap.getDispatcherMapping() & FilterMap.FORWARD) > 0) {

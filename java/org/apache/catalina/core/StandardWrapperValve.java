@@ -178,10 +178,8 @@ final class StandardWrapperValve
         request.setAttribute(Globals.DISPATCHER_REQUEST_PATH_ATTR,
                 requestPathMB);
         // Create the filter chain for this request
-        ApplicationFilterFactory factory =
-            ApplicationFilterFactory.getInstance();
         ApplicationFilterChain filterChain =
-            factory.createFilterChain(request, wrapper, servlet);
+                ApplicationFilterFactory.createFilterChain(request, wrapper, servlet);
 
         // Reset comet flag value after creating the filter chain
         request.setComet(false);

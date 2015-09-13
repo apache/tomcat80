@@ -66,6 +66,10 @@
         gracefully from <code>catalina.sh</code> even if using
         <code>-force</code>. Patch provided by  Alexandre Garnier. (markt)
       </fix>
+      <fix>
+        <bug>58368</bug>: Fix a rare data race in the code that obtains the
+        <code>ApplicationFilterFactory</code> instance. (markt)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Coyote">
@@ -93,7 +97,7 @@
         concurrency issues. (markt)
       </scode>
       <fix>
-        <bug>58367</bug>: Fix a rare data race in the code the obtains the
+        <bug>58367</bug>: Fix a rare data race in the code that obtains the
         reason phrase for a given HTTP response code. (markt)
       </fix>
     </changelog>
