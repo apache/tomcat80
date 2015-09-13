@@ -36,12 +36,12 @@ public class HttpMessages {
     private static final Map<Locale,HttpMessages> instances =
             new ConcurrentHashMap<>();
 
+    // Keep this in separate package from standard i18n messages
     private static final HttpMessages DEFAULT = new HttpMessages(
             StringManager.getManager("org.apache.tomcat.util.http.res",
                     Locale.getDefault()));
 
 
-    // XXX move message resources in this package
     private final StringManager sm;
 
     private String st_200 = null;
@@ -64,10 +64,6 @@ public class HttpMessages {
      *         HTTP specification
      */
     public String getMessage(int status) {
-        // method from Response.
-
-        // Does HTTP requires/allow international messages or
-        // are pre-defined? The user doesn't see them most of the time
         switch( status ) {
         case 200: {
             String s = st_200;
