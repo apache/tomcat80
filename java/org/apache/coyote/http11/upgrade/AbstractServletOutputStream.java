@@ -77,7 +77,7 @@ public abstract class AbstractServletOutputStream<S> extends ServletOutputStream
     public final boolean isReady() {
         if (listener == null) {
             throw new IllegalStateException(
-                    sm.getString("upgrade.sos.canWrite.is"));
+                    sm.getString("upgrade.sos.canWrite.ise"));
         }
 
         // Make sure isReady() and onWritePossible() have a consistent view of
