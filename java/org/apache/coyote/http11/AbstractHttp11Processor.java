@@ -1544,7 +1544,9 @@ public abstract class AbstractHttp11Processor<S> extends AbstractProcessor<S> {
 
         // If we know that the request is bad this early, add the
         // Connection: close header.
-        keepAlive = keepAlive && !statusDropsConnection(statusCode);
+        if (keepAlive && statusDropsConnection(statusCode)) {
+            keepAlive = false;
+        }
         if (!keepAlive) {
             // Avoid adding the close header twice
             if (!connectionClosePresent) {
