@@ -104,6 +104,10 @@
         <bug>58367</bug>: Fix a rare data race in the code that obtains the
         reason phrase for a given HTTP response code. (markt)
       </fix>
+      <fix>
+        <bug>58370</bug>: Fix a rare data race in the connector shutdown code.
+        (markt)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Jasper">
