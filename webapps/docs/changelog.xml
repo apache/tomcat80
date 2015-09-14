@@ -133,6 +133,11 @@
         <bug>58375</bug>: Fix a rare data race on the internal flag Tomcat uses
         to mark a response as committed. (markt)
       </fix>
+      <fix>
+        <bug>58377</bug>: Fix a rare data race on the internal flag Tomcat uses
+        to mark a request as using HTTP keep-alive when switching to
+        asynchronous processing. (markt)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Jasper">
