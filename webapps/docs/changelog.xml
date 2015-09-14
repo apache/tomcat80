@@ -70,6 +70,10 @@
         <bug>58368</bug>: Fix a rare data race in the code that obtains the
         <code>ApplicationFilterFactory</code> instance. (markt)
       </fix>
+      <fix>
+        <bug>58369</bug>: Fix a rare data race in the code that ontains the
+        CookieProcessor for a StandardContext instance. (markt)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Coyote">

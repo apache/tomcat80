@@ -1659,6 +1659,9 @@ public interface Context extends Container {
      * for this Context.
      *
      * @param cookieProcessor   The new cookie processor
+     *
+     * @throws IllegalArgumentException If a {@code null} CookieProcessor is
+     *         specified
      */
     public void setCookieProcessor(CookieProcessor cookieProcessor);
 
