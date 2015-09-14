@@ -149,6 +149,10 @@
       <fix>
         Correct documentation for cluster-howto. (kfujino)
       </fix>
+      <fix>
+        Add missing documentation for property <code>alwaysAddExpires</code> for
+        the <code>LegacyCookieProcessor</code>. (markt)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Tribes">
