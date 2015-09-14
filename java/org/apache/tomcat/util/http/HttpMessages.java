@@ -44,13 +44,28 @@ public class HttpMessages {
 
     private final StringManager sm;
 
-    private String st_200 = null;
-    private String st_302 = null;
-    private String st_400 = null;
-    private String st_404 = null;
+    private final String st_200;
+    private final String st_302;
+    private final String st_400;
+    private final String st_404;
 
     private HttpMessages(StringManager sm) {
+        // There is a performance tradeoff here. This implementation incurs
+        // ~160ns (40ns per StringManager) lookup delay on first access but all
+        // subsequent lookups take ~0.25ns.
+        // The alternative approach (lazy init of each cached String) delays the
+        // StringManager lookup until required but increases the time for
+        // subsequent lookups to ~0.5ns.
+        // These times will be in the noise for most requests. This
+        // implementation was chosen because:
+        // - Over anything more than a few hundred requests it is faster.
+        // - The code is a lot simpler. Thread safe lazy init needs care to get
+        //   right. See http://markmail.org/thread/wjp3oejdyxcrz7do
         this.sm = sm;
+        st_200 = sm.getString("sc.200");
+        st_302 = sm.getString("sc.302");
+        st_400 = sm.getString("sc.400");
+        st_404 = sm.getString("sc.404");
     }
 
 
@@ -64,37 +79,18 @@ public class HttpMessages {
      *         HTTP specification
      */
     public String getMessage(int status) {
-        switch( status ) {
-        case 200: {
-            String s = st_200;
-            if(s == null ) {
-                st_200 = s = sm.getString("sc.200");
-            }
-            return s;
+        switch (status) {
+        case 200:
+            return st_200;
+        case 302:
+            return st_302;
+        case 400:
+            return st_400;
+        case 404:
+            return st_404;
+        default:
+            return sm.getString("sc."+ status);
         }
-        case 302: {
-            String s = st_302;
-            if(s == null ) {
-                st_302 = s = sm.getString("sc.302");
-            }
-            return s;
-        }
-        case 400: {
-            String s = st_400;
-            if(s == null ) {
-                st_400 = s = sm.getString("sc.400");
-            }
-            return s;
-        }
-        case 404: {
-            String s = st_404;
-            if(s == null ) {
-                st_404 = s = sm.getString("sc.404");
-            }
-            return s;
-        }
-        }
-        return sm.getString("sc."+ status);
     }
 
 
