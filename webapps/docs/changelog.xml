@@ -85,6 +85,11 @@
         <bug>58373</bug>: Fix rare data race with the application event
         listeners for StandardContext. (markt)
       </fix>
+      <fix>
+        <bug>59734</bug>: Fix a rare data race in the AsyncContext
+        implementation for access to the internal Tomcat request object to which
+        it holds a reference. (markt)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Coyote">
