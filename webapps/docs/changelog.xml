@@ -129,6 +129,10 @@
         String form when switching from non-async to async due to early
         triggering of the gathering of request statistics. (markt)
       </fix>
+      <fix>
+        <bug>58375</bug>: Fix a rare data race on the internal flag Tomcat uses
+        to mark a response as committed. (markt)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Jasper">
