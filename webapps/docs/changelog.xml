@@ -81,6 +81,10 @@
        <bug>58372</bug>: Fix rare data races closed and suspended flags that
        could be triggered by async and/or comet processing. (markt)
       </fix>
+      <fix>
+        <bug>58373</bug>: Fix rare data race with the application event
+        listeners for StandardContext. (markt)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Coyote">
