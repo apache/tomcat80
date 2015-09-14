@@ -111,6 +111,11 @@
         <bug>58370</bug>: Fix a rare data race in the connector shutdown code.
         (markt)
       </fix>
+      <fix>
+        <bug>58371</bug>: Fix a rare data race when accessing request URI in
+        String form when switching from non-async to async due to early
+        triggering of the gathering of request statistics. (markt)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Jasper">
