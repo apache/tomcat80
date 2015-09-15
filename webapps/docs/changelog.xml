@@ -138,6 +138,10 @@
         to mark a request as using HTTP keep-alive when switching to
         asynchronous processing. (markt)
       </fix>
+      <fix>
+        <bug>58379</bug>: Fix a rare data race on the interal reference Tomcat
+        retains to the socket when switching to asynchronous processing. (markt)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Jasper">
