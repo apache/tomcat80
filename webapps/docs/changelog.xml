@@ -216,6 +216,10 @@
         <bug>58381</bug>: Fix a rare data race in the <code>NioReceiver</code>.
         (markt)
       </fix>
+      <fix>
+        <bug>58382</bug>: Fix multiple rare data races in the default membership
+        implementation. (markt)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="jdbc-pool">
