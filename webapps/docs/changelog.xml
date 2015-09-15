@@ -212,6 +212,10 @@
         Correct log messages in case of using <code>ReplicatedMap</code>.
         (kfujino)
       </fix>
+      <fix>
+        <bug>58381</bug>: Fix a rare data race in the <code>NioReceiver</code>.
+        (markt)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="jdbc-pool">
