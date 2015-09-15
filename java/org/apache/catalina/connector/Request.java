@@ -233,9 +233,9 @@ public class Request
 
 
     /**
-     * Comet state
+     * Comet state (can be accessed from multiple threads concurrently).
      */
-    protected boolean comet = false;
+    protected volatile boolean comet = false;
 
 
     /**
