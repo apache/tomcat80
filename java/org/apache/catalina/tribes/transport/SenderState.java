@@ -16,7 +16,6 @@
  */
 package org.apache.catalina.tribes.transport;
 
-import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.catalina.tribes.Member;
@@ -27,7 +26,7 @@ public class SenderState {
     public static final int SUSPECT = 1;
     public static final int FAILING = 2;
 
-    protected static final Map<Member, SenderState> memberStates = new ConcurrentHashMap<>();
+    protected static final ConcurrentHashMap<Member, SenderState> memberStates = new ConcurrentHashMap<>();
 
     public static SenderState getSenderState(Member member) {
         return getSenderState(member, true);
