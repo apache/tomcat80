@@ -90,6 +90,11 @@
         implementation for access to the internal Tomcat request object to which
         it holds a reference. (markt)
       </fix>
+      <fix>
+        <bug>58380</bug>: Fix two rare data races in the standard session
+        implementation on the flag that tracks if the session is new and on the
+        field that tracks the maximum inactive period. (markt)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Coyote">
