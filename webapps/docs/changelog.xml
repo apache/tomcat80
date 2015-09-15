@@ -220,6 +220,9 @@
         <bug>58382</bug>: Fix multiple rare data races in the default membership
         implementation. (markt)
       </fix>
+      <fix>
+        <bug>58383</bug>: Fix a data race in <code>SenderState</code>. (markt)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="jdbc-pool">
