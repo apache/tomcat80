@@ -189,6 +189,11 @@
         removal could fail for binary and pong MessageHandlers. Patch provided
         by DJ. (markt)
       </fix>
+      <fix>
+        <bug>58384</bug>: Fix a rare and likely harmless data race in field used
+        for tracking how long since the WebSocket connections were last checked
+        for idle expiration. (markt)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Web applications">
