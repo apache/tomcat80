@@ -535,7 +535,6 @@ public class McastService implements MembershipService,MembershipListener,Messag
         this.payload = payload;
         if ( localMember != null ) {
             localMember.setPayload(payload);
-            localMember.getData(true,true);
             try {
                 if (impl != null) impl.send(false);
             }catch ( Exception x ) {
@@ -549,7 +548,6 @@ public class McastService implements MembershipService,MembershipListener,Messag
         this.domain = domain;
         if ( localMember != null ) {
             localMember.setDomain(domain);
-            localMember.getData(true,true);
             try {
                 if (impl != null) impl.send(false);
             }catch ( Exception x ) {
