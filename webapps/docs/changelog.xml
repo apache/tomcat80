@@ -252,6 +252,10 @@
         <code>NonBlockingCoordinator</code>, most of which were associated with
         ensuring that log messages contained the correct information. (markt)
       </fix>
+      <fix>
+        <bug>58392</bug>: Fix a data race in
+        <code>DomainFilterInterceptor</code>. (markt)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="jdbc-pool">

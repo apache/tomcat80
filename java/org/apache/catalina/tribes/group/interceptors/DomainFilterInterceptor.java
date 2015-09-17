@@ -38,7 +38,7 @@ public class DomainFilterInterceptor extends ChannelInterceptorBase {
     private static final Log log = LogFactory.getLog(DomainFilterInterceptor.class);
     protected static final StringManager sm =
             StringManager.getManager(DomainFilterInterceptor.class.getPackage().getName());
-    protected Membership membership = null;
+    protected volatile Membership membership = null;
 
     protected byte[] domain = new byte[0];
 
