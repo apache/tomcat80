@@ -256,6 +256,10 @@
         <bug>58392</bug>: Fix a data race in
         <code>DomainFilterInterceptor</code>. (markt)
       </fix>
+      <fix>
+        <bug>58393</bug>: Fix a data race on the listener in
+        <code>McastService</code>. (markt)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="jdbc-pool">
