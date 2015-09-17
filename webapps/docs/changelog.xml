@@ -172,6 +172,10 @@
         Clean up use of error flag on socket wrapper prompted by
         <bug>58390</bug>. (markt)
       </scode>
+      <scode>
+        Remove some unnecessary code from the NIO Poller and fix
+        <bug>58396</bug> as a side-effect. (markt)
+      </scode>
     </changelog>
   </subsection>
   <subsection name="Jasper">

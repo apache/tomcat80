@@ -83,6 +83,7 @@ public class NioEndpoint extends AbstractEndpoint<NioChannel> {
 
 
     public static final int OP_REGISTER = 0x100; //register interest op
+    @Deprecated // Unused. Will be removed in Tomcat 9.0.x
     public static final int OP_CALLBACK = 0x200; //callback interest op
 
     // ----------------------------------------------------------------- Fields
@@ -604,12 +605,7 @@ public class NioEndpoint extends AbstractEndpoint<NioChannel> {
     @Override
     public void processSocket(SocketWrapper<NioChannel> socketWrapper,
             SocketStatus socketStatus, boolean dispatch) {
-        NioChannel socket = socketWrapper.getSocket();
-        if (socket.isOpen() && dispatch && socketStatus == SocketStatus.OPEN_READ) {
-            socket.getPoller().add(socket, OP_CALLBACK);
-        } else {
-            processSocket((KeyAttachment) socketWrapper, socketStatus, dispatch);
-        }
+        processSocket((KeyAttachment) socketWrapper, socketStatus, dispatch);
     }
 
     protected boolean processSocket(KeyAttachment attachment, SocketStatus status, boolean dispatch) {
@@ -617,7 +613,6 @@ public class NioEndpoint extends AbstractEndpoint<NioChannel> {
             if (attachment == null) {
                 return false;
             }
-            attachment.setCometNotify(false); //will get reset upon next reg
             SocketProcessor sc = processorCache.pop();
             if ( sc == null ) sc = new SocketProcessor(attachment, status);
             else sc.reset(attachment, status);
@@ -799,19 +794,11 @@ public class NioEndpoint extends AbstractEndpoint<NioChannel> {
                     if (key != null) {
                         final KeyAttachment att = (KeyAttachment) key.attachment();
                         if ( att!=null ) {
-                            //handle callback flag
-                            if ((interestOps & OP_CALLBACK) == OP_CALLBACK ) {
-                                att.setCometNotify(true);
-                            } else {
-                                att.setCometNotify(false);
-                            }
-                            interestOps = (interestOps & (~OP_CALLBACK));//remove the callback flag
                             att.access();//to prevent timeout
                             //we are registering the key to start with, reset the fairness counter.
                             int ops = key.interestOps() | interestOps;
                             att.interestOps(ops);
-                            if (att.getCometNotify()) key.interestOps(0);
-                            else key.interestOps(ops);
+                            key.interestOps(ops);
                         } else {
                             cancel = true;
                         }
@@ -894,9 +881,6 @@ public class NioEndpoint extends AbstractEndpoint<NioChannel> {
             PollerEvent r = eventCache.pop();
             if ( r==null) r = new PollerEvent(socket,null,interestOps);
             else r.reset(socket,null,interestOps);
-            if ( (interestOps&OP_CALLBACK) == OP_CALLBACK ) {
-                nextExpiration = 0; //force the check for faster callback
-            }
             addEvent(r);
             if (close) {
                 NioEndpoint.KeyAttachment ka = (NioEndpoint.KeyAttachment)socket.getAttachment();
@@ -1286,12 +1270,6 @@ public class NioEndpoint extends AbstractEndpoint<NioChannel> {
                         KeyAttachment ka = (KeyAttachment) key.attachment();
                         if ( ka == null ) {
                             cancelledKey(key, SocketStatus.ERROR); //we don't support any keys without attachments
-                        } else if (ka.getCometNotify() ) {
-                            ka.setCometNotify(false);
-                            int ops = ka.interestOps() & ~OP_CALLBACK;
-                            reg(key,ka,0);//avoid multiple calls, this gets re-registered after invocation
-                            ka.interestOps(ops);
-                            if (!processSocket(ka, SocketStatus.OPEN_READ, true)) processSocket(ka, SocketStatus.DISCONNECT, true);
                         } else if ((ka.interestOps()&SelectionKey.OP_READ) == SelectionKey.OP_READ ||
                                   (ka.interestOps()&SelectionKey.OP_WRITE) == SelectionKey.OP_WRITE) {
                             //only timeout sockets that we are waiting for a read from
@@ -1354,8 +1332,10 @@ public class NioEndpoint extends AbstractEndpoint<NioChannel> {
 
         public Poller getPoller() { return poller;}
         public void setPoller(Poller poller){this.poller = poller;}
-        public void setCometNotify(boolean notify) { this.cometNotify = notify; }
-        public boolean getCometNotify() { return cometNotify; }
+        @Deprecated // Unused. NO-OP. Will be removed in Tomcat 9.0.x
+        public void setCometNotify(@SuppressWarnings("unused") boolean notify) { /* NO-OP */ }
+        @Deprecated // Unused. Always returns false. Will be removed in Tomcat 9.0.x
+        public boolean getCometNotify() { return false; }
         public int interestOps() { return interestOps;}
         public int interestOps(int ops) { this.interestOps  = ops; return ops; }
         public CountDownLatch getReadLatch() { return readLatch; }
@@ -1396,7 +1376,6 @@ public class NioEndpoint extends AbstractEndpoint<NioChannel> {
 
         private Poller poller = null;
         private int interestOps = 0;
-        private boolean cometNotify = false;
         private CountDownLatch readLatch = null;
         private CountDownLatch writeLatch = null;
         private volatile SendfileData sendfileData = null;
