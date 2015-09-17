@@ -133,7 +133,7 @@ public final class Request {
     private final HashMap<String,Object> attributes = new HashMap<>();
 
     private Response response;
-    private ActionHook hook;
+    private volatile ActionHook hook;
 
     private long bytesRead=0;
     // Time of the request - useful to avoid repeated calls to System.currentTime
@@ -363,18 +363,18 @@ public final class Request {
         return response;
     }
 
-    public void setResponse( Response response ) {
-        this.response=response;
-        response.setRequest( this );
+    public void setResponse(Response response) {
+        this.response = response;
+        response.setRequest(this);
+    }
+
+    protected void setHook(ActionHook hook) {
+        this.hook = hook;
     }
 
     public void action(ActionCode actionCode, Object param) {
-        if( hook==null && response!=null ) {
-            hook=response.getHook();
-        }
-
         if (hook != null) {
-            if( param==null ) {
+            if (param == null) {
                 hook.action(actionCode, this);
             } else {
                 hook.action(actionCode, param);
