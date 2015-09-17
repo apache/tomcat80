@@ -1286,8 +1286,6 @@ public class NioEndpoint extends AbstractEndpoint<NioChannel> {
                         KeyAttachment ka = (KeyAttachment) key.attachment();
                         if ( ka == null ) {
                             cancelledKey(key, SocketStatus.ERROR); //we don't support any keys without attachments
-                        } else if ( ka.getError() ) {
-                            cancelledKey(key, SocketStatus.ERROR);//TODO this is not yet being used
                         } else if (ka.getCometNotify() ) {
                             ka.setCometNotify(false);
                             int ops = ka.interestOps() & ~OP_CALLBACK;

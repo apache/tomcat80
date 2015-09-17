@@ -164,6 +164,10 @@
         <bug>58389</bug>: Fix a rare data race while shutting down the thread
         pools on Connector stop. (markt)
       </fix>
+      <scode>
+        Clean up use of error flag on socket wrapper prompted by
+        <bug>58390</bug>. (markt)
+      </scode>
     </changelog>
   </subsection>
   <subsection name="Jasper">
