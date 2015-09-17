@@ -156,6 +156,10 @@
         <bug>58387</bug>: Fix a rare data race when closing Comet connections.
         (markt)
       </fix>
+      <fix>
+        <bug>58388</bug>: Fix a data race when determining if Comet processing
+        is occurring on a container or non-container thread. (markt)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Jasper">

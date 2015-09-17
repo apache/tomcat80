@@ -25,6 +25,7 @@ import java.util.Set;
 import javax.net.ssl.SSLEngine;
 
 import org.apache.coyote.ActionCode;
+import org.apache.coyote.ContainerThreadMarker;
 import org.apache.coyote.ErrorState;
 import org.apache.coyote.RequestInfo;
 import org.apache.coyote.http11.filters.BufferedInputFilter;
@@ -516,8 +517,7 @@ public class Http11Nio2Processor extends AbstractHttp11Processor<Nio2Channel> {
             if (socketWrapper == null || socketWrapper.getSocket() == null) {
                 return;
             }
-            RequestInfo rp = request.getRequestProcessor();
-            if (rp.getStage() != org.apache.coyote.Constants.STAGE_SERVICE) {
+            if (!ContainerThreadMarker.isContainerThread()) {
                 // Close event for this processor triggered by request
                 // processing in another processor, a non-Tomcat thread (i.e.
                 // an application controlled thread) or similar.
@@ -532,10 +532,9 @@ public class Http11Nio2Processor extends AbstractHttp11Processor<Nio2Channel> {
             if (socketWrapper == null) {
                 return;
             }
-            long timeout = ((Long)param).longValue();
-            //if we are not piggy backing on a worker thread, set the timeout
-            RequestInfo rp = request.getRequestProcessor();
-            if ( rp.getStage() != org.apache.coyote.Constants.STAGE_SERVICE ) {
+            // If we are not piggy backing on a worker thread, set the timeout
+            if (!ContainerThreadMarker.isContainerThread()) {
+                long timeout = ((Long)param).longValue();
                 socketWrapper.setTimeout(timeout);
             }
             break;
