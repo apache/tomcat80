@@ -100,6 +100,10 @@
         to keep track of whether or not a request is being used for Comet
         processing. (markt)
       </fix>
+      <fix>
+        <bug>58394</bug>: Fix a rare data race in Mapper when adding or removing
+        a host. (markt)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Coyote">
