@@ -247,6 +247,11 @@
       <fix>
         <bug>58386</bug>: Fix a data race in <code>ObjectReader</code>. (markt)
       </fix>
+      <fix>
+        <bug>58391</bug>: Fix multiple data races in
+        <code>NonBlockingCoordinator</code>, most of which were associated with
+        ensuring that log messages contained the correct information. (markt)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="jdbc-pool">
