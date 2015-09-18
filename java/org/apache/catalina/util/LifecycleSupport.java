@@ -14,15 +14,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-
 package org.apache.catalina.util;
-
 
 import org.apache.catalina.Lifecycle;
 import org.apache.catalina.LifecycleEvent;
 import org.apache.catalina.LifecycleListener;
-
 
 /**
  * Support class to assist in firing LifecycleEvent notifications to
@@ -32,9 +28,7 @@ import org.apache.catalina.LifecycleListener;
  */
 public final class LifecycleSupport {
 
-
     // ----------------------------------------------------------- Constructors
-
 
     /**
      * Construct a new LifecycleSupport object associated with the specified
@@ -44,15 +38,12 @@ public final class LifecycleSupport {
      *  of events that we fire
      */
     public LifecycleSupport(Lifecycle lifecycle) {
-
         super();
         this.lifecycle = lifecycle;
-
     }
 
 
     // ----------------------------------------------------- Instance Variables
-
 
     /**
      * The source component for lifecycle events that we will fire.
@@ -70,14 +61,12 @@ public final class LifecycleSupport {
 
     // --------------------------------------------------------- Public Methods
 
-
     /**
      * Add a lifecycle event listener to this component.
      *
      * @param listener The listener to add
      */
     public void addLifecycleListener(LifecycleListener listener) {
-
       synchronized (listenersLock) {
           LifecycleListener results[] =
             new LifecycleListener[listeners.length + 1];
@@ -86,7 +75,6 @@ public final class LifecycleSupport {
           results[listeners.length] = listener;
           listeners = results;
       }
-
     }
 
 
@@ -95,9 +83,7 @@ public final class LifecycleSupport {
      * Lifecycle has no listeners registered, a zero-length array is returned.
      */
     public LifecycleListener[] findLifecycleListeners() {
-
         return listeners;
-
     }
 
 
@@ -110,12 +96,11 @@ public final class LifecycleSupport {
      * @param data Event data
      */
     public void fireLifecycleEvent(String type, Object data) {
-
         LifecycleEvent event = new LifecycleEvent(lifecycle, type, data);
         LifecycleListener interested[] = listeners;
-        for (int i = 0; i < interested.length; i++)
+        for (int i = 0; i < interested.length; i++) {
             interested[i].lifecycleEvent(event);
-
+        }
     }
 
 
@@ -125,7 +110,6 @@ public final class LifecycleSupport {
      * @param listener The listener to remove
      */
     public void removeLifecycleListener(LifecycleListener listener) {
-
         synchronized (listenersLock) {
             int n = -1;
             for (int i = 0; i < listeners.length; i++) {
@@ -145,8 +129,5 @@ public final class LifecycleSupport {
             }
             listeners = results;
         }
-
     }
-
-
 }
