@@ -104,6 +104,10 @@
         <bug>58394</bug>: Fix a rare data race in Mapper when adding or removing
         a host. (markt)
       </fix>
+      <fix>
+        <bug>58398</bug>: Fix a rare data race in <code>LifecycleSupport</code>.
+        (markt)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Coyote">
