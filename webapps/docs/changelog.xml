@@ -230,6 +230,10 @@
         removal could fail for binary and pong MessageHandlers. Patch provided
         by DJ. (markt)
       </fix>
+      <fix>
+        Data races detected by RV-Predict, mostly caused by completion handlers
+        running in separate threads. (markt)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Web applications">
