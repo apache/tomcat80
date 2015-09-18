@@ -46,7 +46,7 @@ public class ObjectReader {
     protected long lastAccess = System.currentTimeMillis();
 
     protected boolean accessed = false;
-    private boolean cancelled;
+    private volatile boolean cancelled;
 
     public ObjectReader(int packetSize) {
         this.buffer = new XByteBuffer(packetSize, true);
