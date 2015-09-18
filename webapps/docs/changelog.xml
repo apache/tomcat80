@@ -86,7 +86,7 @@
         listeners for StandardContext. (markt)
       </fix>
       <fix>
-        <bug>59734</bug>: Fix a rare data race in the AsyncContext
+        <bug>58374</bug>: Fix a rare data race in the AsyncContext
         implementation for access to the internal Tomcat request object to which
         it holds a reference. (markt)
       </fix>
@@ -277,6 +277,10 @@
         that were likely to cause issues if certain properties were updated
         concurrently (such updates are unlikely in normal usage). (markt)
       </fix>
+      <scode>
+        Remove some unnecessary code from <code>PooledParallelSender</code> and
+        fix <bug>58397</bug>. (markt)
+      </scode>
     </changelog>
   </subsection>
   <subsection name="jdbc-pool">
