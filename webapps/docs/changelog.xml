@@ -207,6 +207,9 @@
         <bug>58424</bug>: When parsing TLD files, allow whitespace around
         boolean configuration values. (schultz)
       </fix>
+      <fix>
+        Fix a possible resource leak reported by coverity scan. (fschumacher)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Cluster">
