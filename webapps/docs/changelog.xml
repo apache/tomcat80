@@ -215,6 +215,10 @@
       <fix>
         Fix a possible resource leak reported by coverity scan. (fschumacher)
       </fix>
+      <fix>
+        <bug>58427</bug>: Enforce the JSP specification defined limitations of
+        which elements are allowed in an implicit.tld file. (markt)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Cluster">
