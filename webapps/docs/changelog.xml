@@ -112,6 +112,11 @@
         <bug>58412</bug>: Ensure that the <code>AsyncFileHandler</code> has the
         source class and method name available for logging. (fschumacher)
       </fix>
+      <fix>
+        <bug>58416</bug>: Correctly detect when a forced stop fails to stop
+        Tomcat because the Tomcat process is waiting on some system call or is
+        uninterruptible. (markt)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Coyote">
