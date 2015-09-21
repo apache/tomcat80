@@ -29,7 +29,8 @@ import org.xml.sax.Attributes;
  */
 public class ImplicitTldRuleSet extends RuleSetBase {
 
-    private static final StringManager sm = StringManager.getManager(ImplicitTldRuleSet.class);
+    private static final StringManager sm = StringManager.getManager(
+            ImplicitTldRuleSet.class.getPackage().getName());
 
     private static final String PREFIX = "taglib";
     private static final String VALIDATOR_PREFIX = PREFIX + "/validator";
