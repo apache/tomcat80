@@ -494,10 +494,10 @@ public class SecureNioChannel extends NioChannel  {
             int written = sc.write(src);
             return written;
         } else {
-            //make sure we can handle expand, and that we only use one buffer
-            if ( (!this.isSendFile()) && (src != bufHandler.getWriteBuffer()) ) throw new IllegalArgumentException(sm.getString("channel.nio.ssl.invalidBuffer"));
             //are we closing or closed?
             if ( closing || closed) throw new IOException(sm.getString("channel.nio.ssl.closing"));
+            //make sure we can handle expand, and that we only use one buffer
+            if ( (!this.isSendFile()) && (src != bufHandler.getWriteBuffer()) ) throw new IllegalArgumentException(sm.getString("channel.nio.ssl.invalidBuffer"));
 
             //the number of bytes written
             int written = 0;
