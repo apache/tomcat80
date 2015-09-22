@@ -198,6 +198,9 @@
         Remove some unnecessary code from the NIO Poller and fix
         <bug>58396</bug> as a side-effect. (markt)
       </scode>
+      <fix>
+        <bug>57799</bug>: Remove useless sendfile check for NIO SSL. (remm)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Jasper">

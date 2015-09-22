@@ -48,8 +48,6 @@ public class NioChannel implements ByteChannel {
 
     protected Poller poller;
 
-    protected volatile boolean sendFile = false;
-
     public NioChannel(SocketChannel channel, ApplicationBufferHandler bufHandler) {
         this.sc = channel;
         this.bufHandler = bufHandler;
@@ -63,7 +61,6 @@ public class NioChannel implements ByteChannel {
     public void reset() throws IOException {
         bufHandler.getReadBuffer().clear();
         bufHandler.getWriteBuffer().clear();
-        this.sendFile = false;
     }
 
     public int getBufferSize() {
@@ -205,15 +202,6 @@ public class NioChannel implements ByteChannel {
     public boolean flushOutbound() throws IOException {
         return false;
     }
-
-    public boolean isSendFile() {
-        return sendFile;
-    }
-
-    public void setSendFile(boolean s) {
-        this.sendFile = s;
-    }
-
 
     /**
      * This method should be used to check the interrupt status before
