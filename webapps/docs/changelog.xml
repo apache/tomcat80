@@ -240,6 +240,11 @@
         <bug>58427</bug>: Enforce the JSP specification defined limitations of
         which elements are allowed in an implicit.tld file. (markt)
       </fix>
+      <fix>
+        <bug>58444</bug>: Ensure that JSPs work with any custom base class that
+        meets the requirements defined in the JSP specification without
+        requiring that base class to implement Tomcat specific code. (markt)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Cluster">
