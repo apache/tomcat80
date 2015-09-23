@@ -1211,7 +1211,7 @@ public class AprEndpoint extends AbstractEndpoint<Long> {
     // -------------------------------------------------- SocketList Inner Class
 
     public class SocketList {
-        protected int size;
+        protected volatile int size;
         protected int pos;
 
         protected long[] sockets;
