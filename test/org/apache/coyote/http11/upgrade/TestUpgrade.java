@@ -139,8 +139,6 @@ public class TestUpgrade extends TomcatBaseTest {
         pw.println(MESSAGE);
         pw.flush();
 
-        uc.shutdownOutput();
-
         // Note: BufferedReader.readLine() strips new lines
         //       ServletInputStream.readLine() does not strip new lines
         String response = reader.readLine();
@@ -148,6 +146,7 @@ public class TestUpgrade extends TomcatBaseTest {
         response = reader.readLine();
         Assert.assertEquals(MESSAGE, response);
 
+        uc.shutdownOutput();
         uc.shutdownInput();
     }
 
@@ -277,10 +276,11 @@ public class TestUpgrade extends TomcatBaseTest {
 
     public static class EchoNonBlocking implements HttpUpgradeHandler {
 
+        private ServletInputStream sis;
+        private ServletOutputStream sos;
+
         @Override
         public void init(WebConnection connection) {
-            ServletInputStream sis;
-            ServletOutputStream sos;
 
             try {
                 sis = connection.getInputStream();
@@ -289,9 +289,8 @@ public class TestUpgrade extends TomcatBaseTest {
                 throw new IllegalStateException(ioe);
             }
 
-            EchoListener echoListener = new EchoListener(sis, sos);
-            sis.setReadListener(echoListener);
-            sos.setWriteListener(echoListener);
+            sis.setReadListener(new EchoReadListener());
+            sos.setWriteListener(new NoOpWriteListener());
         }
 
         @Override
@@ -299,51 +298,27 @@ public class TestUpgrade extends TomcatBaseTest {
             // NO-OP
         }
 
-        private class EchoListener implements ReadListener, WriteListener {
+        private class EchoReadListener extends NoOpReadListener {
 
-            private final ServletInputStream sis;
-            private final ServletOutputStream sos;
-            private final byte[] buffer = new byte[8192];
-
-            public EchoListener(ServletInputStream sis, ServletOutputStream sos) {
-                this.sis = sis;
-                this.sos = sos;
-            }
+            private byte[] buffer = new byte[8096];
 
             @Override
-            public void onWritePossible() throws IOException {
-                if (sis.isFinished()) {
-                    sis.close();
-                    sos.close();
-                }
-                while (sis.isReady()) {
-                    int read = sis.read(buffer);
-                    if (read > 0) {
-                        sos.write(buffer, 0, read);
-                        if (!sos.isReady()) {
-                            break;
+            public void onDataAvailable() {
+                try {
+                    while (sis.isReady()) {
+                        int read = sis.read(buffer);
+                        if (read > 0) {
+                            if (sos.isReady()) {
+                                sos.write(buffer, 0, read);
+                            } else {
+                                throw new IOException("Unable to echo data. " +
+                                        "isReady() returned false");
+                            }
                         }
                     }
+                } catch (IOException ioe) {
+                    throw new RuntimeException(ioe);
                 }
-            }
-
-            @Override
-            public void onDataAvailable() throws IOException {
-                if (sos.isReady()) {
-                    onWritePossible();
-                }
-            }
-
-            @Override
-            public void onAllDataRead() throws IOException {
-                if (sos.isReady()) {
-                    onWritePossible();
-                }
-            }
-
-            @Override
-            public void onError(Throwable throwable) {
-                throwable.printStackTrace();
             }
         }
     }
