@@ -45,6 +45,14 @@
   issues do not "pop up" wrt. others).
 -->
 <section name="Tomcat 8.0.28 (markt)" rtext="in development">
+  <subsection name="Coyote">
+    <changelog>
+      <update>
+        Add the new ciphers from RFC6655 and RFC7251 to the OpenSSL to JSSE
+        cipher mapping. (markt)
+      </update>
+    </changelog>
+  </subsection>
 </section>
 <section name="Tomcat 8.0.27 (markt)" rtext="release in progress">
   <subsection name="Catalina">
