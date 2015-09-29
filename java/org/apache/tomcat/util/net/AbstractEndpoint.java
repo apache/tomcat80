@@ -16,7 +16,6 @@
  */
 package org.apache.tomcat.util.net;
 
-import java.io.File;
 import java.io.OutputStreamWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -826,25 +825,6 @@ public abstract class AbstractEndpoint<S> {
         }
     }
 
-
-    private String adjustRelativePath(String path, String relativeTo) {
-        // Empty or null path can't point to anything useful. The assumption is
-        // that the value is deliberately empty / null so leave it that way.
-        if (path == null || path.length() == 0) {
-            return path;
-        }
-        String newPath = path;
-        File f = new File(newPath);
-        if ( !f.isAbsolute()) {
-            newPath = relativeTo + File.separator + newPath;
-            f = new File(newPath);
-        }
-        if (!f.exists()) {
-            getLog().warn("configured file:["+newPath+"] does not exist.");
-        }
-        return newPath;
-    }
-
     protected abstract Log getLog();
     // Flags to indicate optional feature support
     // Some of these are always hard-coded, some are hard-coded to false (i.e.
@@ -930,10 +910,7 @@ public abstract class AbstractEndpoint<S> {
 
     private String keystoreFile = System.getProperty("user.home")+"/.keystore";
     public String getKeystoreFile() { return keystoreFile;}
-    public void setKeystoreFile(String s ) {
-        keystoreFile = adjustRelativePath(s,
-                System.getProperty(Constants.CATALINA_BASE_PROP));
-    }
+    public void setKeystoreFile(String s ) { keystoreFile = s; }
 
     private String keystorePass = null;
     public String getKeystorePass() { return keystorePass;}
@@ -975,10 +952,7 @@ public abstract class AbstractEndpoint<S> {
 
     private String truststoreFile = System.getProperty("javax.net.ssl.trustStore");
     public String getTruststoreFile() {return truststoreFile;}
-    public void setTruststoreFile(String s) {
-        truststoreFile = adjustRelativePath(s,
-                System.getProperty(Constants.CATALINA_BASE_PROP));
-    }
+    public void setTruststoreFile(String s) { truststoreFile = s; }
 
     private String truststorePass =
         System.getProperty("javax.net.ssl.trustStorePassword");
