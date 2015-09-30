@@ -67,6 +67,14 @@
       </update>
     </changelog>
   </subsection>
+  <subsection name="Jasper">
+    <changelog>
+      <fix>
+        Improve the error message when JSP parser encounters an error parsing an
+        attribute value. (markt)
+      </fix>
+    </changelog>
+  </subsection>
 </section>
 <section name="Tomcat 8.0.27 (markt)" rtext="release in progress">
   <subsection name="Catalina">
