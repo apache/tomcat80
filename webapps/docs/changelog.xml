@@ -70,6 +70,10 @@
         Add the new ciphers from RFC6655 and RFC7251 to the OpenSSL to JSSE
         cipher mapping. (markt)
       </update>
+      <update>
+        Remove DES, RC2 and RC4 from DEFAULT for the OpenSSL to JSSE cipher
+        mapping to align with the OpenSSL development branch. (markt)
+      </update>
     </changelog>
   </subsection>
   <subsection name="Jasper">
