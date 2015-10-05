@@ -57,6 +57,11 @@
         database, certificate revocation lists, keystores an dtrust stores) to
         be configured using URLs as well as files. (markt)
       </fix>
+      <fix>
+        Perform null-checking on input and stored credentials in all Realms
+        before passing credentials off to CredentialHandlers for matching.
+        (schultz)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Coyote">
