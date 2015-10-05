@@ -84,6 +84,15 @@
       </fix>
     </changelog>
   </subsection>
+  <subsection name="Web applications">
+    <changelog>
+      <update>
+        <bug>58474</bug>: Provide a reference to the differences between
+        <code>CATALINA_HOME</code> and <code>CATALINA_BASE</code> in the sample
+        application that is part of the documentation web application. (markt)
+      </update>
+    </changelog>
+  </subsection>
 </section>
 <section name="Tomcat 8.0.27 (markt)" rtext="2015-10-01">
   <subsection name="Catalina">
