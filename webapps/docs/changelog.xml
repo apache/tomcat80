@@ -93,6 +93,14 @@
       </update>
     </changelog>
   </subsection>
+  <subsection name="Extras">
+    <changelog>
+      <fix>
+        Ensure JULI adapters does not include the LogFactoryImpl class. Patch
+        provided by Benjamin Gandon. (markt)
+      </fix>
+    </changelog>
+  </subsection>
 </section>
 <section name="Tomcat 8.0.27 (markt)" rtext="2015-10-01">
   <subsection name="Catalina">
