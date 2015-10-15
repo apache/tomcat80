@@ -52,7 +52,7 @@
         general contract for Comparator. (fschumacher)
       </fix>
     </changelog>
-  <subsection>
+  </subsection>
 </section>
 <section name="Tomcat 8.0.28 (markt)" rtext="release in progress">
   <subsection name="Catalina">
