@@ -53,8 +53,15 @@
       </fix>
     </changelog>
   </subsection>
+  <subsection name="Other">
+    <changelog>
+      <update>
+        Update optional Checkstyle library to 6.11.2. (kkolinko)
+      </update>
+    </changelog>
+  </subsection>
 </section>
-<section name="Tomcat 8.0.28 (markt)" rtext="release in progress">
+<section name="Tomcat 8.0.28 (markt)" rtext="2015-10-12">
   <subsection name="Catalina">
     <changelog>
       <add>
