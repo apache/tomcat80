@@ -45,6 +45,15 @@
   issues do not "pop up" wrt. others).
 -->
 <section name="Tomcat 8.0.29 (markt)" rtext="in development">
+  <subsection name="Catalina">
+    <changelog>
+      <fix>
+        <bug>58490</bug>: Fixed NPE thrown when scanning for
+        <code>javax.servlet.ServletContainerInitializer</code> in case the web
+        application is not extracted. (violetagg)
+      </fix>
+    </changelog>
+  </subsection>
   <subsection name="Cluster">
     <changelog>
       <fix>
