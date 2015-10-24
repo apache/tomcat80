@@ -52,6 +52,11 @@
         <code>javax.servlet.ServletContainerInitializer</code> in case the web
         application is not extracted. (violetagg)
       </fix>
+      <fix>
+        <bug>58519</bug>: Fix ISE thrown by web application classloader in some
+        error conditions due to trying to call <code>initCause()</code> on a
+        <code>ClassNotFoundException</code> which is not permitted. (markt)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Cluster">
