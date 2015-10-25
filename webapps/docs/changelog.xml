@@ -47,6 +47,10 @@
 <section name="Tomcat 8.0.29 (markt)" rtext="in development">
   <subsection name="Catalina">
     <changelog>
+      <add>
+        <bug>58486</bug>: Protect against two further possible memory leaks
+        associated with XML parsing. (markt)
+      </add>
       <fix>
         <bug>58490</bug>: Fixed NPE thrown when scanning for
         <code>javax.servlet.ServletContainerInitializer</code> in case the web
