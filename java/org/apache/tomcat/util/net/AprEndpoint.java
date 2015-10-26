@@ -1151,7 +1151,7 @@ public class AprEndpoint extends AbstractEndpoint<Long> {
 
     // ---------------------------------------------- SocketTimeouts Inner Class
 
-    public class SocketTimeouts {
+    public static class SocketTimeouts {
         protected int size;
 
         protected long[] sockets;
@@ -1210,7 +1210,7 @@ public class AprEndpoint extends AbstractEndpoint<Long> {
 
     // -------------------------------------------------- SocketList Inner Class
 
-    public class SocketList {
+    public static class SocketList {
         protected volatile int size;
         protected int pos;
 
