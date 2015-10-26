@@ -76,11 +76,6 @@
         error conditions due to trying to call <code>initCause()</code> on a
         <code>ClassNotFoundException</code> which is not permitted. (markt)
       </fix>
-         https://bz.apache.org/bugzilla/show_bug.cgi?id=58518
-    Fix a regression in BZ 56777 (that added support for URIs in config file
-    locations)
-    File paths on Windows could previously be specified with \ or / as the
-    separator. BZ 56777 broke that. This commit restores that behaviour.
     </changelog>
   </subsection>
   <subsection name="Cluster">
