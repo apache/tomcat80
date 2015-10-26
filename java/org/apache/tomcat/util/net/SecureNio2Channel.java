@@ -858,7 +858,7 @@ public class SecureNio2Channel extends Nio2Channel  {
         }
     }
 
-    private class GatherState<A> {
+    private static class GatherState<A> {
         public ByteBuffer[] srcs;
         public int offset;
         public int length;
