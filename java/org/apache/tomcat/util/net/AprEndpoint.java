@@ -1483,7 +1483,7 @@ public class AprEndpoint extends AbstractEndpoint<Long> {
             info = addList.get();
             while (info != null) {
                 boolean comet = connections.get(Long.valueOf(info.socket)).isComet();
-                if (!comet || (comet && !processSocket(info.socket, SocketStatus.STOP))) {
+                if (!comet || !processSocket(info.socket, SocketStatus.STOP)) {
                     // Make sure the  socket isn't in the poller before we close it
                     removeFromPoller(info.socket);
                     // Poller isn't running at this point so use destroySocket()
@@ -1500,8 +1500,7 @@ public class AprEndpoint extends AbstractEndpoint<Long> {
                     for (int n = 0; n < rv; n++) {
                         boolean comet = connections.get(
                                 Long.valueOf(desc[n*2+1])).isComet();
-                        if (!comet || (comet && !processSocket(
-                                desc[n*2+1], SocketStatus.STOP))) {
+                        if (!comet || !processSocket(desc[n*2+1], SocketStatus.STOP)) {
                             destroySocket(desc[n*2+1]);
                         }
                     }
@@ -1630,8 +1629,7 @@ public class AprEndpoint extends AbstractEndpoint<Long> {
                 removeFromPoller(socket);
                 boolean comet = connections.get(
                         Long.valueOf(socket)).isComet();
-                if (!comet || (comet && !processSocket(
-                        socket, SocketStatus.TIMEOUT))) {
+                if (!comet || !processSocket(socket, SocketStatus.TIMEOUT)) {
                     destroySocket(socket);
                     addList.remove(socket);
                     closeList.remove(socket);
@@ -1779,8 +1777,7 @@ public class AprEndpoint extends AbstractEndpoint<Long> {
                                 if (!addToPoller(info.socket, wrapper.pollerFlags)) {
                                     // Can't do anything: close the socket right
                                     // away
-                                    if (!comet || (comet && !processSocket(
-                                            info.socket, SocketStatus.ERROR))) {
+                                    if (!comet || !processSocket(info.socket, SocketStatus.ERROR)) {
                                         closeSocket(info.socket);
                                     }
                                 } else {
