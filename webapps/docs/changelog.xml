@@ -162,7 +162,7 @@
       </add>
       <fix>
         <bug>56777</bug>: Allow file based configuration resources (user
-        database, certificate revocation lists, keystores an dtrust stores) to
+        database, certificate revocation lists, keystores and trust stores) to
         be configured using URLs as well as files. (markt)
       </fix>
       <fix>
