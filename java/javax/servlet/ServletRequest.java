@@ -116,6 +116,7 @@ public interface ServletRequest {
      *
      * @return a long integer containing the length of the request body or -1 if
      *         the length is not known
+     * @since Servlet 3.1
      */
     public long getContentLengthLong();
 
@@ -410,7 +411,7 @@ public interface ServletRequest {
      * proxy that sent the request.
      *
      * @return an integer specifying the port number
-     * @since 2.4
+     * @since Servlet 2.4
      */
     public int getRemotePort();
 
@@ -420,7 +421,7 @@ public interface ServletRequest {
      *
      * @return a <code>String</code> containing the host name of the IP on which
      *         the request was received.
-     * @since 2.4
+     * @since Servlet 2.4
      */
     public String getLocalName();
 
@@ -430,7 +431,7 @@ public interface ServletRequest {
      *
      * @return a <code>String</code> containing the IP address on which the
      *         request was received.
-     * @since 2.4
+     * @since Servlet 2.4
      */
     public String getLocalAddr();
 
@@ -439,7 +440,7 @@ public interface ServletRequest {
      * the request was received.
      *
      * @return an integer specifying the port number
-     * @since 2.4
+     * @since Servlet 2.4
      */
     public int getLocalPort();
 
