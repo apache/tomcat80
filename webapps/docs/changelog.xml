@@ -115,6 +115,12 @@
         <code>Map.entrySet()</code> instead of <code>Map.keySet()</code>
         Based on a patch provided by Anthony Whitford. (violetagg)
       </fix>
+      <fix>
+        Ensure that <code>ServletRequest.getContentLengthLong</code> is used
+        instead of <code>ServletRequest.getContentLength</code> for servlets and
+        valves provided by Tomcat. The API is available since Servlet
+        specification 3.1. (violetagg)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Cluster">
