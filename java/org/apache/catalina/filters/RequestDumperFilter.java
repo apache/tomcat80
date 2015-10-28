@@ -108,7 +108,7 @@ public class RequestDumperFilter implements Filter {
 
         doLog(" characterEncoding", request.getCharacterEncoding());
         doLog("     contentLength",
-                Integer.toString(request.getContentLength()));
+                Long.toString(request.getContentLengthLong()));
         doLog("       contentType", request.getContentType());
 
         if (hRequest == null) {
