@@ -23,6 +23,7 @@ import java.nio.ByteBuffer;
 import java.nio.channels.AsynchronousCloseException;
 import java.nio.channels.CompletionHandler;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
@@ -189,9 +190,10 @@ public class Nio2ServletInputStream extends AbstractServletInputStream {
             readPending = true;
             readBuffer.clear();
             flipped = false;
+            Future<Integer> future = null;
             try {
-                nRead = channel.read(readBuffer)
-                        .get(wrapper.getTimeout(), TimeUnit.MILLISECONDS).intValue();
+                future = channel.read(readBuffer);
+                nRead = future.get(wrapper.getTimeout(), TimeUnit.MILLISECONDS).intValue();
                 readPending = false;
             } catch (ExecutionException e) {
                 if (e.getCause() instanceof IOException) {
@@ -205,6 +207,9 @@ public class Nio2ServletInputStream extends AbstractServletInputStream {
                 onError(e);
                 throw new IOException(e);
             } catch (TimeoutException e) {
+                if (future != null) {
+                    future.cancel(true);
+                }
                 SocketTimeoutException ex = new SocketTimeoutException();
                 onError(ex);
                 throw ex;

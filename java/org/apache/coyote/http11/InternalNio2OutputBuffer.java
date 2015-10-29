@@ -24,6 +24,7 @@ import java.nio.ByteBuffer;
 import java.nio.channels.CompletionHandler;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -393,12 +394,14 @@ public class InternalNio2OutputBuffer extends AbstractOutputBuffer<Nio2Channel> 
                     // Ignore timeout
                 }
             }
+            Future<Integer> future = null;
             try {
                 if (bufferedWrites.size() > 0) {
                     for (ByteBuffer buffer : bufferedWrites) {
                         buffer.flip();
                         while (buffer.hasRemaining()) {
-                            if (socket.getSocket().write(buffer).get(socket.getTimeout(), TimeUnit.MILLISECONDS).intValue() < 0) {
+                            future = socket.getSocket().write(buffer);
+                            if (future.get(socket.getTimeout(), TimeUnit.MILLISECONDS).intValue() < 0) {
                                 throw new EOFException(sm.getString("iob.failedwrite"));
                             }
                         }
@@ -410,7 +413,8 @@ public class InternalNio2OutputBuffer extends AbstractOutputBuffer<Nio2Channel> 
                     flipped = true;
                 }
                 while (byteBuffer.hasRemaining()) {
-                    if (socket.getSocket().write(byteBuffer).get(socket.getTimeout(), TimeUnit.MILLISECONDS).intValue() < 0) {
+                    future = socket.getSocket().write(byteBuffer);
+                    if (future.get(socket.getTimeout(), TimeUnit.MILLISECONDS).intValue() < 0) {
                         throw new EOFException(sm.getString("iob.failedwrite"));
                     }
                 }
@@ -423,6 +427,9 @@ public class InternalNio2OutputBuffer extends AbstractOutputBuffer<Nio2Channel> 
             } catch (InterruptedException e) {
                 throw new IOException(e);
             } catch (TimeoutException e) {
+                if (future != null) {
+                    future.cancel(true);
+                }
                 throw new SocketTimeoutException();
             }
             byteBuffer.clear();

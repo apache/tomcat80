@@ -22,6 +22,7 @@ import java.net.SocketTimeoutException;
 import java.nio.ByteBuffer;
 import java.nio.channels.CompletionHandler;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
@@ -219,9 +220,10 @@ public class InternalNio2InputBuffer extends AbstractNioInputBuffer<Nio2Channel>
             } else {
                 byteBuffer.clear();
                 flipped = false;
+                Future<Integer> future = null;
                 try {
-                    nRead = socket.getSocket().read(byteBuffer)
-                            .get(socket.getTimeout(), TimeUnit.MILLISECONDS).intValue();
+                    future = socket.getSocket().read(byteBuffer);
+                    nRead = future.get(socket.getTimeout(), TimeUnit.MILLISECONDS).intValue();
                 } catch (ExecutionException e) {
                     if (e.getCause() instanceof IOException) {
                         throw (IOException) e.getCause();
@@ -231,6 +233,9 @@ public class InternalNio2InputBuffer extends AbstractNioInputBuffer<Nio2Channel>
                 } catch (InterruptedException e) {
                     throw new IOException(e);
                 } catch (TimeoutException e) {
+                    if (future != null) {
+                        future.cancel(true);
+                    }
                     throw new SocketTimeoutException();
                 }
                 if (nRead > 0) {

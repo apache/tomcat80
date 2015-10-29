@@ -23,6 +23,7 @@ import java.nio.ByteBuffer;
 import java.nio.channels.AsynchronousCloseException;
 import java.nio.channels.CompletionHandler;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -122,8 +123,10 @@ public class Nio2ServletOutputStream extends AbstractServletOutputStream<Nio2Cha
             buffer.clear();
             buffer.put(b, off, len);
             buffer.flip();
+            Future<Integer> future = null;
             try {
-                written = channel.write(buffer).get(socketWrapper.getTimeout(), TimeUnit.MILLISECONDS).intValue();
+                future = channel.write(buffer);
+                written = future.get(socketWrapper.getTimeout(), TimeUnit.MILLISECONDS).intValue();
             } catch (ExecutionException e) {
                 if (e.getCause() instanceof IOException) {
                     onError(e.getCause());
@@ -136,6 +139,9 @@ public class Nio2ServletOutputStream extends AbstractServletOutputStream<Nio2Cha
                 onError(e);
                 throw new IOException(e);
             } catch (TimeoutException e) {
+                if (future != null) {
+                    future.cancel(true);
+                }
                 SocketTimeoutException ex = new SocketTimeoutException();
                 onError(ex);
                 throw ex;
@@ -156,11 +162,13 @@ public class Nio2ServletOutputStream extends AbstractServletOutputStream<Nio2Cha
 
     @Override
     protected void doFlush() throws IOException {
+        Future<Boolean> future = null;
         try {
             // Block until a possible non blocking write is done
             if (writePending.tryAcquire(socketWrapper.getTimeout(), TimeUnit.MILLISECONDS)) {
                 writePending.release();
-                channel.flush().get(socketWrapper.getTimeout(), TimeUnit.MILLISECONDS);
+                future = channel.flush();
+                future.get(socketWrapper.getTimeout(), TimeUnit.MILLISECONDS);
             } else {
                 throw new TimeoutException();
             }
@@ -176,6 +184,9 @@ public class Nio2ServletOutputStream extends AbstractServletOutputStream<Nio2Cha
             onError(e);
             throw new IOException(e);
         } catch (TimeoutException e) {
+            if (future != null) {
+                future.cancel(true);
+            }
             SocketTimeoutException ex = new SocketTimeoutException();
             onError(ex);
             throw ex;
