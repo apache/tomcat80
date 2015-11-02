@@ -195,7 +195,7 @@ public class McastService implements MembershipService,MembershipListener,Messag
     public int getRecoveryCounter(){
         String p = properties.getProperty("recoveryCounter");
         if(p != null){
-            return Integer.valueOf(p).intValue();
+            return Integer.parseInt(p);
         }
         return -1;
     }
@@ -207,7 +207,7 @@ public class McastService implements MembershipService,MembershipListener,Messag
     public boolean getRecoveryEnabled() {
         String p = properties.getProperty("recoveryEnabled");
         if(p != null){
-            return Boolean.valueOf(p).booleanValue();
+            return Boolean.parseBoolean(p);
         }
         return false;
     }
@@ -219,7 +219,7 @@ public class McastService implements MembershipService,MembershipListener,Messag
     public long getRecoverySleepTime(){
         String p = properties.getProperty("recoverySleepTime");
         if(p != null){
-            return Long.valueOf(p).longValue();
+            return Long.parseLong(p);
         }
         return -1;
     }
@@ -231,14 +231,14 @@ public class McastService implements MembershipService,MembershipListener,Messag
     public boolean getLocalLoopbackDisabled() {
         String p = properties.getProperty("localLoopbackDisabled");
         if(p != null){
-            return Boolean.valueOf(p).booleanValue();
+            return Boolean.parseBoolean(p);
         }
         return false;
     }
 
     public int getPort() {
         String p = properties.getProperty("mcastPort");
-        return Integer.valueOf(p).intValue();
+        return Integer.parseInt(p);
     }
 
     public void setFrequency(long time) {
@@ -247,7 +247,7 @@ public class McastService implements MembershipService,MembershipListener,Messag
 
     public long getFrequency() {
         String p = properties.getProperty("mcastFrequency");
-        return Long.valueOf(p).longValue();
+        return Long.parseLong(p);
     }
 
     public void setMcastDropTime(long time) {
@@ -259,7 +259,7 @@ public class McastService implements MembershipService,MembershipListener,Messag
 
     public long getDropTime() {
         String p = properties.getProperty("memberDropTime");
-        return Long.valueOf(p).longValue();
+        return Long.parseLong(p);
     }
 
     /**
@@ -347,9 +347,9 @@ public class McastService implements MembershipService,MembershipListener,Messag
                                     soTimeout,
                                     this,
                                     this,
-                                    Boolean.valueOf(properties.getProperty("localLoopbackDisabled","false")).booleanValue());
+                                    Boolean.parseBoolean(properties.getProperty("localLoopbackDisabled","false")));
         String value = properties.getProperty("recoveryEnabled","true");
-        boolean recEnabled = Boolean.valueOf(value).booleanValue() ;
+        boolean recEnabled = Boolean.parseBoolean(value);
         impl.setRecoveryEnabled(recEnabled);
         int recCnt = Integer.parseInt(properties.getProperty("recoveryCounter","10"));
         impl.setRecoveryCounter(recCnt);
