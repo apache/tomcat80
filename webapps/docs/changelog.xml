@@ -125,6 +125,11 @@
         Add a new RestCsrfPreventionFilter that provides basic CSRF protection
         for REST APIs. (violetagg)
       </add>
+      <fix>
+        <bug>57799</bug>: InputStream.available() was causing an IO operation
+        to occur even in blocking mode, which caused problems with NIO2.
+        (remm)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Coyote">

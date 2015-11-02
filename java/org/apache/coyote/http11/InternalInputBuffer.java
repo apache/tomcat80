@@ -76,7 +76,7 @@ public class InternalInputBuffer extends AbstractInputBuffer<Socket> {
      * tested for == 0 or &gt; 0.
      */
     @Override
-    public int available() {
+    public int available(boolean read) {
         return 1;
     }
 
