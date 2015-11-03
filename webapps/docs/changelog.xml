@@ -48,6 +48,10 @@
   <subsection name="Catalina">
     <changelog>
       <add>
+        Extend the fix for <bug>58228</bug> to include
+        <code>ServletContext.getRealPath()</code>. (markt)
+      </add>
+      <add>
         <bug>58486</bug>: Protect against two further possible memory leaks
         associated with XML parsing. (markt)
       </add>
