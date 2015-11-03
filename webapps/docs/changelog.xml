@@ -134,6 +134,10 @@
         to occur even in blocking mode, which caused problems with NIO2.
         (remm)
       </fix>
+      <fix>
+        <bug>58578</bug>: Avoid NPE accessing cookies during access logging
+        for request that had no context mapping. (remm)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Coyote">

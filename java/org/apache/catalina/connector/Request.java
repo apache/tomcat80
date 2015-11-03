@@ -2965,6 +2965,10 @@ public class Request
 
         cookiesConverted = true;
 
+        if (getContext() == null) {
+            return;
+        }
+
         parseCookies();
 
         ServerCookies serverCookies = coyoteRequest.getCookies();
