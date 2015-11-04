@@ -192,7 +192,7 @@
   <subsection name="Other">
     <changelog>
       <update>
-        Update optional Checkstyle library to 6.11.2. (kkolinko)
+        Update optional Checkstyle library to 6.12. (kkolinko)
       </update>
     </changelog>
   </subsection>
