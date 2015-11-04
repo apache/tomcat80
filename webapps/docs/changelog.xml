@@ -144,7 +144,7 @@
       </fix>
       <fix>
         <bug>58582</bug>: Combined realm should perform background processing
-        on its sub-realms. Based upon a patch providede by Aidan. (schultz)
+        on its sub-realms. Based upon a patch provided by Aidan. (schultz)
       </fix>
     </changelog>
   </subsection>
