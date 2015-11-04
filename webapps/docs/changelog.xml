@@ -138,6 +138,10 @@
         <bug>58578</bug>: Avoid NPE accessing cookies during access logging
         for request that had no context mapping. (remm)
       </fix>
+      <fix>
+        Avoid UnsupportedOperationException when releasing an user-provided
+        URLStreamHandlerFactory. Patch provided by Cristian Talau. (violetagg)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Coyote">
