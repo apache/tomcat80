@@ -53,7 +53,7 @@ test.cobertura=false
 
 # Some platforms (e.g. OSX El Capitan) require IPv4 to be the default for the
 # multicast tests to work
-#java.net.preferIPv4Stack=true
+java.net.preferIPv4Stack=false
 
 # Location of GPG executable (used only for releases)
 gpg.exec=/path/to/gpg
@@ -239,6 +239,3 @@ cobertura.home=${base.path}/cobertura-${cobertura.version}
 cobertura.jar=${cobertura.home}/cobertura-${cobertura.version}.jar
 cobertura.lib=${cobertura.home}/lib
 cobertura.loc=${base-sf.loc}/cobertura/cobertura-2.0.3-bin.tar.gz
-
-# ----- JVM settings for unit tests
-java.net.preferIPv4Stack=false
