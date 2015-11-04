@@ -142,6 +142,10 @@
         Avoid UnsupportedOperationException when releasing an user-provided
         URLStreamHandlerFactory. Patch provided by Cristian Talau. (violetagg)
       </fix>
+      <fix>
+        <bug>58582</bug>: Combined realm should perform background processing
+        on its sub-realms. Based upon a patch providede by Aidan. (schultz)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Coyote">
