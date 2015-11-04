@@ -617,6 +617,11 @@ public abstract class AbstractAjpProcessor<S> extends AbstractProcessor<S> {
             throw new UnsupportedOperationException(
                     sm.getString("ajpprocessor.comet.notsupported"));
         }
+        case IS_COMET: {
+            // HTTP connections only. Unsupported for AJP.
+            throw new UnsupportedOperationException(
+                    sm.getString("ajpprocessor.comet.notsupported"));
+        }
         case AVAILABLE: {
             if (available()) {
                 request.setAvailable(1);

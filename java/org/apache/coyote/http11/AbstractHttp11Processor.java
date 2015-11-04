@@ -920,6 +920,11 @@ public abstract class AbstractHttp11Processor<S> extends AbstractProcessor<S> {
             endRequest();
             break;
         }
+        case IS_COMET: {
+            AtomicBoolean result = (AtomicBoolean) param;
+            result.set(isComet());
+            break;
+        }
         default: {
             actionInternal(actionCode, param);
             break;

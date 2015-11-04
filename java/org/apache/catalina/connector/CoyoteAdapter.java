@@ -519,15 +519,11 @@ public class CoyoteAdapter implements Adapter {
 
                 if (request.isComet()) {
                     if (!response.isClosed() && !response.isError()) {
+                        comet = true;
+                        res.action(ActionCode.COMET_BEGIN, null);
                         if (request.getAvailable() || (request.getContentLength() > 0 && (!request.isParametersParsed()))) {
                             // Invoke a read event right away if there are available bytes
-                            if (event(req, res, SocketStatus.OPEN_READ)) {
-                                comet = true;
-                                res.action(ActionCode.COMET_BEGIN, null);
-                            }
-                        } else {
-                            comet = true;
-                            res.action(ActionCode.COMET_BEGIN, null);
+                            event(req, res, SocketStatus.OPEN_READ);
                         }
                     } else {
                         // Clear the filter chain, as otherwise it will not be reset elsewhere
@@ -535,8 +531,8 @@ public class CoyoteAdapter implements Adapter {
                         request.setFilterChain(null);
                     }
                 }
-
             }
+
             AsyncContextImpl asyncConImpl = (AsyncContextImpl)request.getAsyncContext();
             if (asyncConImpl != null) {
                 async = true;

@@ -135,6 +135,11 @@ public enum ActionCode {
     COMET_SETTIMEOUT,
 
     /**
+     * Callback to determine if the current request is a Comet request.
+     */
+    IS_COMET,
+
+    /**
      * Callback for an async request.
      */
     ASYNC_START,

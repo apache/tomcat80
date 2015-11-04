@@ -22,6 +22,7 @@ import java.security.AccessController;
 import java.security.PrivilegedActionException;
 import java.security.PrivilegedExceptionAction;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.servlet.ReadListener;
 
@@ -241,7 +242,14 @@ public class InputBuffer extends Reader
             available = cb.getLength();
         }
         if (available == 0) {
-            coyoteRequest.action(ActionCode.AVAILABLE, Boolean.valueOf(coyoteRequest.getReadListener() != null));
+            // Written this way to avoid use of IS_COMET action where possible
+            boolean readForAvailable = coyoteRequest.getReadListener() != null;
+            if (!readForAvailable) {
+                AtomicBoolean isComet = new AtomicBoolean();
+                coyoteRequest.action(ActionCode.IS_COMET, isComet);
+                readForAvailable = isComet.get();
+            }
+            coyoteRequest.action(ActionCode.AVAILABLE, Boolean.valueOf(readForAvailable));
             available = (coyoteRequest.getAvailable() > 0) ? 1 : 0;
         }
         return available;
