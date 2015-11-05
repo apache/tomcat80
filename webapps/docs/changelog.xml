@@ -48,6 +48,12 @@
   <subsection name="Catalina">
     <changelog>
       <add>
+        Extend the fix for <bug>57136</bug> to provide a JSP Servlet
+        initialisation parameter per web application that controls whether o
+        not EL in JSP attributes is processed as if it uses JSP attribute
+        quoting. By default, EL does not use JSP attribute quoting. (markt)
+      </add>
+      <add>
         Extend the fix for <bug>58228</bug> to include
         <code>ServletContext.getRealPath()</code>. (markt)
       </add>

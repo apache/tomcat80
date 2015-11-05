@@ -213,6 +213,8 @@ public final class EmbeddedServletOptions implements Options {
      */
     private boolean strictQuoteEscaping = STRICT_QUOTE_ESCAPING_DEFAULT;
 
+    private boolean quoteAttributeEL = false;
+
     public String getProperty(String name ) {
         return settings.getProperty( name );
     }
@@ -221,6 +223,15 @@ public final class EmbeddedServletOptions implements Options {
         if (name != null && value != null){
             settings.setProperty( name, value );
         }
+    }
+
+    public void setQuoteAttributeEL(boolean b) {
+        this.quoteAttributeEL = b;
+    }
+
+    @Override
+    public boolean getQuoteAttributeEL() {
+        return quoteAttributeEL;
     }
 
     /**
@@ -774,6 +785,18 @@ public final class EmbeddedServletOptions implements Options {
             }
         }
 
+        String quoteAttributeEL = config.getInitParameter("quoteAttributeEL");
+        if (quoteAttributeEL != null) {
+            if (quoteAttributeEL.equalsIgnoreCase("true")) {
+                this.quoteAttributeEL = true;
+            } else if (quoteAttributeEL.equalsIgnoreCase("false")) {
+                this.quoteAttributeEL = false;
+            } else {
+                if (log.isWarnEnabled()) {
+                    log.warn(Localizer.getMessage("jsp.warning.quoteAttributeEL"));
+                }
+            }
+        }
 
         // Setup the global Tag Libraries location cache for this
         // web-application.
