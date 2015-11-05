@@ -156,6 +156,16 @@
       </fix>
     </changelog>
   </subsection>
+  <subsection name="Jasper">
+    <changelog>
+      <add>
+        Deprecate the <code>STRICT_QUOTE_ESCAPING</code> system property and
+        replace it with an initialisation parameter for the JSP Servlet. This
+        enables per web application control of this configuration setting.
+        (markt)
+      </add>
+    </changelog>
+  </subsection>
   <subsection name="Cluster">
     <changelog>
       <fix>
