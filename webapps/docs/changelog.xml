@@ -1043,9 +1043,10 @@
         which the web application class loader always delegates first. (markt)
       </fix>
       <fix>
-        <bug>57871</bug>: Ensure that setting the the allowHttpSepsInV0 property
-        of a LegacyCookieProcessor to false only prevents HTTP separators from
-        being used without quotes. (markt)
+        <bug>57871</bug>: Ensure that setting the
+        <code>allowHttpSepsInV0</code> property of a
+        <code>LegacyCookieProcessor</code> to false only prevents HTTP
+        separators from being used without quotes. (markt)
       </fix>
       <fix>
         Add a workaround for issues with SPNEGO authentication when running on
