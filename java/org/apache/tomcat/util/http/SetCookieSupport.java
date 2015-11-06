@@ -35,7 +35,7 @@ public class SetCookieSupport {
         String alwaysAddExpires = System.getProperty(
                 "org.apache.tomcat.util.http.ServerCookie.ALWAYS_ADD_EXPIRES");
         if (alwaysAddExpires != null) {
-            ALWAYS_ADD_EXPIRES = Boolean.valueOf(alwaysAddExpires).booleanValue();
+            ALWAYS_ADD_EXPIRES = Boolean.parseBoolean(alwaysAddExpires);
         } else {
             ALWAYS_ADD_EXPIRES = !Boolean.getBoolean("org.apache.catalina.STRICT_SERVLET_COMPLIANCE");
         }
