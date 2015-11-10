@@ -22,11 +22,11 @@ import java.util.concurrent.Executor;
 
 import javax.servlet.ServletInputStream;
 import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpUpgradeHandler;
 import javax.servlet.http.WebConnection;
 
 import org.apache.coyote.Processor;
 import org.apache.coyote.Request;
+import org.apache.coyote.UpgradeToken;
 import org.apache.juli.logging.Log;
 import org.apache.tomcat.util.net.AbstractEndpoint.Handler.SocketState;
 import org.apache.tomcat.util.net.SSLSupport;
@@ -41,14 +41,14 @@ public abstract class AbstractProcessor<S>
             StringManager.getManager(Constants.Package);
     protected abstract Log getLog();
 
-    private final HttpUpgradeHandler httpUpgradeHandler;
+    private final UpgradeToken upgradeToken;
     private final AbstractServletInputStream upgradeServletInputStream;
     private final AbstractServletOutputStream<S> upgradeServletOutputStream;
 
-    protected AbstractProcessor (HttpUpgradeHandler httpUpgradeHandler,
+    protected AbstractProcessor(UpgradeToken upgradeToken,
             AbstractServletInputStream upgradeServletInputStream,
             AbstractServletOutputStream<S> upgradeServletOutputStream) {
-        this.httpUpgradeHandler = httpUpgradeHandler;
+        this.upgradeToken = upgradeToken;
         this.upgradeServletInputStream = upgradeServletInputStream;
         this.upgradeServletOutputStream = upgradeServletOutputStream;
     }
@@ -84,8 +84,8 @@ public abstract class AbstractProcessor<S>
     }
 
     @Override
-    public HttpUpgradeHandler getHttpUpgradeHandler() {
-        return httpUpgradeHandler;
+    public UpgradeToken getUpgradeToken() {
+        return upgradeToken;
     }
 
     @Override

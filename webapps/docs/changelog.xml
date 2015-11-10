@@ -175,6 +175,10 @@
         Cancel pending blocking IO operation following a timeout in the NIO2
         connector. (remm)
       </fix>
+      <fix>
+        Add instance manager support for upgrade handlers, and set context
+        class loader. (remm)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Jasper">

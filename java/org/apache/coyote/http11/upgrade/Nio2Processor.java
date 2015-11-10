@@ -18,8 +18,7 @@ package org.apache.coyote.http11.upgrade;
 
 import java.nio.ByteBuffer;
 
-import javax.servlet.http.HttpUpgradeHandler;
-
+import org.apache.coyote.UpgradeToken;
 import org.apache.juli.logging.Log;
 import org.apache.juli.logging.LogFactory;
 import org.apache.tomcat.util.net.AbstractEndpoint;
@@ -36,9 +35,9 @@ public class Nio2Processor extends AbstractProcessor<Nio2Channel> {
 
     public Nio2Processor(AbstractEndpoint<Nio2Channel> endpoint,
             SocketWrapper<Nio2Channel> wrapper, ByteBuffer leftoverInput,
-            HttpUpgradeHandler httpUpgradeProcessor,
+            UpgradeToken upgradeToken,
             int asyncWriteBufferSize) {
-        super(httpUpgradeProcessor,
+        super(upgradeToken,
                 new Nio2ServletInputStream(wrapper, endpoint),
                 new Nio2ServletOutputStream(wrapper, asyncWriteBufferSize, endpoint));
 

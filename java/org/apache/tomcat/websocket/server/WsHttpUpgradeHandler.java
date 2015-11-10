@@ -52,8 +52,6 @@ public class WsHttpUpgradeHandler implements HttpUpgradeHandler {
     private static final StringManager sm =
             StringManager.getManager(Constants.PACKAGE_NAME);
 
-    private final ClassLoader applicationClassLoader;
-
     private Endpoint ep;
     private EndpointConfig endpointConfig;
     private WsServerContainer webSocketContainer;
@@ -66,11 +64,6 @@ public class WsHttpUpgradeHandler implements HttpUpgradeHandler {
     private WebConnection connection;
 
     private WsSession wsSession;
-
-
-    public WsHttpUpgradeHandler() {
-        applicationClassLoader = Thread.currentThread().getContextClassLoader();
-    }
 
 
     public void preInit(Endpoint ep, EndpointConfig endpointConfig,
@@ -117,9 +110,6 @@ public class WsHttpUpgradeHandler implements HttpUpgradeHandler {
         // Need to call onOpen using the web application's class loader
         // Create the frame using the application's class loader so it can pick
         // up application specific config from the ServerContainerImpl
-        Thread t = Thread.currentThread();
-        ClassLoader cl = t.getContextClassLoader();
-        t.setContextClassLoader(applicationClassLoader);
         try {
             WsRemoteEndpointImplServer wsRemoteEndpointServer =
                     new WsRemoteEndpointImplServer(sos, webSocketContainer);
@@ -140,8 +130,6 @@ public class WsHttpUpgradeHandler implements HttpUpgradeHandler {
             sis.setReadListener(new WsReadListener(this, wsFrame));
         } catch (DeploymentException e) {
             throw new IllegalArgumentException(e);
-        } finally {
-            t.setContextClassLoader(cl);
         }
     }
 
@@ -159,15 +147,7 @@ public class WsHttpUpgradeHandler implements HttpUpgradeHandler {
 
 
     private void onError(Throwable throwable) {
-        // Need to call onError using the web application's class loader
-        Thread t = Thread.currentThread();
-        ClassLoader cl = t.getContextClassLoader();
-        t.setContextClassLoader(applicationClassLoader);
-        try {
-            ep.onError(wsSession, throwable);
-        } finally {
-            t.setContextClassLoader(cl);
-        }
+        ep.onError(wsSession, throwable);
     }
 
 

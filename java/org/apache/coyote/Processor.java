@@ -20,8 +20,6 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.concurrent.Executor;
 
-import javax.servlet.http.HttpUpgradeHandler;
-
 import org.apache.tomcat.util.net.AbstractEndpoint.Handler.SocketState;
 import org.apache.tomcat.util.net.SSLSupport;
 import org.apache.tomcat.util.net.SocketStatus;
@@ -41,7 +39,7 @@ public interface Processor<S> {
     SocketState asyncDispatch(SocketStatus status);
     SocketState asyncPostProcess();
 
-    HttpUpgradeHandler getHttpUpgradeHandler();
+    UpgradeToken getUpgradeToken();
     SocketState upgradeDispatch(SocketStatus status) throws IOException;
 
     void errorDispatch();

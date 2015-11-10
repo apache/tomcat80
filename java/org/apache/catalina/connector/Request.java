@@ -80,8 +80,10 @@ import org.apache.catalina.core.AsyncContextImpl;
 import org.apache.catalina.mapper.MappingData;
 import org.apache.catalina.util.ParameterMap;
 import org.apache.coyote.ActionCode;
+import org.apache.coyote.UpgradeToken;
 import org.apache.juli.logging.Log;
 import org.apache.juli.logging.LogFactory;
+import org.apache.tomcat.InstanceManager;
 import org.apache.tomcat.util.ExceptionUtils;
 import org.apache.tomcat.util.buf.B2CConverter;
 import org.apache.tomcat.util.buf.ByteChunk;
@@ -1881,15 +1883,18 @@ public class Request
     @Override
     public <T extends HttpUpgradeHandler> T upgrade(
             Class<T> httpUpgradeHandlerClass) throws java.io.IOException, ServletException {
-
         T handler;
+        InstanceManager instanceManager = null;
         try {
-            handler = (T) getContext().getInstanceManager().newInstance(httpUpgradeHandlerClass);
+            instanceManager = getContext().getInstanceManager();
+            handler = (T) instanceManager.newInstance(httpUpgradeHandlerClass);
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NamingException e) {
             throw new ServletException(e);
         }
+        UpgradeToken upgradeToken = new UpgradeToken(handler,
+                getContext().getLoader().getClassLoader(), instanceManager);
 
-        coyoteRequest.action(ActionCode.UPGRADE, handler);
+        coyoteRequest.action(ActionCode.UPGRADE, upgradeToken);
 
         // Output required by RFC2616. Protocol specific headers should have
         // already been set.

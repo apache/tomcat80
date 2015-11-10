@@ -20,10 +20,9 @@ import java.io.IOException;
 import java.net.Socket;
 import java.nio.ByteBuffer;
 
-import javax.servlet.http.HttpUpgradeHandler;
-
 import org.apache.coyote.AbstractProtocol;
 import org.apache.coyote.Processor;
+import org.apache.coyote.UpgradeToken;
 import org.apache.coyote.http11.upgrade.BioProcessor;
 import org.apache.juli.logging.Log;
 import org.apache.tomcat.util.net.AbstractEndpoint;
@@ -179,9 +178,9 @@ public class Http11Protocol extends AbstractHttp11JsseProtocol<Socket> {
         @Override
         protected Processor<Socket> createUpgradeProcessor(
                 SocketWrapper<Socket> socket, ByteBuffer leftoverInput,
-                HttpUpgradeHandler httpUpgradeProcessor)
+                UpgradeToken upgradeToken)
                 throws IOException {
-            return new BioProcessor(socket, leftoverInput, httpUpgradeProcessor,
+            return new BioProcessor(socket, leftoverInput, upgradeToken,
                     proto.getUpgradeAsyncWriteBufferSize());
         }
 

@@ -18,8 +18,7 @@ package org.apache.coyote.http11.upgrade;
 
 import java.nio.ByteBuffer;
 
-import javax.servlet.http.HttpUpgradeHandler;
-
+import org.apache.coyote.UpgradeToken;
 import org.apache.juli.logging.Log;
 import org.apache.juli.logging.LogFactory;
 import org.apache.tomcat.util.net.NioChannel;
@@ -35,9 +34,9 @@ public class NioProcessor extends AbstractProcessor<NioChannel> {
     private static final int INFINITE_TIMEOUT = -1;
 
     public NioProcessor(SocketWrapper<NioChannel> wrapper, ByteBuffer leftoverInput,
-            HttpUpgradeHandler httpUpgradeProcessor, NioSelectorPool pool,
+            UpgradeToken upgradeToken, NioSelectorPool pool,
             int asyncWriteBufferSize) {
-        super(httpUpgradeProcessor,
+        super(upgradeToken,
                 new NioServletInputStream(wrapper, pool),
                 new NioServletOutputStream(wrapper, asyncWriteBufferSize, pool));
 

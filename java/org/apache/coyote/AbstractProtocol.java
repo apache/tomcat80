@@ -35,6 +35,7 @@ import javax.servlet.http.HttpUpgradeHandler;
 import javax.servlet.http.WebConnection;
 
 import org.apache.juli.logging.Log;
+import org.apache.tomcat.InstanceManager;
 import org.apache.tomcat.util.ExceptionUtils;
 import org.apache.tomcat.util.collections.SynchronizedStack;
 import org.apache.tomcat.util.modeler.Registry;
@@ -679,15 +680,15 @@ public abstract class AbstractProtocol<S> implements ProtocolHandler,
 
                     if (state == SocketState.UPGRADING) {
                         // Get the HTTP upgrade handler
-                        HttpUpgradeHandler httpUpgradeHandler =
-                                processor.getHttpUpgradeHandler();
+                        UpgradeToken upgradeToken = processor.getUpgradeToken();
+                        HttpUpgradeHandler httpUpgradeHandler = upgradeToken.getHttpUpgradeHandler();
                         // Retrieve leftover input
                         ByteBuffer leftoverInput = processor.getLeftoverInput();
                         // Release the Http11 processor to be re-used
                         release(wrapper, processor, false, false);
                         // Create the upgrade processor
                         processor = createUpgradeProcessor(
-                                wrapper, leftoverInput, httpUpgradeHandler);
+                                wrapper, leftoverInput, upgradeToken);
                         // Mark the connection as upgraded
                         wrapper.setUpgraded(true);
                         // Associate with the processor with the connection
@@ -698,7 +699,19 @@ public abstract class AbstractProtocol<S> implements ProtocolHandler,
                         // This cast should be safe. If it fails the error
                         // handling for the surrounding try/catch will deal with
                         // it.
-                        httpUpgradeHandler.init((WebConnection) processor);
+                        if (upgradeToken.getInstanceManager() == null) {
+                            httpUpgradeHandler.init((WebConnection) processor);
+                        } else {
+                            Thread thread = Thread.currentThread();
+                            // Set context class loader environment for user class call
+                            ClassLoader originalClassLoader = thread.getContextClassLoader();
+                            try {
+                                thread.setContextClassLoader(upgradeToken.getApplicationClassLoader());
+                                httpUpgradeHandler.init((WebConnection) processor);
+                            } finally {
+                                thread.setContextClassLoader(originalClassLoader);
+                            }
+                        }
                     }
                     if (getLog().isDebugEnabled()) {
                         getLog().debug("Socket: [" + wrapper +
@@ -745,7 +758,23 @@ public abstract class AbstractProtocol<S> implements ProtocolHandler,
                     // processors are not recycled.
                     connections.remove(socket);
                     if (processor.isUpgrade()) {
-                        processor.getHttpUpgradeHandler().destroy();
+                        UpgradeToken upgradeToken = processor.getUpgradeToken();
+                        HttpUpgradeHandler httpUpgradeHandler = upgradeToken.getHttpUpgradeHandler();
+                        InstanceManager instanceManager = upgradeToken.getInstanceManager();
+                        if (instanceManager == null) {
+                            httpUpgradeHandler.destroy();
+                        } else {
+                            Thread thread = Thread.currentThread();
+                            // Set context class loader environment for user class call
+                            ClassLoader originalClassLoader = thread.getContextClassLoader();
+                            try {
+                                thread.setContextClassLoader(upgradeToken.getApplicationClassLoader());
+                                httpUpgradeHandler.destroy();
+                                instanceManager.destroyInstance(httpUpgradeHandler);
+                            } finally {
+                                thread.setContextClassLoader(originalClassLoader);
+                            }
+                        }
                     } else {
                         release(wrapper, processor, true, false);
                     }
@@ -794,7 +823,7 @@ public abstract class AbstractProtocol<S> implements ProtocolHandler,
                 boolean addToPoller);
         protected abstract Processor<S> createUpgradeProcessor(
                 SocketWrapper<S> socket, ByteBuffer leftoverInput,
-                HttpUpgradeHandler httpUpgradeProcessor) throws IOException;
+                UpgradeToken upgradeToken) throws IOException;
 
         protected void register(AbstractProcessor<S> processor) {
             if (getProtocol().getDomain() != null) {

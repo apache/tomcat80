@@ -21,10 +21,9 @@ import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 import java.util.Iterator;
 
-import javax.servlet.http.HttpUpgradeHandler;
-
 import org.apache.coyote.AbstractProtocol;
 import org.apache.coyote.Processor;
+import org.apache.coyote.UpgradeToken;
 import org.apache.coyote.http11.upgrade.NioProcessor;
 import org.apache.juli.logging.Log;
 import org.apache.juli.logging.LogFactory;
@@ -274,9 +273,9 @@ public class Http11NioProtocol extends AbstractHttp11JsseProtocol<NioChannel> {
         @Override
         protected Processor<NioChannel> createUpgradeProcessor(
                 SocketWrapper<NioChannel> socket, ByteBuffer leftoverInput,
-                HttpUpgradeHandler httpUpgradeProcessor)
+                UpgradeToken upgradeToken)
                 throws IOException {
-            return new NioProcessor(socket, leftoverInput, httpUpgradeProcessor,
+            return new NioProcessor(socket, leftoverInput, upgradeToken,
                     proto.getEndpoint().getSelectorPool(),
                     proto.getUpgradeAsyncWriteBufferSize());
         }
