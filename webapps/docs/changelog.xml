@@ -45,6 +45,12 @@
   issues do not "pop up" wrt. others).
 -->
 <section name="Tomcat 8.0.29 (markt)" rtext="in development">
+  <subsection name="General">
+    <changelog>
+      <bug>58596</bug>: Clarify the description in RUNNING.txt of how
+      environment variables are used. (markt)
+    </changelog>
+  </subsection>
   <subsection name="Catalina">
     <changelog>
       <add>
