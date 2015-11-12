@@ -231,6 +231,15 @@
       </fix>
     </changelog>
   </subsection>
+  <subsection name="Web applications">
+    <changelog>
+      <add>
+        Make it clear in the documentation for the CGI servlet that the debug
+        page is not considered secure and should not be used in production.
+        (markt)
+      </add>
+    </changelog>
+  </subsection>
   <subsection name="jdbc-pool">
     <changelog>
       <fix>
