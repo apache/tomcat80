@@ -183,6 +183,21 @@
     <Bug code="NS"/>
   </Match>
   <Match>
+    <!-- Sync is to protect construction of data not individual fields -->
+    <Class name="org.apache.catalina.tribes.membership.MemberImpl"/>
+    <Or>
+      <Method name="getCommand"/>
+      <Method name="getDomain"/>
+      <Method name="getHost"/>
+      <Method name="getPayload"/>
+      <Method name="getPort"/>
+      <Method name="getSecurePort"/>
+      <Method name="getUdpPort"/>
+      <Method name="getUniqueId"/>
+    </Or>
+    <Bug pattern="UG_SYNC_SET_UNSYNC_GET"/>
+  </Match>
+  <Match>
     <!-- Intentional in case thread is waiting -->
     <Class name="org.apache.catalina.tribes.transport.RxTaskPool"/>
     <Method name="returnWorker"/>
@@ -428,6 +443,15 @@
     <Bug code="ML" />
   </Match>
   <Match>
+    <!-- Modifications to SocketLists are always protected by syncs -->
+    <Class name="org.apache.tomcat.util.net.AprEndpoint$SocketList"/>
+    <Or>
+      <Method name="add"/>
+      <Method name="remove"/>
+    </Or>
+    <Bug pattern="VO_VOLATILE_INCREMENT"/>
+  </Match>
+  <Match>
     <!-- Object is only ever set to null, sync therefore is still valid -->
     <Class name="org.apache.tomcat.util.net.AprEndpoint$SocketProcessor"/>
     <Method name="run"/>
@@ -651,8 +675,8 @@
   <Match>
     <!-- Code is deliberately unused -->
     <Or>
-      <Class name="org.apache.catalina.webresources.AbstractTestDirResourceSet" />
       <Class name="org.apache.catalina.webresources.AbstractTestFileResourceSet" />
+      <Class name="org.apache.catalina.webresources.TestDirResourceSet" />
       <Class name="org.apache.catalina.webresources.TestJarResourceSet" />
       <Class name="org.apache.catalina.webresources.TestJarResourceSetInternal" />
     </Or>
@@ -692,6 +716,22 @@
       <Method name="testRenegotiateWorks" />
     </Or>
     <Bug code="RR" />
+  </Match>
+  <Match>
+    <Class name="org.apache.tomcat.util.threads.TestLimitLatch" />
+    <Or>
+      <Method name="waitForThreadToStop" />
+      <Method name="testTenWait" />
+    </Or>
+    <Bug pattern="NN_NAKED_NOTIFY " />
+  </Match>
+  <Match>
+    <Class name="org.apache.tomcat.util.threads.TestLimitLatch$TestThread" />
+     <Method name="run" />
+     <Or>
+      <Bug pattern="WA_NOT_IN_LOOP" />
+      <Bug pattern="UW_UNCOND_WAIT " />
+    </Or>
   </Match>
   <Match>
     <!-- Code is deliberately unused -->
