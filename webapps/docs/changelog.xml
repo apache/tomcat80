@@ -47,8 +47,10 @@
 <section name="Tomcat 8.0.29 (markt)" rtext="in development">
   <subsection name="General">
     <changelog>
-      <bug>58596</bug>: Clarify the description in RUNNING.txt of how
-      environment variables are used. (markt)
+      <update>
+        <bug>58596</bug>: Clarify the description in RUNNING.txt of how
+        environment variables are used. (markt)
+      </update>
     </changelog>
   </subsection>
   <subsection name="Catalina">
