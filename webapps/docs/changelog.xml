@@ -184,6 +184,10 @@
         <code>HttpServletRequest.getRequestURL()</code> returns the correct
         value when using the <code>RemoteIpFilter</code>. (markt)
       </fix>
+      <fix>
+        Ensure that in an embedded Tomcat the logging configuration is
+        not lost during garbage collection. (violetagg)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Coyote">
@@ -267,7 +271,8 @@
         Update optional Checkstyle library to 6.12.1. (kkolinko)
       </update>
       <add>
-        Add support for FindBugs. It is disabled by default. (violetagg)
+        Add support for creating a FindBugs report when building Tomcat. It
+        is disabled by default. (violetagg)
       </add>
     </changelog>
   </subsection>
