@@ -61,6 +61,11 @@
         not EL in JSP attributes is processed as if it uses JSP attribute
         quoting. By default, EL does not use JSP attribute quoting. (markt)
       </add>
+      <fix>
+        <bug>57799</bug>: InputStream.available() was causing an IO operation
+        to occur even in blocking mode, which caused problems with NIO2.
+        (remm)
+      </fix>
       <add>
         Extend the fix for <bug>58228</bug> to include
         <code>ServletContext.getRealPath()</code>. (markt)
@@ -143,11 +148,6 @@
         Add a new RestCsrfPreventionFilter that provides basic CSRF protection
         for REST APIs. (violetagg)
       </add>
-      <fix>
-        <bug>57799</bug>: InputStream.available() was causing an IO operation
-        to occur even in blocking mode, which caused problems with NIO2.
-        (remm)
-      </fix>
       <fix>
         <bug>58578</bug>: Avoid NPE accessing cookies during access logging
         for request that had no context mapping. (remm)
