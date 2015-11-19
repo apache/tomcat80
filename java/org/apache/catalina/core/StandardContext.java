@@ -815,12 +815,52 @@ public class StandardContext extends ContainerBase
 
     private boolean validateClientProvidedNewSessionId = true;
 
+    boolean mapperContextRootRedirectEnabled = false;
+
+    boolean mapperDirectoryRedirectEnabled = false;
+
+
     // ----------------------------------------------------- Context Properties
+
+    @Override
+    public void setMapperContextRootRedirectEnabled(boolean mapperContextRootRedirectEnabled) {
+        this.mapperContextRootRedirectEnabled = mapperContextRootRedirectEnabled;
+    }
+
+
+    /**
+     * {@inheritDoc}
+     * <p>
+     * The default value for this implementation is {@code false}.
+     */
+    @Override
+    public boolean getMapperContextRootRedirectEnabled() {
+        return mapperContextRootRedirectEnabled;
+    }
+
+
+    @Override
+    public void setMapperDirectoryRedirectEnabled(boolean mapperDirectoryRedirectEnabled) {
+        this.mapperDirectoryRedirectEnabled = mapperDirectoryRedirectEnabled;
+    }
+
+
+    /**
+     * {@inheritDoc}
+     * <p>
+     * The default value for this implementation is {@code false}.
+     */
+    @Override
+    public boolean getMapperDirectoryRedirectEnabled() {
+        return mapperDirectoryRedirectEnabled;
+    }
+
 
     @Override
     public void setValidateClientProvidedNewSessionId(boolean validateClientProvidedNewSessionId) {
         this.validateClientProvidedNewSessionId = validateClientProvidedNewSessionId;
     }
+
 
     /**
      * {@inheritDoc}
@@ -831,6 +871,7 @@ public class StandardContext extends ContainerBase
     public boolean getValidateClientProvidedNewSessionId() {
         return validateClientProvidedNewSessionId;
     }
+
 
     @Override
     public void setCookieProcessor(CookieProcessor cookieProcessor) {
