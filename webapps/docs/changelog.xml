@@ -44,6 +44,16 @@
   They eventually become mixed with the numbered issues. (I.e., numbered
   issues do not "pop up" wrt. others).
 -->
+<section name="Tomcat 8.0.30 (markt)" rtext="in development">
+  <subection name="Catalina">
+    <changelog>
+      <fix>
+        <bug>58629</bug>: Allow an embedded Tomcat instance to start when the
+        <code>Service</code> has no <code>Engine</code> configured. (markt)
+      </fix>
+    </changelog>
+  </subection>
+</section>
 <section name="Tomcat 8.0.29 (markt)" rtext="in development">
   <subsection name="General">
     <changelog>

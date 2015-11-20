@@ -448,7 +448,6 @@ public class StandardService extends LifecycleMBeanBase implements Service {
             }
         }
 
-
         mapperListener.start();
 
         // Start our defined Connectors second
