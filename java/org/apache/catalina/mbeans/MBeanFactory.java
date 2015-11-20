@@ -106,6 +106,7 @@ public class MBeanFactory {
         String type = pname.getKeyProperty("type");
         String j2eeType = pname.getKeyProperty("j2eeType");
         Service service = getService(pname);
+        @SuppressWarnings("deprecation")
         StandardEngine engine = (StandardEngine) service.getContainer();
         if ((j2eeType!=null) && (j2eeType.equals("WebModule"))) {
             String name = pname.getKeyProperty("name");
@@ -141,6 +142,7 @@ public class MBeanFactory {
         String hostName = oname.getKeyProperty("host");
         String path = oname.getKeyProperty("path");
         Service service = getService(oname);
+        @SuppressWarnings("deprecation")
         Container engine = service.getContainer();
         if (hostName == null) {
             // child's container is Engine
@@ -469,6 +471,7 @@ public class MBeanFactory {
         } else {
             log.warn("Deployer not found for "+pname.getKeyProperty("host"));
             Service service = getService(pname);
+            @SuppressWarnings("deprecation")
             Engine engine = (Engine) service.getContainer();
             Host host = (Host) engine.findChild(pname.getKeyProperty("host"));
             host.addChild(context);
@@ -517,6 +520,7 @@ public class MBeanFactory {
         // Add the new instance to its parent component
         ObjectName pname = new ObjectName(parent);
         Service service = getService(pname);
+        @SuppressWarnings("deprecation")
         Engine engine = (Engine) service.getContainer();
         engine.addChild(host);
 
@@ -790,6 +794,7 @@ public class MBeanFactory {
         ObjectName oname = new ObjectName(name);
         String hostName = oname.getKeyProperty("host");
         Service service = getService(oname);
+        @SuppressWarnings("deprecation")
         Engine engine = (Engine) service.getContainer();
         Host host = (Host) engine.findChild(hostName);
 

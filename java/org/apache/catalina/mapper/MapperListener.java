@@ -99,6 +99,7 @@ public class MapperListener extends LifecycleMBeanBase
         // already registered their MBeans
         findDefaultHost();
 
+        @SuppressWarnings("deprecation")
         Engine engine = (Engine) service.getContainer();
         addListeners(engine);
 
@@ -117,6 +118,7 @@ public class MapperListener extends LifecycleMBeanBase
     public void stopInternal() throws LifecycleException {
         setState(LifecycleState.STOPPING);
 
+        @SuppressWarnings("deprecation")
         Engine engine = (Engine) service.getContainer();
         removeListeners(engine);
     }
@@ -255,6 +257,7 @@ public class MapperListener extends LifecycleMBeanBase
 
     private void findDefaultHost() {
 
+        @SuppressWarnings("deprecation")
         Engine engine = (Engine) service.getContainer();
         String defaultHost = engine.getDefaultHost();
 

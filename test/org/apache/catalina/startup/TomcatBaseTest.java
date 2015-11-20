@@ -808,6 +808,7 @@ public abstract class TomcatBaseTest extends LoggingBaseTest {
             // Use fast, insecure session ID generation for all tests
             Server server = getServer();
             for (Service service : server.findServices()) {
+                @SuppressWarnings("deprecation")
                 Container e = service.getContainer();
                 for (Container h : e.findChildren()) {
                     for (Container c : h.findChildren()) {

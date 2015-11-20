@@ -134,6 +134,7 @@ public class CoyoteAdapter implements Adapter {
      *
      * @return false to indicate an error, expected or not
      */
+    @SuppressWarnings("deprecation")
     @Override
     public boolean event(org.apache.coyote.Request req,
             org.apache.coyote.Response res, SocketStatus status) {
@@ -257,6 +258,7 @@ public class CoyoteAdapter implements Adapter {
         }
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public boolean asyncDispatch(org.apache.coyote.Request req,
             org.apache.coyote.Response res, SocketStatus status) throws Exception {
@@ -468,6 +470,7 @@ public class CoyoteAdapter implements Adapter {
     /**
      * Service method.
      */
+    @SuppressWarnings("deprecation")
     @Override
     public void service(org.apache.coyote.Request req,
                         org.apache.coyote.Response res)
@@ -625,6 +628,7 @@ public class CoyoteAdapter implements Adapter {
     }
 
 
+    @SuppressWarnings("deprecation")
     @Override
     public void log(org.apache.coyote.Request req,
             org.apache.coyote.Response res, long time) {
@@ -745,6 +749,7 @@ public class CoyoteAdapter implements Adapter {
      * @throws ServletException If the supported methods of the target servlet
      *                          can not be determined
      */
+    @SuppressWarnings("deprecation")
     protected boolean postParseRequest(org.apache.coyote.Request req, Request request,
             org.apache.coyote.Response res, Response response) throws IOException, ServletException {
 
