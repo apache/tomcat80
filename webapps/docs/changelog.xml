@@ -48,6 +48,11 @@
   <subection name="Catalina">
     <changelog>
       <fix>
+        <bug>34319</bug>: Only load those keys in <code>StoreBase.processExpire</code>
+        from JDBCStore, that are old enough, to be expired. Based on a patch
+        by Tom Anderson. (fschumacher)
+      </fix>
+      <fix>
         <bug>58629</bug>: Allow an embedded Tomcat instance to start when the
         <code>Service</code> has no <code>Engine</code> configured. (markt)
       </fix>
