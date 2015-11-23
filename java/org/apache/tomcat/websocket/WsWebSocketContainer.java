@@ -342,7 +342,9 @@ public class WsWebSocketContainer
                 }
             } catch (TimeoutException | InterruptedException | ExecutionException |
                     EOFException e) {
-                channel.close();
+                if (channel != null) {
+                    channel.close();
+                }
                 throw new DeploymentException(
                         sm.getString("wsWebSocketContainer.httpRequestFailed"), e);
             }
