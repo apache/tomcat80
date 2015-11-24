@@ -48,9 +48,9 @@
   <subection name="Catalina">
     <changelog>
       <fix>
-        <bug>34319</bug>: Only load those keys in <code>StoreBase.processExpire</code>
-        from JDBCStore, that are old enough, to be expired. Based on a patch
-        by Tom Anderson. (fschumacher)
+        <bug>34319</bug>: Only load those keys in
+        <code>StoreBase.processExpire</code> from JDBCStore, that are old
+        enough, to be expired. Based on a patch by Tom Anderson. (fschumacher)
       </fix>
       <fix>
         <bug>58629</bug>: Allow an embedded Tomcat instance to start when the
@@ -100,8 +100,10 @@
   <subsection name="jdbc-pool">
     <changelog>
       <fix>
-        Correct evaluation of system property <code>org.apache.tomcat.jdbc.pool.onlyAttemptCurrentClassLoader</code>.
-        It was basically ignored before. Reported by coverity scan. (fschumacher)
+        Correct evaluation of system property
+        <code>org.apache.tomcat.jdbc.pool.onlyAttemptCurrentClassLoader</code>.
+        It was basically ignored before. Reported by coverity scan.
+        (fschumacher)
       </fix>
       <fix>
         Fix potential integer overflow in <code>ConnectionPool</code> and
@@ -110,7 +112,7 @@
     </changelog>
   </subsection>
 </section>
-<section name="Tomcat 8.0.29 (markt)" rtext="in development">
+<section name="Tomcat 8.0.29 (markt)" rtext="2015-11-24">
   <subsection name="General">
     <changelog>
       <update>
