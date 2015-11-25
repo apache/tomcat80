@@ -314,8 +314,8 @@
       </fix>
       <update>
         Synchronize OpenSSL to JSSE cipher mapping to recent OpenSSL changes. In
-        particular, <code>TLSv1.0</code> is not an alias for those ciphers that
-        require TLSv1 and will no work with SSLv3. <code>TLSv1</code> remains
+        particular, <code>TLSv1.0</code> is now an alias for those ciphers that
+        require TLSv1 and will not work with SSLv3. <code>TLSv1</code> remains
         an alias for <code>SSLv3</code>. (markt)
       </update>
     </changelog>
