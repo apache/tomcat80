@@ -45,7 +45,7 @@
   issues do not "pop up" wrt. others).
 -->
 <section name="Tomcat 8.0.30 (markt)" rtext="in development">
-  <subection name="Catalina">
+  <subsection name="Catalina">
     <changelog>
       <fix>
         <bug>34319</bug>: Only load those keys in
@@ -57,12 +57,23 @@
         <code>Service</code> has no <code>Engine</code> configured. (markt)
       </fix>
     </changelog>
-  </subection>
+  </subsection>
   <subsection name="Coyote">
     <changelog>
       <fix>
         Improve upgrade context classloader handling by using Context.bind and
         unbind. (remm)
+      </fix>
+    </changelog>
+  </subsection>
+  <subsection name="Jasper">
+    <changelog>
+      <fix>
+        <bug>57136#c25</bug>: Change default value of
+        <code>quoteAttributeEL</code> setting in Jasper to be <code>true</code>
+        for better compatibility with other implementations and older versions
+        of Tomcat (8.0.26/7.0.64 and earlier). Add command line option
+        <code>-no-quoteAttributeEL</code> in JspC. (kkolinko)
       </fix>
     </changelog>
   </subsection>
