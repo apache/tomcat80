@@ -109,7 +109,7 @@
     <changelog>
       <fix>
         <bug>58631</bug>: Correct the continuation character use in the Windows
-        Service How-To page of the documenation web application. (markt)
+        Service How-To page of the documentation web application. (markt)
       </fix>
     </changelog>
   </subsection>
@@ -121,7 +121,7 @@
         disappeared. (kfujino)
       </fix>
       <fix>
-        Correct the warnnig log of when the member that is not registered in the
+        Correct the warning log of when the member that is not registered in the
         membership is detected. (kfujino)
       </fix>
       <fix>
@@ -314,8 +314,8 @@
       </fix>
       <update>
         Synchronize OpenSSL to JSSE cipher mapping to recent OpenSSL changes. In
-        particular, <code>TLSv1.0</code> is no an alias for those ciphers that
-        require TLSv1 and will no work with SDSLv3. <code>TLSv1</code> remains
+        particular, <code>TLSv1.0</code> is not an alias for those ciphers that
+        require TLSv1 and will no work with SSLv3. <code>TLSv1</code> remains
         an alias for <code>SSLv3</code>. (markt)
       </update>
     </changelog>
@@ -597,7 +597,7 @@
         asynchronous processing. (markt)
       </fix>
       <fix>
-        <bug>58379</bug>: Fix a rare data race on the interal reference Tomcat
+        <bug>58379</bug>: Fix a rare data race on the internal reference Tomcat
         retains to the socket when switching to asynchronous processing. (markt)
       </fix>
       <fix>
