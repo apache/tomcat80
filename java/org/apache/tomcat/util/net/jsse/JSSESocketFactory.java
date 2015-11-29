@@ -784,9 +784,6 @@ public class JSSESocketFactory implements ServerSocketFactory, SSLUtil {
     /**
      * Configures SSLEngine to honor cipher suites ordering based upon
      * endpoint configuration.
-     *
-     * @throws InvalidAlgorithmParameterException If the runtime JVM doesn't
-     *         support this setting.
      */
     protected void configureUseServerCipherSuitesOrder(SSLServerSocket socket) {
         String useServerCipherSuitesOrderStr = endpoint
