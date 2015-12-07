@@ -45,6 +45,15 @@
   issues do not "pop up" wrt. others).
 -->
 <section name="Tomcat 8.0.31 (markt)" rtext="in development">
+  <subsection name="Web Applications">
+    <changelog>
+      <add>
+        Add a description of the default value of
+        <code>heartbeatSleeptime</code> attribute and <code>optionCheck</code>
+        attribute in the cluster channel docs. (kfujino)
+      </add>
+    </changelog>
+  </subsection>
 </section>
 <section name="Tomcat 8.0.30 (markt)" rtext="2015-12-06">
   <subsection name="Catalina">
