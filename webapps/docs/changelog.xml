@@ -54,6 +54,14 @@
       </add>
     </changelog>
   </subsection>
+  <subsection name="Tribes">
+    <changelog>
+      <fix>
+        Fix potential NPE in <code>AbstractReplicatedMap.breakdown()</code>.
+        (kfujino)
+      </fix>
+    </changelog>
+  </subsection>
 </section>
 <section name="Tomcat 8.0.30 (markt)" rtext="2015-12-06">
   <subsection name="Catalina">
