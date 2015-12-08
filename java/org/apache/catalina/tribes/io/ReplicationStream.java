@@ -37,7 +37,7 @@ import org.apache.catalina.tribes.util.StringManager;
  */
 public final class ReplicationStream extends ObjectInputStream {
 
-    protected static final StringManager sm =
+    static final StringManager sm =
             StringManager.getManager(ReplicationStream.class.getPackage().getName());
 
     /**

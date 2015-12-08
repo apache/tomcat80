@@ -143,7 +143,7 @@ public final class Request {
     private final RequestInfo reqProcessorMX=new RequestInfo(this);
 
 
-    protected volatile ReadListener listener;
+    volatile ReadListener listener;
 
     public ReadListener getReadListener() {
         return listener;

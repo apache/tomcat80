@@ -47,7 +47,7 @@ public final class Mapper {
     private static final org.apache.juli.logging.Log log =
         org.apache.juli.logging.LogFactory.getLog(Mapper.class);
 
-    protected static final StringManager sm =
+    static final StringManager sm =
         StringManager.getManager(Mapper.class.getPackage().getName());
 
     // ----------------------------------------------------- Instance Variables
@@ -56,20 +56,20 @@ public final class Mapper {
     /**
      * Array containing the virtual hosts definitions.
      */
-    protected volatile MappedHost[] hosts = new MappedHost[0];
+    volatile MappedHost[] hosts = new MappedHost[0];
 
 
     /**
      * Default host name.
      */
-    protected String defaultHostName = null;
+    String defaultHostName = null;
 
 
     /**
      * Mapping from Context object to Context version to support
      * RequestDispatcher mappings.
      */
-    protected Map<Context, ContextVersion> contextObjectToContextVersionMap =
+    Map<Context, ContextVersion> contextObjectToContextVersionMap =
             new ConcurrentHashMap<>();
 
 
