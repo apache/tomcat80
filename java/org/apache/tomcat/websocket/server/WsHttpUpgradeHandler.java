@@ -147,6 +147,9 @@ public class WsHttpUpgradeHandler implements HttpUpgradeHandler {
 
 
     private void onError(Throwable throwable) {
+        wsSession.doClose(new CloseReason(CloseCodes.GOING_AWAY, throwable.getMessage()),
+                new CloseReason(CloseCodes.CLOSED_ABNORMALLY, throwable.getMessage()));
+
         ep.onError(wsSession, throwable);
     }
 
