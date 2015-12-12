@@ -207,9 +207,7 @@ public class Nio2ServletInputStream extends AbstractServletInputStream {
                 onError(e);
                 throw new IOException(e);
             } catch (TimeoutException e) {
-                if (future != null) {
-                    future.cancel(true);
-                }
+                future.cancel(true);
                 SocketTimeoutException ex = new SocketTimeoutException();
                 onError(ex);
                 throw ex;

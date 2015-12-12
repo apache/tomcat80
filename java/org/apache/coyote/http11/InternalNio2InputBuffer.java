@@ -233,9 +233,7 @@ public class InternalNio2InputBuffer extends AbstractNioInputBuffer<Nio2Channel>
                 } catch (InterruptedException e) {
                     throw new IOException(e);
                 } catch (TimeoutException e) {
-                    if (future != null) {
-                        future.cancel(true);
-                    }
+                    future.cancel(true);
                     throw new SocketTimeoutException();
                 }
                 if (nRead > 0) {

@@ -427,9 +427,7 @@ public class InternalNio2OutputBuffer extends AbstractOutputBuffer<Nio2Channel> 
             } catch (InterruptedException e) {
                 throw new IOException(e);
             } catch (TimeoutException e) {
-                if (future != null) {
-                    future.cancel(true);
-                }
+                future.cancel(true);
                 throw new SocketTimeoutException();
             }
             byteBuffer.clear();

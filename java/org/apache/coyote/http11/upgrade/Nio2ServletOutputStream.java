@@ -139,9 +139,7 @@ public class Nio2ServletOutputStream extends AbstractServletOutputStream<Nio2Cha
                 onError(e);
                 throw new IOException(e);
             } catch (TimeoutException e) {
-                if (future != null) {
-                    future.cancel(true);
-                }
+                future.cancel(true);
                 SocketTimeoutException ex = new SocketTimeoutException();
                 onError(ex);
                 throw ex;
