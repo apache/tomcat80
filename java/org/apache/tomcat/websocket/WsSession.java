@@ -473,6 +473,8 @@ public class WsSession implements Session {
                 return;
             }
 
+            state = State.OUTPUT_CLOSED;
+
             if (log.isDebugEnabled()) {
                 log.debug(sm.getString("wsSession.doClose", id));
             }
@@ -482,8 +484,6 @@ public class WsSession implements Session {
                 log.warn(sm.getString("wsSession.flushFailOnClose"), e);
                 fireEndpointOnError(e);
             }
-
-            state = State.OUTPUT_CLOSED;
 
             sendCloseMessage(closeReasonMessage);
             fireEndpointOnClose(closeReasonLocal);
