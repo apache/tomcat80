@@ -991,23 +991,25 @@ public class DeltaManager extends ClusterManagerBase{
                 return null;
             }
             DeltaRequest deltaRequest = session.getDeltaRequest();
-            session.lock();
-            if (deltaRequest.getSize() > 0) {
-                counterSend_EVT_SESSION_DELTA++;
-                byte[] data = serializeDeltaRequest(session,deltaRequest);
-                msg = new SessionMessageImpl(getName(),
-                                             SessionMessage.EVT_SESSION_DELTA,
-                                             data,
-                                             sessionId,
-                                             sessionId + "-" + System.currentTimeMillis());
-                session.resetDeltaRequest();
+            try {
+                session.lock();
+                if (deltaRequest.getSize() > 0) {
+                    counterSend_EVT_SESSION_DELTA++;
+                    byte[] data = serializeDeltaRequest(session,deltaRequest);
+                    msg = new SessionMessageImpl(getName(),
+                                                 SessionMessage.EVT_SESSION_DELTA,
+                                                 data,
+                                                 sessionId,
+                                                 sessionId + "-" + System.currentTimeMillis());
+                    session.resetDeltaRequest();
+                }
+            } finally {
+                session.unlock();
             }
         } catch (IOException x) {
             log.error(sm.getString("deltaManager.createMessage.unableCreateDeltaRequest",
                     sessionId), x);
             return null;
-        } finally {
-            if (session!=null) session.unlock();
         }
         if(msg == null) {
             if(!expires && !session.isPrimarySession()) {
