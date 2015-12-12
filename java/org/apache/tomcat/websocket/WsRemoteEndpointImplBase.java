@@ -539,7 +539,7 @@ public abstract class WsRemoteEndpointImplBase implements RemoteEndpoint {
 
     private void handleSendFailureWithEncode(Throwable t) throws IOException, EncodeException {
         // First, unwrap any execution exception
-        if (t instanceof ExecutionException) {
+        if (t instanceof ExecutionException && t.getCause() != null) {
             t = t.getCause();
         }
 
