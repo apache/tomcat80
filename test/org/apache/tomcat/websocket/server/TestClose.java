@@ -244,7 +244,7 @@ public class TestClose extends TomcatBaseTest {
         client.closeSocket();
         events.onMessageWait.countDown();
 
-        // BIO will see close form client before it sees the TCP close
+        // BIO will see close from client before it sees the TCP close
         awaitOnClose(CloseCodes.CLOSED_ABNORMALLY, CloseCodes.NORMAL_CLOSURE);
     }
 
@@ -264,7 +264,6 @@ public class TestClose extends TomcatBaseTest {
         client.forceCloseSocket();
         events.onMessageWait.countDown();
 
-        // BIO will see close form client before it sees the TCP close
         awaitOnClose(CloseCodes.CLOSED_ABNORMALLY);
     }
 
