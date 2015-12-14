@@ -377,7 +377,7 @@ public class WsSession implements Session {
 
     @Override
     public boolean isOpen() {
-        return state == State.OPEN;
+        return state == State.OPEN || state == State.SENDING_CLOSED;
     }
 
 
@@ -473,7 +473,7 @@ public class WsSession implements Session {
                 return;
             }
 
-            state = State.OUTPUT_CLOSED;
+            state = State.CLOSED_SENT;
 
             if (log.isDebugEnabled()) {
                 log.debug(sm.getString("wsSession.doClose", id));
@@ -516,8 +516,9 @@ public class WsSession implements Session {
                     fireEndpointOnError(e);
                 }
                 if (state == State.OPEN) {
-                    state = State.OUTPUT_CLOSED;
+                    state = State.SENDING_CLOSED;
                     sendCloseMessage(closeReason);
+                    state = State.CLOSED_SENT;
                     fireEndpointOnClose(closeReason);
                 }
                 state = State.CLOSED;
@@ -647,7 +648,7 @@ public class WsSession implements Session {
             // If the session has already been closed the any registered futures
             // will have been processed so the failure result for this future
             // needs to be set here.
-            if (state == State.OPEN) {
+            if (isOpen()) {
                 futures.put(f2sh, f2sh);
             } else {
                 // Construct the exception outside of the sync block
@@ -775,7 +776,8 @@ public class WsSession implements Session {
 
     private static enum State {
         OPEN,
-        OUTPUT_CLOSED,
+        SENDING_CLOSED,
+        CLOSED_SENT,
         CLOSED
     }
 }

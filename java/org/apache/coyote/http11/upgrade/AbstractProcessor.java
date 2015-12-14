@@ -110,6 +110,9 @@ public abstract class AbstractProcessor<S>
                         "abstractProcessor.osCloseFail", ioe));
             }
             return SocketState.CLOSED;
+        } else if (status == SocketStatus.DISCONNECT) {
+            upgradeServletInputStream.onError(
+                    new IOException(sm.getString("abstractProcessor.clientAbort")));
         } else {
             // Unexpected state
             return SocketState.CLOSED;

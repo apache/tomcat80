@@ -641,11 +641,13 @@ public abstract class AbstractProtocol<S> implements ProtocolHandler,
                             state = processor.asyncDispatch(
                                     nextDispatch.getSocketStatus());
                         }
-                    } else if (status == SocketStatus.DISCONNECT &&
-                            !processor.isComet()) {
-                        // Do nothing here, just wait for it to get recycled
-                        // Don't do this for Comet we need to generate an end
-                        // event (see BZ 54022)
+                    } else if (processor.isComet()) {
+                        state = processor.event(status);
+                    } else if (processor.isUpgrade()) {
+                        state = processor.upgradeDispatch(status);
+                    } else if (status == SocketStatus.DISCONNECT) {
+                        // Comet and upgrade need to see DISCONNECT but the
+                        // others don't. NO-OP and let socket close.
                     } else if (processor.isAsync()) {
                         state = processor.asyncDispatch(status);
                     } else if (state == SocketState.ASYNC_END) {
@@ -663,10 +665,6 @@ public abstract class AbstractProtocol<S> implements ProtocolHandler,
                             // pipe-lined data. To avoid this, process it now.
                             state = processor.process(wrapper);
                         }
-                    } else if (processor.isComet()) {
-                        state = processor.event(status);
-                    } else if (processor.isUpgrade()) {
-                        state = processor.upgradeDispatch(status);
                     } else if (status == SocketStatus.OPEN_WRITE) {
                         // Extra write event likely after async, ignore
                         state = SocketState.LONG;
