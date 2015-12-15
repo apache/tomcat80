@@ -74,7 +74,6 @@ public class StaticMembershipInterceptor extends ChannelInterceptorBase {
             if (member != null) {
                 super.memberAdded(member);
             }
-            
         } else {
             super.messageReceived(msg);
         }
