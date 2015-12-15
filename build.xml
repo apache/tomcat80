@@ -1913,9 +1913,6 @@
     <!-- 64 bit amd -->
     <copy file="${commons-daemon.home}/windows/amd64/prunsrv.exe"
         tofile="${tomcat.dist}/bin/x64/tomcat${version.major}.exe" />
-    <!-- 64 bit ia -->
-    <copy file="${commons-daemon.home}/windows/ia64/prunsrv.exe"
-        tofile="${tomcat.dist}/bin/i64/tomcat${version.major}.exe" />
     <!-- tc native -->
     <copy todir="${tomcat.dist}/bin">
       <fileset dir="${tomcat-native.home}/bin">
@@ -1925,9 +1922,6 @@
     </copy>
 
     <!-- platform README files -->
-    <echo append="false" file="${tomcat.dist}/bin/i64/README">
-Apache Tomcat ${version} native binaries for Win64 IA64 platform.
-    </echo>
     <echo append="false" file="${tomcat.dist}/bin/x64/README">
 Apache Tomcat ${version} native binaries for Win64 AMD64/EMT64 platform.
     </echo>
@@ -2368,7 +2362,6 @@ skip.installer property in build.properties" />
         <include name="BENCHMARKS.txt"/>
         <exclude name="bin/service.bat"/>
         <exclude name="bin/x64/"/>
-        <exclude name="bin/i64/"/>
         <exclude name="bin/*.exe"/>
         <exclude name="bin/*.dll"/>
       </zipfileset>
@@ -2401,7 +2394,6 @@ skip.installer property in build.properties" />
         <include name="RUNNING.txt"/>
         <include name="BENCHMARKS.txt"/>
         <exclude name="bin/x64/"/>
-        <exclude name="bin/i64/"/>
       </zipfileset>
 
     </zip>
@@ -2424,7 +2416,6 @@ skip.installer property in build.properties" />
         <include name="RUNNING.txt"/>
         <include name="BENCHMARKS.txt"/>
         <exclude name="bin/x64/"/>
-        <exclude name="bin/i64/"/>
         <exclude name="bin/*.dll"/>
         <exclude name="bin/tomcat${version.major}.exe"/>
       </zipfileset>
@@ -2434,36 +2425,6 @@ skip.installer property in build.properties" />
       </zipfileset>
     </zip>
     <hashAndSign file="${tomcat.release}/v${version}/bin/${final.name}-windows-x64.zip" />
-
-    <!-- Windows i64 package -->
-    <zip zipfile="${tomcat.release}/v${version}/bin/${final.name}-windows-i64.zip">
-      <zipfileset dir="${tomcat.dist}" prefix="${final.name}">
-        <include name="bin/**"/>
-        <include name="conf/**"/>
-        <include name="logs/**"/>
-        <include name="lib/**"/>
-        <include name="webapps/**"/>
-        <include name="work/**"/>
-        <include name="temp/**"/>
-        <include name="LICENSE"/>
-        <include name="NOTICE"/>
-        <include name="README.txt"/>
-        <include name="RELEASE-NOTES"/>
-        <include name="RUNNING.txt"/>
-        <include name="BENCHMARKS.txt"/>
-        <exclude name="bin/x64/"/>
-        <exclude name="bin/i64/"/>
-        <exclude name="bin/*.dll"/>
-        <exclude name="bin/tomcat${version.major}.exe"/>
-      </zipfileset>
-      <zipfileset dir="${tomcat.dist}/bin/i64" prefix="${final.name}/bin">
-        <include name="*.dll"/>
-        <include name="*.exe"/>
-      </zipfileset>
-    </zip>
-
-    <hashAndSign file="${tomcat.release}/v${version}/bin/${final.name}-windows-i64.zip" />
-
   </target>
 
   <!-- Packages the deployer distribution in zip format -->
@@ -2547,7 +2508,6 @@ skip.installer property in build.properties" />
         <exclude name="conf/**" />
         <exclude name="src/**" />
         <exclude name="bin/x64/"/>
-        <exclude name="bin/i64/"/>
         <exclude name="bin/*.exe"/>
         <exclude name="bin/*.dll"/>
       </tarfileset>
