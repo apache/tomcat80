@@ -437,6 +437,11 @@
         require TLSv1 and will not work with SSLv3. <code>TLSv1</code> remains
         an alias for <code>SSLv3</code>. (markt)
       </update>
+      <fix>
+        Add path parameter handling to
+        <code>HttpServletRequest.getContextPath()</code>. This is a follow-up to
+        the fix for <bug>57215</bug>. (markt)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Jasper">
