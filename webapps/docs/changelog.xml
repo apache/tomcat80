@@ -86,6 +86,9 @@
         <code>heartbeatSleeptime</code> attribute and <code>optionCheck</code>
         attribute in the cluster channel docs. (kfujino)
       </add>
+      <fix>
+        Correct some typos in the JNDI resources How-To. (markt)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Tribes">
