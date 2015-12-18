@@ -585,6 +585,7 @@ public class InternalAprInputBuffer extends AbstractInputBuffer<Long> {
             bbuf.limit(nRead);
             bbuf.get(buf, pos, nRead);
             lastValid = pos + nRead;
+            return true;
         } else if (-nRead == Status.EAGAIN) {
             return false;
         } else if (-nRead == Status.APR_EGENERAL && wrapper.isSecure()) {
@@ -616,8 +617,6 @@ public class InternalAprInputBuffer extends AbstractInputBuffer<Long> {
             throw new IOException(sm.getString("iib.failedread.apr",
                     Integer.valueOf(-nRead)));
         }
-
-        return (nRead > 0);
     }
 
 
