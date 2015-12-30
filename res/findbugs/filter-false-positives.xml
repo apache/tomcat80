@@ -336,6 +336,12 @@
     <Bug code="UL"  />
   </Match>
   <Match>
+    <!-- Fall-through expected -->
+    <Class name="org.apache.coyote.http11.AbstractHttp11Processor" />
+    <Method name="process"/>
+    <Bug code="SF" />
+  </Match>
+  <Match>
     <!-- Locks are always released. Non-standard pattern is required because -->
     <!-- of lock upgrade that is used. -->
     <Class name="org.apache.coyote.http11.InternalAprInputBuffer" />
@@ -548,6 +554,12 @@
       <Method name="updateAttributes"/>
     </Or>
     <Bug code="ES" />
+  </Match>
+  <Match>
+    <!-- Fall-through expected -->
+    <Class name="org.apache.tomcat.util.http.Parameters" />
+    <Method name="processParameters"/>
+    <Bug code="SF" />
   </Match>
   <Match>
     <!-- Hiding of field in superclass is deliberate -->
