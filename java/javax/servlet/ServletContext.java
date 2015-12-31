@@ -934,6 +934,7 @@ public interface ServletContext {
      *
      * @return The primary name of the virtual host on which this context is
      *         deployed
+     * @since Servlet 3.1
      */
     public String getVirtualServerName();
 }
