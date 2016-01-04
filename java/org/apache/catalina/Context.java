@@ -800,7 +800,10 @@ public interface Context extends Container, ContextBind {
      * Wrapper appended to this Context.
      *
      * @param listener Java class name of an InstanceListener class
+     *
+     * @deprecated Will be removed in 9.0.x onwards
      */
+    @Deprecated
     public void addInstanceListener(String listener);
 
 
@@ -987,7 +990,10 @@ public interface Context extends Container, ContextBind {
     /**
      * Return the set of InstanceListener classes that will be added to
      * newly created Wrappers automatically.
+     *
+     * @deprecated Will be removed in 9.0.x onwards
      */
+    @Deprecated
     public String[] findInstanceListeners();
 
 
@@ -1214,7 +1220,10 @@ public interface Context extends Container, ContextBind {
      * will be added to newly created Wrappers.
      *
      * @param listener Class name of an InstanceListener class to be removed
+     *
+     * @deprecated Will be removed in 9.0.x onwards
      */
+    @Deprecated
     public void removeInstanceListener(String listener);
 
 

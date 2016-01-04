@@ -102,6 +102,10 @@
         <code>org.apache.catalina.core.DefaultInstanceManager</code> class.
         (kkolinko)
       </fix>
+      <scode>
+        Deprecate InstanceListener, InstanceEvent and InstanceSupport prior to
+        removal in 9.0.x. (markt)
+      </scode>
     </changelog>
   </subsection>
   <subsection name="Jasper">

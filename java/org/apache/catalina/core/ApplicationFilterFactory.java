@@ -50,6 +50,7 @@ public final class ApplicationFilterFactory {
      * @param servlet The servlet instance to be wrapped
 
      */
+    @SuppressWarnings("deprecation")
     public static ApplicationFilterChain createFilterChain
         (ServletRequest request, Wrapper wrapper, Servlet servlet) {
 
