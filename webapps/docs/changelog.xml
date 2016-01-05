@@ -106,6 +106,10 @@
         Deprecate InstanceListener, InstanceEvent and InstanceSupport prior to
         removal in 9.0.x. (markt)
       </scode>
+      <fix>
+        Ensure that the proper file encoding if specified will be used when
+        a readme file is served by DefaultServlet. (violetagg)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Jasper">
