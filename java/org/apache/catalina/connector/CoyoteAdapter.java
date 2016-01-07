@@ -951,8 +951,8 @@ public class CoyoteAdapter implements Adapter {
                                 // Recycle cookies and session info in case the
                                 // correct context is configured with different
                                 // settings
-                                req.getCookies().recycle();
                                 request.recycleSessionInfo();
+                                request.recycleCookieInfo(true);
                             }
                             break;
                         }

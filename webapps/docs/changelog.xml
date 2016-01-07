@@ -114,6 +114,10 @@
         Fix declaration of <code>localPort</code> attribute of Connector MBean:
         it is read-only. (kkolinko)
       </fix>
+      <fix>
+        <bug>58809/bug>: Correctly recycle cookies when mapping requests for
+        parallel deployment. (markt)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Jasper">

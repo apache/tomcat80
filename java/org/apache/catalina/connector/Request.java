@@ -477,8 +477,6 @@ public class Request
             parts = null;
         }
         partsParseException = null;
-        cookiesParsed = false;
-        cookiesConverted = false;
         locales.clear();
         localesParsed = false;
         secure = false;
@@ -492,9 +490,9 @@ public class Request
         attributes.clear();
         sslAttributesParsed = false;
         notes.clear();
-        cookies = null;
 
         recycleSessionInfo();
+        recycleCookieInfo(false);
 
         if (Globals.IS_SECURITY_ENABLED || Connector.RECYCLE_FACADES) {
             parameterMap = new ParameterMap<>();
@@ -551,6 +549,16 @@ public class Request
         requestedSessionId = null;
         requestedSessionURL = false;
         requestedSessionSSL = false;
+    }
+
+
+    protected void recycleCookieInfo(boolean recycleCoyote) {
+        cookiesParsed = false;
+        cookiesConverted = false;
+        cookies = null;
+        if (recycleCoyote) {
+            getCoyoteRequest().getCookies().recycle();
+        }
     }
 
 
