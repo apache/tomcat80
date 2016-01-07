@@ -890,7 +890,7 @@ public class Connector extends LifecycleMBeanBase  {
         sb.append(",port=");
         int port = getPort();
         if (port > 0) {
-            sb.append(getPort());
+            sb.append(port);
         } else {
             sb.append("auto-");
             sb.append(getProperty("nameIndex"));
@@ -1047,7 +1047,7 @@ public class Connector extends LifecycleMBeanBase  {
         sb.append('-');
         int port = getPort();
         if (port > 0) {
-            sb.append(getPort());
+            sb.append(port);
         } else {
             sb.append("auto-");
             sb.append(getProperty("nameIndex"));
