@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.MalformedURLException;
 import java.net.URI;
+import java.net.URL;
 import java.nio.charset.Charset;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
@@ -48,6 +49,7 @@ import org.apache.catalina.Wrapper;
 import org.apache.catalina.security.SecurityUtil;
 import org.apache.catalina.util.RequestUtil;
 import org.apache.catalina.util.SessionConfig;
+import org.apache.catalina.util.UriUtil;
 import org.apache.coyote.ActionCode;
 import org.apache.tomcat.util.buf.CharChunk;
 import org.apache.tomcat.util.buf.UEncoder;
@@ -55,7 +57,6 @@ import org.apache.tomcat.util.buf.UEncoder.SafeCharsSet;
 import org.apache.tomcat.util.http.FastHttpDateFormat;
 import org.apache.tomcat.util.http.MimeHeaders;
 import org.apache.tomcat.util.http.parser.MediaTypeCache;
-import org.apache.tomcat.util.net.URL;
 import org.apache.tomcat.util.res.StringManager;
 
 /**
@@ -82,9 +83,6 @@ public class Response
     private static final boolean ENFORCE_ENCODING_IN_GET_WRITER;
 
     static {
-        // Ensure that URL is loaded for SM
-        URL.isSchemeChar('c');
-
         ENFORCE_ENCODING_IN_GET_WRITER = Boolean.parseBoolean(
                 System.getProperty("org.apache.catalina.connector.Response.ENFORCE_ENCODING_IN_GET_WRITER",
                         "true"));
@@ -1592,7 +1590,7 @@ public class Response
                 throw iae;
             }
 
-        } else if (leadingSlash || !hasScheme(location)) {
+        } else if (leadingSlash || !UriUtil.hasScheme(location)) {
 
             redirectURLCC.recycle();
 
@@ -1767,21 +1765,6 @@ public class Response
         return true;
     }
 
-    /**
-     * Determine if a URI string has a <code>scheme</code> component.
-     */
-    private boolean hasScheme(String uri) {
-        int len = uri.length();
-        for(int i=0; i < len ; i++) {
-            char c = uri.charAt(i);
-            if(c == ':') {
-                return i > 0;
-            } else if(!URL.isSchemeChar(c)) {
-                return false;
-            }
-        }
-        return false;
-    }
 
     /**
      * Return the specified URL with the specified session identifier
