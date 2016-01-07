@@ -59,10 +59,10 @@ public final class CookieSupport {
     public static final boolean ALLOW_NAME_ONLY;
 
     /**
-     * If set to true, the cookie header will be preserved. In most cases
-     * except debugging, this is not useful.
+     * @deprecated Unused. As of 8.0.31, cookie headers are always preserved.
      */
-    public static final boolean PRESERVE_COOKIE_HEADER;
+    @Deprecated
+    public static final boolean PRESERVE_COOKIE_HEADER = true;
 
     /**
      * The list of separators that apply to version 0 cookies. To quote the
@@ -92,14 +92,6 @@ public final class CookieSupport {
         ALLOW_HTTP_SEPARATORS_IN_V0 = Boolean.parseBoolean(System.getProperty(
                 "org.apache.tomcat.util.http.ServerCookie.ALLOW_HTTP_SEPARATORS_IN_V0",
                 "false"));
-
-        String preserveCookieHeader = System.getProperty(
-                "org.apache.tomcat.util.http.ServerCookie.PRESERVE_COOKIE_HEADER");
-        if (preserveCookieHeader == null) {
-            PRESERVE_COOKIE_HEADER = STRICT_SERVLET_COMPLIANCE;
-        } else {
-            PRESERVE_COOKIE_HEADER = Boolean.parseBoolean(preserveCookieHeader);
-        }
 
         String  fwdSlashIsSeparator = System.getProperty(
                 "org.apache.tomcat.util.http.ServerCookie.FWD_SLASH_IS_SEPARATOR");

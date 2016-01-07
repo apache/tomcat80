@@ -94,10 +94,6 @@ public final class LegacyCookieProcessor implements CookieProcessor {
     @SuppressWarnings("deprecation") // Default to false when deprecated code is removed
     private boolean allowHttpSepsInV0 = CookieSupport.ALLOW_HTTP_SEPARATORS_IN_V0;
 
-    @SuppressWarnings("deprecation") // Default to STRICT_SERVLET_COMPLIANCE
-                                     // when deprecated code is removed
-    private boolean preserveCookieHeader = CookieSupport.PRESERVE_COOKIE_HEADER;
-
     @SuppressWarnings("deprecation") // Default to !STRICT_SERVLET_COMPLIANCE
                                      // when deprecated code is removed
     private boolean alwaysAddExpires = SetCookieSupport.ALWAYS_ADD_EXPIRES;
@@ -195,13 +191,28 @@ public final class LegacyCookieProcessor implements CookieProcessor {
     }
 
 
+    /**
+     * @return Always returns true
+     *
+     * @deprecated No longer used. Cookie headers are now always preserved. Will
+     *             be removed in Tomcat 9.0.x.
+     */
+    @Deprecated
     public boolean getPreserveCookieHeader() {
-        return preserveCookieHeader;
+        return true;
     }
 
 
+    /**
+     * NO-OP.
+     *
+     * @param preserveCookieHeader Ignored
+     *
+     * @deprecated No longer used. Cookie headers are now always preserved. Will
+     *             be removed in Tomcat 9.0.x.
+     */
+    @Deprecated
     public void setPreserveCookieHeader(boolean preserveCookieHeader) {
-        this.preserveCookieHeader = preserveCookieHeader;
     }
 
 
@@ -262,17 +273,7 @@ public final class LegacyCookieProcessor implements CookieProcessor {
                     log.debug("Cookies: Parsing b[]: " + cookieValue.toString());
                 }
                 ByteChunk bc = cookieValue.getByteChunk();
-                if (getPreserveCookieHeader()) {
-                    int len = bc.getLength();
-                    if (len > 0) {
-                        byte[] buf = new byte[len];
-                        System.arraycopy(bc.getBytes(), bc.getOffset(), buf, 0, len);
-                        processCookieHeader(buf, 0, len, serverCookies);
-                    }
-                } else {
-                    processCookieHeader(bc.getBytes(), bc.getOffset(), bc.getLength(),
-                            serverCookies);
-                }
+                processCookieHeader(bc.getBytes(), bc.getOffset(), bc.getLength(), serverCookies);
             }
 
             // search from the next position
@@ -830,19 +831,25 @@ public final class LegacyCookieProcessor implements CookieProcessor {
             return;
         }
 
-        int src = bc.getStart();
-        int end = bc.getEnd();
-        int dest = src;
-        byte[] buffer = bc.getBuffer();
+        // Take a copy of the buffer so the original cookie header is not
+        // modified by this unescaping.
+        byte[] original = bc.getBuffer();
+        int len = bc.getLength();
 
-        while (src < end) {
-            if (buffer[src] == '\\' && src < end && buffer[src+1]  == '"') {
+        byte[] copy = new byte[len];
+        System.arraycopy(original, bc.getStart(), copy, 0, len);
+
+        int src = 0;
+        int dest = 0;
+
+        while (src < len) {
+            if (copy[src] == '\\' && src < len && copy[src+1]  == '"') {
                 src++;
             }
-            buffer[dest] = buffer[src];
+            copy[dest] = copy[src];
             dest ++;
             src ++;
         }
-        bc.setEnd(dest);
+        bc.setBytes(copy, 0, dest);
     }
 }
