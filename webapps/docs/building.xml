@@ -69,7 +69,7 @@ Download a binary distribution of Ant 1.9.5 or later from
 <p>
 Unpack the binary distribution into a convenient location so that the
 Ant release resides in its own directory (conventionally named
-<code>apache-ant-1.8.x</code>).  For the remainder of this guide,
+<code>apache-ant-1.9.x</code>).  For the remainder of this guide,
 the symbolic name <code>${ant.home}</code> is used to refer to the full pathname of
  the Ant installation directory.
 </p>
