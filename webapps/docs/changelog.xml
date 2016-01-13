@@ -140,6 +140,11 @@
         set to <code>true</code>, ensure that the heartbeat thread does not
         start. (kfujino)
       </fix>
+      <scode>
+        Simplify the code of <code>JvmRouteBinderValve.startInternal()</code>.
+        Avoid potential NPE when <code>JvmRouteBinderValve</code> is configured
+        directly at <code>Engine</code> element. (kfujino)
+      </scode>
     </changelog>
   </subsection>
   <subsection name="WebSocket">
