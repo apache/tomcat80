@@ -1918,8 +1918,15 @@ public class ContextConfig implements LifecycleListener {
             WebResource[] webResources =
                     webResource.getWebResourceRoot().listResources(
                             webResource.getWebappPath());
-            for (WebResource r : webResources) {
-                processAnnotationsWebResource(r, fragment, handlesTypesOnly);
+            if (webResources.length > 0) {
+                if (log.isDebugEnabled()) {
+                    log.debug(sm.getString(
+                            "contextConfig.processAnnotationsWebDir.debug",
+                            webResource.getURL()));
+                }
+                for (WebResource r : webResources) {
+                    processAnnotationsWebResource(r, fragment, handlesTypesOnly);
+                }
             }
         } else if (webResource.isFile() &&
                 webResource.getName().endsWith(".class")) {
@@ -1962,6 +1969,11 @@ public class ContextConfig implements LifecycleListener {
             boolean handlesTypesOnly) {
 
         try (Jar jar = JarFactory.newInstance(url)) {
+            if (log.isDebugEnabled()) {
+                log.debug(sm.getString(
+                        "contextConfig.processAnnotationsJar.debug", url));
+            }
+
             jar.nextEntry();
             String entryName = jar.getEntryName();
             while (entryName != null) {
@@ -1993,12 +2005,16 @@ public class ContextConfig implements LifecycleListener {
             // Returns null if directory is not readable
             String[] dirs = file.list();
             if (dirs != null) {
+                if (log.isDebugEnabled()) {
+                    log.debug(sm.getString(
+                            "contextConfig.processAnnotationsDir.debug", file));
+                }
                 for (String dir : dirs) {
                     processAnnotationsFile(
                             new File(file,dir), fragment, handlesTypesOnly);
                 }
             }
-        } else if (file.canRead() && file.getName().endsWith(".class")) {
+        } else if (file.getName().endsWith(".class") && file.canRead()) {
             try (FileInputStream fis = new FileInputStream(file)) {
                 processAnnotationsStream(fis, fragment, handlesTypesOnly);
             } catch (IOException e) {

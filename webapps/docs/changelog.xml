@@ -115,6 +115,11 @@
         it is read-only. (kkolinko)
       </fix>
       <fix>
+        <bug>58766</bug>: Make skipping non-class files during annotation
+        scanning faster by checking the file name first. Improve debug logging.
+        (kkolinko)
+      </fix>
+      <fix>
         <bug>58809</bug>: Correctly recycle cookies when mapping requests for
         parallel deployment. As a side-effect of this fix, the system property
         <code>org.apache.tomcat.util.http.ServerCookie.PRESERVE_COOKIE_HEADER</code>
