@@ -135,6 +135,11 @@
         Make sure that shared Digester is reset in an unlikely error case
         in <code>HostConfig.deployWAR()</code>. (kkolinko)
       </fix>
+      <fix>
+        <bug>58867</bug>: Improve checking on Host start for WAR files that have
+        been modified while Tomcat has stopped and re-expand them if
+        <code>unpackWARs</code> is <code>true</code>. (markt)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Jasper">
