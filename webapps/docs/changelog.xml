@@ -140,6 +140,9 @@
         been modified while Tomcat has stopped and re-expand them if
         <code>unpackWARs</code> is <code>true</code>. (markt)
       </fix>
+      <fix>
+        Fix a potential JDBC resource leak in DataSourceRealm. (schultz)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Jasper">
