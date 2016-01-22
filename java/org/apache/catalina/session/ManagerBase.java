@@ -32,6 +32,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.regex.Pattern;
 
 import org.apache.catalina.Container;
 import org.apache.catalina.Context;
@@ -210,8 +211,31 @@ public abstract class ManagerBase extends LifecycleMBeanBase
     protected final PropertyChangeSupport support =
             new PropertyChangeSupport(this);
 
+    private Pattern sessionAttributeNamePattern;
+
 
     // ------------------------------------------------------------- Properties
+
+    public String getSessionAttributeNameFilter() {
+        if (sessionAttributeNamePattern == null) {
+            return null;
+        }
+        return sessionAttributeNamePattern.toString();
+    }
+
+
+    public void setSessionAttributeNameFilter(String sessionAttributeNameFilter) {
+        if (sessionAttributeNameFilter == null || sessionAttributeNameFilter.length() == 0) {
+            sessionAttributeNamePattern = null;
+        }
+        sessionAttributeNamePattern = Pattern.compile(sessionAttributeNameFilter);
+    }
+
+
+    protected Pattern getSessionAttributeNamePattern() {
+        return sessionAttributeNamePattern;
+    }
+
 
     @Override
     @Deprecated
@@ -273,6 +297,13 @@ public abstract class ManagerBase extends LifecycleMBeanBase
     }
 
 
+    /**
+     * {@inheritDoc}
+     * <p>
+     * Session attributes do not need to implement {@link java.io.Serializable}
+     * if they are excluded from distribution by
+     * {@link #willAttributeDistribute(String, Object)}.
+     */
     @Override
     public void setDistributable(boolean distributable) {
 
@@ -729,11 +760,18 @@ public abstract class ManagerBase extends LifecycleMBeanBase
     /**
      * {@inheritDoc}
      * <p>
-     * This implementation always returns {@code true}
+     * This implementation excludes session attributes from distribution if the:
+     * <ul>
+     * <li>attribute name matches {@link #getSessionAttributeNameFilter()}</li>
+     * </ul>
      */
     @Override
     public boolean willAttributeDistribute(String name, Object value) {
-        return true;
+        Pattern sessionAttributeNamePattern = getSessionAttributeNamePattern();
+        if (sessionAttributeNamePattern == null) {
+            return true;
+        }
+        return sessionAttributeNamePattern.matcher(name).matches();
     }
 
 
