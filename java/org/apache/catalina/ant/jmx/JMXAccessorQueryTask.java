@@ -150,7 +150,7 @@ public class JMXAccessorQueryTask extends JMXAccessorTask {
      * @param pname
      * @param oname
      *
-     * @Deprecated Unused. Will be removed in Tomcat 9.0.x
+     * @deprecated Unused. Will be removed in Tomcat 9.0.x
      */
     @Deprecated
     protected void bindAttributes(MBeanServerConnection jmxServerConnection,
