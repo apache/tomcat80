@@ -96,8 +96,7 @@ public class TestWebappClassLoader extends TomcatBaseTest {
             "org.apache.tomcat",
             "javax.el",
             "javax.servlet",
-            "javax.websocket",
-            "javax.security.auth.message"
+            "javax.websocket"
         };
 
         WebappClassLoader loader = new WebappClassLoader();
