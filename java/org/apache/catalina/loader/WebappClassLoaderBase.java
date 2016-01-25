@@ -2761,8 +2761,7 @@ public abstract class WebappClassLoaderBase extends URLClassLoader
                 }
                 if (name.startsWith("el.", 6) ||
                     name.startsWith("servlet.", 6) ||
-                    name.startsWith("websocket.", 6) ||
-                    name.startsWith("security.auth.message.", 6)) {
+                    name.startsWith("websocket.", 6)) {
                     return true;
                 }
             } else if (!isClassName && ch == '/') {
@@ -2772,8 +2771,7 @@ public abstract class WebappClassLoaderBase extends URLClassLoader
                 }
                 if (name.startsWith("el/", 6) ||
                     name.startsWith("servlet/", 6) ||
-                    name.startsWith("websocket/", 6) ||
-                    name.startsWith("security/auth/message/", 6)) {
+                    name.startsWith("websocket/", 6)) {
                     return true;
                 }
             }
