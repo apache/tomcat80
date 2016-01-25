@@ -45,14 +45,6 @@
   issues do not "pop up" wrt. others).
 -->
 <section name="Tomcat 8.0.32 (markt)" rtext="in development">
-  <subsection name="Cluster">
-    <changelog>
-      <fix>
-        Correct a regression in the session attribute filtering that prevented
-        clustering from starting in the default configuration. (kfujino)
-      </fix>
-    </changelog>
-  </subsection>
   <subsection name="General">
     <changelog>
       <add>
@@ -60,6 +52,14 @@
         property <code>test.name</code> and document the property in
         BUILDING.txt. (rjung)
       </add>
+    </changelog>
+  </subsection>
+  <subsection name="Cluster">
+    <changelog>
+      <fix>
+        Correct a regression in the session attribute filtering that prevented
+        clustering from starting in the default configuration. (kfujino)
+      </fix>
     </changelog>
   </subsection>
 </section>
