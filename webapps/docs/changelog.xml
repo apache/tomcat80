@@ -54,6 +54,14 @@
       </add>
     </changelog>
   </subsection>
+  <subsection name="Catalina">
+    <changelog>
+      <fix>
+        Fix class loader decision on the delegation for class loading and
+        resource lookup and make it faster too. (rjung)
+      </fix>
+    </changelog>
+  </subsection>
   <subsection name="Cluster">
     <changelog>
       <fix>
