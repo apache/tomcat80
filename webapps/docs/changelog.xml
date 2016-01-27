@@ -62,6 +62,14 @@
       </fix>
     </changelog>
   </subsection>
+  <subsection name="Coyote">
+    <changelog>
+      <add>
+        New configuration option <code>ajpFlush</code> for the AJP connectors
+        to disable the sending of AJP flush packets. (rjung)
+      </add>
+    </changelog>
+  </subsection>
   <subsection name="Cluster">
     <changelog>
       <fix>

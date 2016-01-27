@@ -298,6 +298,24 @@ public abstract class AbstractAjpProcessor<S> extends AbstractProcessor<S> {
 
 
     /**
+     * Send AJP flush packet when flushing.
+     * An flush packet is a zero byte AJP13 SEND_BODY_CHUNK
+     * packet. mod_jk and mod_proxy_ajp interprete this as
+     * a request to flush data to the client.
+     * AJP always does flush at the and of the response, so if
+     * it is not important, that the packets get streamed up to
+     * the client, do not use extra flush packets.
+     * For compatibility and to stay on the safe side, flush
+     * packets are enabled by default.
+     */
+    protected boolean ajpFlush = true;
+    public boolean getAjpFlush() { return ajpFlush; }
+    public void setAjpFlush(boolean ajpFlush) {
+        this.ajpFlush = ajpFlush;
+    }
+
+
+    /**
      * The number of milliseconds Tomcat will wait for a subsequent request
      * before closing the connection. The default is -1 which is an infinite
      * timeout.
@@ -1566,7 +1584,7 @@ public abstract class AbstractAjpProcessor<S> extends AbstractProcessor<S> {
         // Calling code should ensure that there is no data in the buffers for
         // non-blocking writes.
         // TODO Validate the assertion above
-        if (explicit && !finished) {
+        if (ajpFlush && explicit && !finished) {
             // Send the flush message
             output(flushMessageArray, 0, flushMessageArray.length, true);
         }
