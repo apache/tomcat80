@@ -33,7 +33,7 @@ public class CompressionMethodSelector {
     /**
      * Regular expression that defines the user agents to not use gzip with
      */
-    protected Pattern noCompressionUserAgents = null;
+    private Pattern noCompressionUserAgents = null;
 
     public CompressionMethod getCompressionMethod(Request request,
                                                   CompressionLevel compressionLevel) {
