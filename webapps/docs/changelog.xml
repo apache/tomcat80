@@ -87,7 +87,7 @@
     </changelog>
   </subsection>
 </section>
-<section name="Tomcat 8.0.31 (markt)" rtext="release in progress">
+<section name="Tomcat 8.0.31 (markt)" rtext="not released">
   <subsection name="Catalina">
     <changelog>
       <fix>
