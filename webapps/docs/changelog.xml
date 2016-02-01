@@ -64,6 +64,10 @@
         Fix class loader decision on the delegation for class loading and
         resource lookup and make it faster too. (rjung)
       </fix>
+      <fix>
+        <bug>58946</bug>: Ensure that the request parameter map remains
+        immutable when processing via a RequestDispatcher. (markt)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Coyote">
