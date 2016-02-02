@@ -72,6 +72,10 @@
         <bug>58827</bug>: Deprecate what is left of the JSR 77 implementation.
         (markt)
       </fix>
+      <fix>
+        <bug>58905</bug>: Ensure that <code>Tomcat.silence()</code> silences the
+        correct logger and respects the current setting. (markt)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Coyote">
