@@ -95,11 +95,13 @@
     </changelog>
   </subsection>
   <subsection name="WebSocket">
-    <fix>
-      Fix a timing issue on session close that could result in an exception
-      being thrown for an incomplete message even through the message was
-      completed. (markt)
-    </fix>
+    <changelog>
+      <fix>
+        Fix a timing issue on session close that could result in an exception
+        being thrown for an incomplete message even through the message was
+        completed. (markt)
+      </fix>
+    </changelog>
   </subsection>
 </section>
 <section name="Tomcat 8.0.31 (markt)" rtext="not released">
