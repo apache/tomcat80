@@ -6246,7 +6246,11 @@ public class StandardContext extends ContainerBase
      * JSR77 deploymentDescriptor attribute
      *
      * @return string deployment descriptor
+     *
+     * @deprecated The JSR-77 implementation is incomplete and will be removed
+     *             in 9.0.x
      */
+    @Deprecated
     public String getDeploymentDescriptor() {
 
         InputStream stream = null;
@@ -6277,7 +6281,11 @@ public class StandardContext extends ContainerBase
      * JSR77 servlets attribute
      *
      * @return list of all servlets ( we know about )
+     *
+     * @deprecated The JSR-77 implementation is incomplete and will be removed
+     *             in 9.0.x
      */
+    @Deprecated
     public String[] getServlets() {
 
         String[] result = null;
@@ -6490,7 +6498,11 @@ public class StandardContext extends ContainerBase
 
     /**
      * Support for "stateManageable" JSR77
+     *
+     * @deprecated The JSR-77 implementation is incomplete and will be removed
+     *             in 9.0.x
      */
+    @Deprecated
     public boolean isStateManageable() {
         return true;
     }

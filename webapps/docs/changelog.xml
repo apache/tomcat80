@@ -68,6 +68,10 @@
         <bug>58946</bug>: Ensure that the request parameter map remains
         immutable when processing via a RequestDispatcher. (markt)
       </fix>
+      <fix>
+        <bug>58827</bug>: Deprecate what is left of the JSR 77 implementation.
+        (markt)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Coyote">
