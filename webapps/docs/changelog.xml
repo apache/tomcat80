@@ -46,6 +46,7 @@
 -->
 <section name="Tomcat 8.0.33 (markt)" rtext="development in progress">
   <subsection name="Catalina">
+    <changelog>
       <fix>
         Correct a regression in the fix for <bug>58867</bug>. When configuring a
         Context to use an external directory for the <code>docBase</code>, and
