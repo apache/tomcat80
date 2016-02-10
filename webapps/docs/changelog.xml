@@ -45,6 +45,17 @@
   issues do not "pop up" wrt. others).
 -->
 <section name="Tomcat 8.0.33 (markt)" rtext="development in progress">
+  <subsection name="Catalina">
+      <fix>
+        Correct a regression in the fix for <bug>58867</bug>. When configuring a
+        Context to use an external directory for the <code>docBase</code>, and
+        that directory happens to be located along side the original WAR, use
+        the directory as the <code>docBase</code> rather than expanding the
+        WAR into the <code>appBase</code> and using the newly created expanded
+        directory as the <code>docBase</code>. (markt) 
+      </fix>
+    </changelog>
+  </subsection>
   <subsection name="Web applications">
     <changelog>
       <fix>

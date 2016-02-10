@@ -574,8 +574,7 @@ public class ContextConfig implements LifecycleListener {
     /**
      * Adjust docBase.
      */
-    protected void fixDocBase()
-        throws IOException {
+    protected void fixDocBase() throws IOException {
 
         Host host = (Host) context.getParent();
         File appBase = host.getAppBaseFile();
@@ -611,6 +610,8 @@ public class ContextConfig implements LifecycleListener {
             }
         }
 
+        boolean docBaseInAppBase = docBase.startsWith(appBase.getPath() + File.separatorChar);
+
         if (docBase.toLowerCase(Locale.ENGLISH).endsWith(".war") && !file.isDirectory()) {
             if (unpackWARs) {
                 URL war = new URL("jar:" + (new File(docBase)).toURI().toURL() + "!/");
@@ -629,7 +630,7 @@ public class ContextConfig implements LifecycleListener {
             File docDir = new File(docBase);
             File warFile = new File(docBase + ".war");
             URL war = null;
-            if (warFile.exists()) {
+            if (warFile.exists() && docBaseInAppBase) {
                 war = new URL("jar:" + warFile.toURI().toURL() + "!/");
             }
             if (docDir.exists()) {
@@ -657,7 +658,7 @@ public class ContextConfig implements LifecycleListener {
             }
         }
 
-        if (docBase.startsWith(appBase.getPath() + File.separatorChar)) {
+        if (docBaseInAppBase) {
             docBase = docBase.substring(appBase.getPath().length());
             docBase = docBase.replace(File.separatorChar, '/');
             if (docBase.startsWith("/")) {
@@ -668,7 +669,6 @@ public class ContextConfig implements LifecycleListener {
         }
 
         context.setDocBase(docBase);
-
     }
 
 
