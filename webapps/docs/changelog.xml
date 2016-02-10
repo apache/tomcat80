@@ -60,7 +60,7 @@
     </changelog>
   </subsection>
 </section>
-<section name="Tomcat 8.0.32 (markt)" rtext="release vote in progress">
+<section name="Tomcat 8.0.32 (markt)" rtext="2016-02-08">
   <subsection name="General">
     <changelog>
       <add>
