@@ -32,6 +32,8 @@
 
   - JSON files (RFC7159) are data and cannot contain comments
 
+  - unused modules
+
 output/build/webapps/docs/*.html
 output/build/webapps/docs/appdev/*.html
 output/build/webapps/docs/architecture/*.html
@@ -69,3 +71,5 @@ test/webapp-fragments/WEB-INF/classes/*.txt
 webapps/examples/WEB-INF/classes/websocket/echo/servers.json
 output/build/webapps/examples/WEB-INF/classes/websocket/echo/servers.json
 output/dist/webapps/examples/WEB-INF/classes/websocket/echo/servers.json
+
+modules/tomcat-lite/*
