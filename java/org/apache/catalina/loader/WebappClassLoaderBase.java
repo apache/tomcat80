@@ -2753,6 +2753,9 @@ public abstract class WebappClassLoaderBase extends URLClassLoader
         char ch;
         if (name.startsWith("javax")) {
             /* 5 == length("javax") */
+            if (name.length() == 5) {
+                return false;
+            }
             ch = name.charAt(5);
             if (isClassName && ch == '.') {
                 /* 6 == length("javax.") */
@@ -2777,6 +2780,9 @@ public abstract class WebappClassLoaderBase extends URLClassLoader
             }
         } else if (name.startsWith("org")) {
             /* 3 == length("org") */
+            if (name.length() == 3) {
+                return false;
+            }
             ch = name.charAt(3);
             if (isClassName && ch == '.') {
                 /* 4 == length("org.") */
