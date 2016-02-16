@@ -68,6 +68,10 @@
         Remove unnecessary code. There is no support for context level cluster.
         (kfujino)
       </scode>
+      <add>
+        Make checking for var and map replacement in RewriteValve a bit stricter and
+        correct detection of colon in var replacement. (fschumacher)
+      </add>
     </changelog>
   </subsection>
   <subsection name="Web applications">
