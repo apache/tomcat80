@@ -82,7 +82,6 @@ import javax.servlet.http.HttpSessionIdListener;
 import javax.servlet.http.HttpSessionListener;
 
 import org.apache.catalina.Authenticator;
-import org.apache.catalina.Cluster;
 import org.apache.catalina.Container;
 import org.apache.catalina.ContainerListener;
 import org.apache.catalina.Context;
@@ -5143,9 +5142,6 @@ public class StandardContext extends ContainerBase
                 logger = null;
                 getLogger();
 
-                Cluster cluster = getClusterInternal();
-                if ((cluster != null) && (cluster instanceof Lifecycle))
-                    ((Lifecycle) cluster).start();
                 Realm realm = getRealmInternal();
                 if ((realm != null) && (realm instanceof Lifecycle))
                     ((Lifecycle) realm).start();
@@ -5507,10 +5503,6 @@ public class StandardContext extends ContainerBase
             Realm realm = getRealmInternal();
             if ((realm != null) && (realm instanceof Lifecycle)) {
                 ((Lifecycle) realm).stop();
-            }
-            Cluster cluster = getClusterInternal();
-            if ((cluster != null) && (cluster instanceof Lifecycle)) {
-                ((Lifecycle) cluster).stop();
             }
             Loader loader = getLoader();
             if ((loader != null) && (loader instanceof Lifecycle)) {
