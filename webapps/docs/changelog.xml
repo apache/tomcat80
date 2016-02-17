@@ -72,6 +72,10 @@
         Make checking for var and map replacement in RewriteValve a bit stricter and
         correct detection of colon in var replacement. (fschumacher)
       </add>
+      <fix>
+        Fix the type of <code>InstanceManager</code> attribute of mbean
+        definition of <code>StandardContext</code>. (kfujino)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Web applications">
