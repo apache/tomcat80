@@ -2414,19 +2414,19 @@ public abstract class WebappClassLoaderBase extends URLClassLoader
 
             WebResource webResource = entry.webResource;
             if (webResource == null) {
-                webResource = resources.getResource(path);
+                webResource = resources.getClassLoaderResource(path);
             } else {
                 entry.webResource = null;
             }
 
-            if (webResource == null) {
+            if (!webResource.exists()) {
                 return null;
             }
 
+            byte[] binaryContent = webResource.getContent();
             Manifest manifest = webResource.getManifest();
             URL codeBase = webResource.getCodeBase();
             Certificate[] certificates = webResource.getCertificates();
-            byte[] binaryContent = webResource.getContent();
 
             if (transformers.size() > 0) {
                 // If the resource is a class just being loaded, decorate it
