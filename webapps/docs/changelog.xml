@@ -76,6 +76,10 @@
         Fix the type of <code>InstanceManager</code> attribute of mbean
         definition of <code>StandardContext</code>. (kfujino)
       </fix>
+      <fix>
+        Refactor the web application class loader to reduce the impact of JAR
+        scanning on the memory footprint of the web application. (markt) 
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Web applications">
