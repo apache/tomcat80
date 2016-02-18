@@ -1197,21 +1197,22 @@ public class NioEndpoint extends AbstractEndpoint<NioChannel> {
                         sd.fchannel.close();
                     } catch (Exception ignore) {
                     }
-                    if ( sd.keepAlive ) {
+                    // For calls from outside the Poller, the caller is
+                    // responsible for registering the socket for the
+                    // appropriate event(s) if sendfile completes.
+                    if (!calledByProcessor) {
+                        if (sd.keepAlive) {
                             if (log.isDebugEnabled()) {
                                 log.debug("Connection is keep alive, registering back for OP_READ");
                             }
-                            if (calledByProcessor) {
-                                this.add(attachment.getSocket(),SelectionKey.OP_READ);
-                            } else {
-                                reg(sk,attachment,SelectionKey.OP_READ);
+                            reg(sk,attachment,SelectionKey.OP_READ);
+                        } else {
+                            if (log.isDebugEnabled()) {
+                                log.debug("Send file connection is being closed");
                             }
-                    } else {
-                        if (log.isDebugEnabled()) {
-                            log.debug("Send file connection is being closed");
+                            cancelledKey(sk,SocketStatus.STOP);
+                            return false;
                         }
-                        cancelledKey(sk,SocketStatus.STOP);
-                        return false;
                     }
                 } else {
                     if (log.isDebugEnabled()) {
