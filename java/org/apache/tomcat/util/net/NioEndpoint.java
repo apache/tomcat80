@@ -1140,7 +1140,8 @@ public class NioEndpoint extends AbstractEndpoint<NioChannel> {
             return result;
         }
 
-        public boolean processSendfile(SelectionKey sk, KeyAttachment attachment, boolean event) {
+        public boolean processSendfile(SelectionKey sk, KeyAttachment attachment,
+                boolean calledByProcessor) {
             NioChannel sc = null;
             try {
                 unreg(sk, attachment, sk.readyOps());
@@ -1150,10 +1151,10 @@ public class NioEndpoint extends AbstractEndpoint<NioChannel> {
                     log.trace("Processing send file for: " + sd.fileName);
                 }
 
-                //setup the file channel
-                if ( sd.fchannel == null ) {
+                if (sd.fchannel == null) {
+                    // Setup the file channel
                     File f = new File(sd.fileName);
-                    if ( !f.exists() ) {
+                    if (!f.exists()) {
                         cancelledKey(sk,SocketStatus.ERROR);
                         return false;
                     }
@@ -1162,19 +1163,19 @@ public class NioEndpoint extends AbstractEndpoint<NioChannel> {
                     sd.fchannel = fis.getChannel();
                 }
 
-                //configure output channel
+                // Configure output channel
                 sc = attachment.getSocket();
-                //ssl channel is slightly different
+                // TLS/SSL channel is slightly different
                 WritableByteChannel wc = ((sc instanceof SecureNioChannel)?sc:sc.getIOChannel());
 
-                //we still have data in the buffer
+                // We still have data in the buffer
                 if (sc.getOutboundRemaining()>0) {
                     if (sc.flushOutbound()) {
                         attachment.access();
                     }
                 } else {
                     long written = sd.fchannel.transferTo(sd.pos,sd.length,wc);
-                    if ( written > 0 ) {
+                    if (written > 0) {
                         sd.pos += written;
                         sd.length -= written;
                         attachment.access();
@@ -1187,7 +1188,7 @@ public class NioEndpoint extends AbstractEndpoint<NioChannel> {
                         }
                     }
                 }
-                if ( sd.length <= 0 && sc.getOutboundRemaining()<=0) {
+                if (sd.length <= 0 && sc.getOutboundRemaining()<=0) {
                     if (log.isDebugEnabled()) {
                         log.debug("Send file complete for: "+sd.fileName);
                     }
@@ -1200,7 +1201,7 @@ public class NioEndpoint extends AbstractEndpoint<NioChannel> {
                             if (log.isDebugEnabled()) {
                                 log.debug("Connection is keep alive, registering back for OP_READ");
                             }
-                            if (event) {
+                            if (calledByProcessor) {
                                 this.add(attachment.getSocket(),SelectionKey.OP_READ);
                             } else {
                                 reg(sk,attachment,SelectionKey.OP_READ);
@@ -1216,7 +1217,7 @@ public class NioEndpoint extends AbstractEndpoint<NioChannel> {
                     if (log.isDebugEnabled()) {
                         log.debug("OP_WRITE for sendfile: " + sd.fileName);
                     }
-                    if (event) {
+                    if (calledByProcessor) {
                         add(attachment.getSocket(),SelectionKey.OP_WRITE);
                     } else {
                         reg(sk,attachment,SelectionKey.OP_WRITE);
