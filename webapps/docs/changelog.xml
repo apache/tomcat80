@@ -53,7 +53,7 @@
         that directory happens to be located along side the original WAR, use
         the directory as the <code>docBase</code> rather than expanding the
         WAR into the <code>appBase</code> and using the newly created expanded
-        directory as the <code>docBase</code>. (markt) 
+        directory as the <code>docBase</code>. (markt)
       </fix>
       <add>
         <bug>58988</bug>: Special characters in the substitutions for the RewriteValve
@@ -78,7 +78,7 @@
       </fix>
       <fix>
         Refactor the web application class loader to reduce the impact of JAR
-        scanning on the memory footprint of the web application. (markt) 
+        scanning on the memory footprint of the web application. (markt)
       </fix>
     </changelog>
   </subsection>
