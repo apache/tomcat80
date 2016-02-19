@@ -88,6 +88,11 @@
         Refactor the JAR and JAR-in-WAR resource handling to reduce the memory
         footprint of the web application. (markt)
       </fix>
+      <fix>
+        <bug>57809</bug>: Deprecate the custom context attribute
+        <code>org.apache.tomcat.util.scan.MergedWebXml</code> which will be
+        removed in Tomcat 9. (markt)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Coyote">
