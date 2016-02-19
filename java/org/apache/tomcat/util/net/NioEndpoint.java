@@ -1140,7 +1140,7 @@ public class NioEndpoint extends AbstractEndpoint<NioChannel> {
             return result;
         }
 
-        public boolean processSendfile(SelectionKey sk, KeyAttachment attachment,
+        public SendfileState processSendfile(SelectionKey sk, KeyAttachment attachment,
                 boolean calledByProcessor) {
             NioChannel sc = null;
             try {
@@ -1156,7 +1156,7 @@ public class NioEndpoint extends AbstractEndpoint<NioChannel> {
                     File f = new File(sd.fileName);
                     if (!f.exists()) {
                         cancelledKey(sk,SocketStatus.ERROR);
-                        return false;
+                        return SendfileState.ERROR;
                     }
                     @SuppressWarnings("resource") // Closed when channel is closed
                     FileInputStream fis = new FileInputStream(f);
@@ -1211,9 +1211,9 @@ public class NioEndpoint extends AbstractEndpoint<NioChannel> {
                                 log.debug("Send file connection is being closed");
                             }
                             cancelledKey(sk,SocketStatus.STOP);
-                            return false;
                         }
                     }
+                    return SendfileState.DONE;
                 } else {
                     if (log.isDebugEnabled()) {
                         log.debug("OP_WRITE for sendfile: " + sd.fileName);
@@ -1223,17 +1223,17 @@ public class NioEndpoint extends AbstractEndpoint<NioChannel> {
                     } else {
                         reg(sk,attachment,SelectionKey.OP_WRITE);
                     }
+                    return SendfileState.PENDING;
                 }
             }catch ( IOException x ) {
                 if ( log.isDebugEnabled() ) log.debug("Unable to complete sendfile request:", x);
                 cancelledKey(sk,SocketStatus.ERROR);
-                return false;
+                return SendfileState.ERROR;
             }catch ( Throwable t ) {
                 log.error("",t);
                 cancelledKey(sk, SocketStatus.ERROR);
-                return false;
+                return SendfileState.ERROR;
             }
-            return true;
         }
 
         protected void unreg(SelectionKey sk, KeyAttachment attachment, int readyOps) {

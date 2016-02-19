@@ -873,10 +873,6 @@ public class Nio2Endpoint extends AbstractEndpoint<Nio2Channel> {
                TimeUnit.MILLISECONDS, socket, awaitBytes);
     }
 
-    public enum SendfileState {
-        PENDING, DONE, ERROR
-    }
-
     private CompletionHandler<Integer, SendfileData> sendfile = new CompletionHandler<Integer, SendfileData>() {
 
         @Override
