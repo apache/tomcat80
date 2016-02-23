@@ -104,7 +104,7 @@
       </fix>
     </changelog>
   </subsection>
-  <subsection name="WbSocket">
+  <subsection name="WebSocket">
     <changelog>
       <fix>
         <bug>59014</bug>: Ensure that a WebSocket close message can be sent
