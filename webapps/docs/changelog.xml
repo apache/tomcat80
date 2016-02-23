@@ -93,6 +93,12 @@
         <code>org.apache.tomcat.util.scan.MergedWebXml</code> which will be
         removed in Tomcat 9. (markt)
       </fix>
+      <fix>
+        <bug>59054</bug>: Ensure that using the
+        <code>CrawlerSessionManagerValve</code> in a distributed environment
+        does not trigger an error when the Valve registers itself in the
+        session. (markt)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Coyote">
