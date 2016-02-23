@@ -651,7 +651,8 @@ public class WsSession implements Session {
             // If the session has already been closed the any registered futures
             // will have been processed so the failure result for this future
             // needs to be set here.
-            if (isOpen()) {
+            if (isOpen() || f2sh.isCloseMessage()) {
+                // WebSocket session is open or this is the close message
                 futures.put(f2sh, f2sh);
             } else if (f2sh.isDone()) {
                 // NO-OP. The future completed before the session closed so no
