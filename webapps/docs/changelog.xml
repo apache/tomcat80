@@ -104,6 +104,14 @@
       </fix>
     </changelog>
   </subsection>
+  <subsection name="WbSocket">
+    <changelog>
+      <fix>
+        <bug>59014</bug>: Ensure that a WebSocket close message can be sent
+        after a close message has been received. (markt)
+      </fix>
+    </changelog>
+  </subsection>
   <subsection name="Web applications">
     <changelog>
       <fix>
