@@ -55,7 +55,6 @@ public class WsRemoteEndpointImplServer extends WsRemoteEndpointImplBase {
     private volatile ByteBuffer[] buffers = null;
 
     private volatile long timeoutExpiry = -1;
-    private volatile boolean close;
 
 
     public WsRemoteEndpointImplServer(ServletOutputStream sos, WsServerContainer serverContainer) {
@@ -105,9 +104,6 @@ public class WsRemoteEndpointImplServer extends WsRemoteEndpointImplBase {
                 if (complete) {
                     wsWriteTimeout.unregister(this);
                     clearHandler(null, useDispatch);
-                    if (close) {
-                        close();
-                    }
                     break;
                 }
             }
