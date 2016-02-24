@@ -438,9 +438,9 @@
      </Description>
      <Description
         tag="CookieProcessor"
-        standard="true"
+        standard="false"
         default="false"
-        tagClass="org.apache.tomcat.util.http.LegacyCookieProcessor"
+        tagClass="org.apache.tomcat.util.http.CookieProcessor"
         storeFactoryClass="org.apache.catalina.storeconfig.StoreFactoryBase">
      </Description>
      <Description

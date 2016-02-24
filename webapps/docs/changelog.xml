@@ -103,6 +103,12 @@
         does not trigger an error when the Valve registers itself in the
         session. (markt)
       </fix>
+      <fix>
+        Storeconfig handling of alternate cookie processors. (markt/remm)
+      </fix>
+      <fix>
+        Storeconfig handling for socket properties. (remm)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Coyote">

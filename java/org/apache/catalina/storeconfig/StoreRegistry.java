@@ -42,6 +42,7 @@ import org.apache.catalina.tribes.MessageListener;
 import org.apache.catalina.tribes.transport.DataSender;
 import org.apache.juli.logging.Log;
 import org.apache.juli.logging.LogFactory;
+import org.apache.tomcat.util.http.CookieProcessor;
 
 /**
  * Central StoreRegistry for all server.xml elements
@@ -65,7 +66,7 @@ public class StoreRegistry {
             Valve.class, ClusterListener.class, MessageListener.class,
             DataSender.class, ChannelInterceptor.class, Member.class,
             WebResourceRoot.class, WebResourceSet.class,
-            CredentialHandler.class };
+            CredentialHandler.class, CookieProcessor.class };
 
     /**
      * @return Returns the name.
