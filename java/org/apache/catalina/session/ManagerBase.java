@@ -436,7 +436,7 @@ public abstract class ManagerBase extends LifecycleMBeanBase implements Manager 
     @Deprecated
     @Override
     public void setMaxInactiveInterval(int interval) {
-        // NO-OP
+        log.warn(sm.getString("managerBase.setMaxInactiveIntervalUnused"));
     }
 
 

@@ -114,6 +114,11 @@
       <fix>
         Storeconfig handling for socket properties. (remm)
       </fix>
+      <add>
+        Log a warning message if a user tries to configure the default session
+        timeout via the deprecated (and ignored)
+        <code>Manager.setMaxInactiveInterval()</code> method. (markt)
+      </add>
     </changelog>
   </subsection>
   <subsection name="Coyote">
