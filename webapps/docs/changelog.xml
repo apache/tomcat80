@@ -140,6 +140,9 @@
       <update>
         <bug>58111</bug>: Update to the Eclipse JDT Compiler 4.5. (markt)
       </update>
+      <add>
+        Add Java 9 support for JSPs. (markt)
+      </add>
     </changelog>
   </subsection>
   <subsection name="WebSocket">
