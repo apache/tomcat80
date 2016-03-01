@@ -18,25 +18,14 @@ package org.apache.catalina.util;
 
 /**
  * Utility class for working with URIs and URLs.
+ *
+ * @deprecated Use {@link org.apache.tomcat.util.buf.UriUtil}
  */
+@Deprecated
 public final class UriUtil {
 
     private UriUtil() {
         // Utility class. Hide default constructor
-    }
-
-
-    /**
-     * Determine if the character is allowed in the scheme of a URI.
-     * See RFC 2396, Section 3.1
-     *
-     * @param c The character to test
-     *
-     * @return {@code true} if a the character is allowed, otherwise {code
-     *         @false}
-     */
-    private static boolean isSchemeChar(char c) {
-        return Character.isLetterOrDigit(c) || c == '+' || c == '-' || c == '.';
     }
 
 
@@ -48,15 +37,6 @@ public final class UriUtil {
      * @return {@code true} if a scheme is present, otherwise {code @false}
      */
     public static boolean hasScheme(CharSequence uri) {
-        int len = uri.length();
-        for(int i=0; i < len ; i++) {
-            char c = uri.charAt(i);
-            if(c == ':') {
-                return i > 0;
-            } else if(!UriUtil.isSchemeChar(c)) {
-                return false;
-            }
-        }
-        return false;
+        return org.apache.tomcat.util.buf.UriUtil.hasScheme(uri);
     }
 }

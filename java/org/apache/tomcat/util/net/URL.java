@@ -44,7 +44,7 @@ import java.util.Locale;
  * @author Craig R. McClanahan
  *
  * @deprecated Will be removed in Tomcat 9.0.x. Use {@link java.net.URI} or
- *             {@link org.apache.catalina.util.UriUtil}.
+ *             {@link org.apache.tomcat.util.buf.UriUtil}.
  */
 @Deprecated
 public final class URL implements Serializable {
