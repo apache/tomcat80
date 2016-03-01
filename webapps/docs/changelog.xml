@@ -119,6 +119,9 @@
         timeout via the deprecated (and ignored)
         <code>Manager.setMaxInactiveInterval()</code> method. (markt)
       </add>
+      <fix>
+        Fix incorrect parsing of the NE and NC flags in rewrite rules. (remm)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Coyote">
