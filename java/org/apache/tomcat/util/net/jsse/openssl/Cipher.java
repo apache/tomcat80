@@ -21,6 +21,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -1290,7 +1291,7 @@ public enum Cipher {
             false,
             56,
             128,
-            new String[] {"SSL_RSA_EXPORT1024_WITH_RC2_CBC_56_MD"},
+            new String[] {"SSL_RSA_EXPORT1024_WITH_RC2_CBC_56_MD5"},
             null
     ),
     // Cipher 62
@@ -4651,7 +4652,7 @@ public enum Cipher {
         } else {
             this.openSSLAltNames = Collections.emptySet();
         }
-        Set<String> jsseNames = new HashSet<>();
+        Set<String> jsseNames = new LinkedHashSet<>();
         if (jsseAltNames != null && jsseAltNames.length != 0) {
             jsseNames.addAll(Arrays.asList(jsseAltNames));
         }
