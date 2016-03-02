@@ -426,8 +426,12 @@ public class OpenSSLCipherConfigurationParser {
         addListAlias(kECDHe, filterByKeyExchange(allCiphers, Collections.singleton(KeyExchange.ECDHe)));
         addListAlias(kECDH, filterByKeyExchange(allCiphers, new HashSet<>(Arrays.asList(KeyExchange.ECDHe, KeyExchange.ECDHr))));
         addListAlias(ECDH, filterByKeyExchange(allCiphers, new HashSet<>(Arrays.asList(KeyExchange.ECDHe, KeyExchange.ECDHr, KeyExchange.EECDH))));
-        addListAlias(kECDHE, filterByKeyExchange(allCiphers, Collections.singleton(KeyExchange.ECDHe)));
-        aliases.put(ECDHE, aliases.get(kECDHE));
+        addListAlias(kECDHE, filterByKeyExchange(allCiphers, Collections.singleton(KeyExchange.EECDH)));
+
+        Set<Cipher> ecdhe = filterByKeyExchange(allCiphers, Collections.singleton(KeyExchange.EECDH));
+        remove(ecdhe, aNULL);
+        addListAlias(ECDHE, ecdhe);
+
         addListAlias(kEECDH, filterByKeyExchange(allCiphers, Collections.singleton(KeyExchange.EECDH)));
         aliases.put(EECDHE, aliases.get(kEECDH));
         Set<Cipher> eecdh = filterByKeyExchange(allCiphers, Collections.singleton(KeyExchange.EECDH));
@@ -526,7 +530,7 @@ public class OpenSSLCipherConfigurationParser {
         ciphers.addAll(aliases.get(alias));
     }
 
-    static void remove(final LinkedHashSet<Cipher> ciphers, final String alias) {
+    static void remove(final Set<Cipher> ciphers, final String alias) {
         ciphers.removeAll(aliases.get(alias));
     }
 
@@ -550,6 +554,10 @@ public class OpenSSLCipherConfigurationParser {
         return result;
     }
 
+    /*
+     * See
+     * https://github.com/openssl/openssl/blob/7c96dbcdab959fef74c4caae63cdebaa354ab252/ssl/ssl_ciph.c#L1371
+     */
     static LinkedHashSet<Cipher> defaultSort(final LinkedHashSet<Cipher> ciphers) {
         final LinkedHashSet<Cipher> result = new LinkedHashSet<>(ciphers.size());
         /* Now arrange all ciphers by preference: */
@@ -557,15 +565,13 @@ public class OpenSSLCipherConfigurationParser {
         /* Everything else being equal, prefer ephemeral ECDH over other key exchange mechanisms */
         result.addAll(filterByKeyExchange(ciphers, Collections.singleton(KeyExchange.EECDH)));
         /* AES is our preferred symmetric cipher */
-        moveToStart(result, filterByEncryption(result, new HashSet<>(Arrays.asList(Encryption.AES128, Encryption.AES128GCM,
-                Encryption.AES256, Encryption.AES256GCM))));
-        result.addAll(filterByEncryption(ciphers, new HashSet<>(Arrays.asList(Encryption.AES128, Encryption.AES128GCM,
-                Encryption.AES256, Encryption.AES256GCM))));
+        Set<Encryption> aes = new HashSet<>(Arrays.asList(Encryption.AES128, Encryption.AES128CCM,
+                Encryption.AES128CCM8, Encryption.AES128GCM, Encryption.AES256,
+                Encryption.AES256CCM, Encryption.AES256CCM8, Encryption.AES256GCM));
+        moveToStart(result, filterByEncryption(result, aes));
+        result.addAll(filterByEncryption(ciphers, aes));
         /* Temporarily enable everything else for sorting */
         result.addAll(ciphers);
-
-        /* Low priority for SSLv2 */
-        moveToEnd(result, filterByProtocol(result, Collections.singleton(Protocol.SSLv2)));
 
         /* Low priority for MD5 */
         moveToEnd(result, filterByMessageDigest(result, Collections.singleton(MessageDigest.MD5)));
@@ -579,7 +585,7 @@ public class OpenSSLCipherConfigurationParser {
         moveToEnd(result, filterByAuthentication(result, Collections.singleton(Authentication.ECDH)));
         moveToEnd(result, filterByKeyExchange(result, Collections.singleton(KeyExchange.RSA)));
         moveToEnd(result, filterByKeyExchange(result, Collections.singleton(KeyExchange.PSK)));
-        moveToEnd(result, filterByKeyExchange(result, Collections.singleton(KeyExchange.KRB5)));
+
         /* RC4 is sort-of broken -- move the the end */
         moveToEnd(result, filterByEncryption(result, Collections.singleton(Encryption.RC4)));
         return strengthSort(result);
@@ -714,12 +720,21 @@ public class OpenSSLCipherConfigurationParser {
         return convertForJSSE(parse(expression));
     }
 
-    public static String jsseToOpenSSL(String cipher) {
+
+    /**
+     * Converts a JSSE cipher name to an OpenSSL cipher name.
+     *
+     * @param jsseCipherName The JSSE name for a cipher
+     *
+     * @return The OpenSSL name for the specified JSSE cipher
+     */
+    public static String jsseToOpenSSL(String jsseCipherName) {
         if (!initialized) {
             init();
         }
-        return jsseToOpenSSL.get(cipher);
+        return jsseToOpenSSL.get(jsseCipherName);
     }
+
 
     static String displayResult(Collection<Cipher> ciphers, boolean useJSSEFormat, String separator) {
         if (ciphers.isEmpty()) {
