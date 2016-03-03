@@ -67,6 +67,23 @@ public class TestOpenSSLCipherConfigurationParserOnly {
     }
 
     @Test
+    public void testDefaultSort03() throws Exception {
+        // Reproducing a failure observed on Gump with OpenSSL 1.1.x
+
+        // AES should beat CAMELLIA
+        LinkedHashSet<Cipher> input = new LinkedHashSet<>();
+        input.add(Cipher.TLS_ECDHE_ECDSA_WITH_CAMELLIA_256_CBC_SHA384);
+        input.add(Cipher.TLS_ECDHE_PSK_WITH_AES_256_CBC_SHA384);
+        LinkedHashSet<Cipher> result = OpenSSLCipherConfigurationParser.defaultSort(input);
+
+        LinkedHashSet<Cipher> expected = new LinkedHashSet<>();
+        expected.add(Cipher.TLS_ECDHE_PSK_WITH_AES_256_CBC_SHA384);
+        expected.add(Cipher.TLS_ECDHE_ECDSA_WITH_CAMELLIA_256_CBC_SHA384);
+
+        Assert.assertEquals(expected.toString(), result.toString());
+    }
+
+    @Test
     public void testRename01() throws Exception {
         // EDH -> DHE
         LinkedHashSet<Cipher> result =
@@ -75,5 +92,22 @@ public class TestOpenSSLCipherConfigurationParserOnly {
         expected.add(Cipher.TLS_DHE_DSS_EXPORT_WITH_DES40_CBC_SHA);
 
         Assert.assertEquals(expected, result);
+    }
+
+    @Test
+    public void testCustomOrdering() throws Exception {
+        // https://bz.apache.org/bugzilla/show_bug.cgi?id=59081
+        LinkedHashSet<Cipher> result = OpenSSLCipherConfigurationParser.parse(
+                "ECDHE-RSA-AES256-SHA384:ECDHE-RSA-AES256-SHA:ECDHE-RSA-DES-CBC3-SHA:" +
+                "DHE-RSA-AES256-SHA:DHE-RSA-AES128-SHA:DES-CBC3-SHA");
+        LinkedHashSet<Cipher> expected = new LinkedHashSet<>();
+        expected.add(Cipher.TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384);
+        expected.add(Cipher.TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA);
+        expected.add(Cipher.TLS_ECDHE_RSA_WITH_3DES_EDE_CBC_SHA);
+        expected.add(Cipher.TLS_DHE_RSA_WITH_AES_256_CBC_SHA);
+        expected.add(Cipher.TLS_DHE_RSA_WITH_AES_128_CBC_SHA);
+        expected.add(Cipher.TLS_RSA_WITH_3DES_EDE_CBC_SHA);
+
+        Assert.assertEquals(expected.toString(), result.toString());
     }
 }
