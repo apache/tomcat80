@@ -157,6 +157,10 @@
         <bug>59081</bug>: Retain the user defined cipher order when defining
         ciphers using the OpenSSL format. (markt)
       </fix>
+      <fix>
+        <bug>59089</bug>: Correctly ignore HTTP headers that include non-token
+        characters in the header name. (markt)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Jasper">

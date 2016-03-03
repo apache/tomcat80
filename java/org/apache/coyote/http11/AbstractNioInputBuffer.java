@@ -471,7 +471,7 @@ public abstract class AbstractNioInputBuffer<S> extends AbstractInputBuffer<S> {
                 headerData.realPos = pos;
                 headerData.lastSignificantChar = pos;
                 break;
-            } else if (!HTTP_TOKEN_CHAR[chr]) {
+            } else if (chr < 0 || !HTTP_TOKEN_CHAR[chr]) {
                 // If a non-token header is detected, skip the line and
                 // ignore the header
                 headerData.lastSignificantChar = pos;

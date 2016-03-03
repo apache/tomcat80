@@ -387,7 +387,7 @@ public class InternalAprInputBuffer extends AbstractInputBuffer<Long> {
             if (buf[pos] == Constants.COLON) {
                 colon = true;
                 headerValue = headers.addValue(buf, start, pos - start);
-            } else if (!HTTP_TOKEN_CHAR[buf[pos]]) {
+            } else if (chr < 0 || !HTTP_TOKEN_CHAR[buf[pos]]) {
                 // If a non-token header is detected, skip the line and
                 // ignore the header
                 skipLine(start);
