@@ -348,7 +348,7 @@ public class InternalInputBuffer extends AbstractInputBuffer<Socket> {
             if (buf[pos] == Constants.COLON) {
                 colon = true;
                 headerValue = headers.addValue(buf, start, pos - start);
-            } else if (chr < 0 || !HTTP_TOKEN_CHAR[buf[pos]]) {
+            } else if (buf[pos] < 0 || !HTTP_TOKEN_CHAR[buf[pos]]) {
                 // If a non-token header is detected, skip the line and
                 // ignore the header
                 skipLine(start);
