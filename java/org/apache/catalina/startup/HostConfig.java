@@ -282,6 +282,8 @@ public class HostConfig
         // Process the event that has occurred
         if (event.getType().equals(Lifecycle.PERIODIC_EVENT)) {
             check();
+        } else if (event.getType().equals(Lifecycle.BEFORE_START_EVENT)) {
+            beforeStart();
         } else if (event.getType().equals(Lifecycle.START_EVENT)) {
             start();
         } else if (event.getType().equals(Lifecycle.STOP_EVENT)) {
@@ -1503,6 +1505,18 @@ public class HostConfig
     }
 
 
+    public void beforeStart() {
+        if (host.getCreateDirs()) {
+            File[] dirs = new File[] {host.getAppBaseFile(),host.getConfigBaseFile()};
+            for (int i=0; i<dirs.length; i++) {
+                if (!dirs[i].mkdirs() && !dirs[i].isDirectory()) {
+                    log.error(sm.getString("hostConfig.createDirs",dirs[i]));
+                }
+            }
+        }
+    }
+
+
     /**
      * Process a "start" event for this Host.
      */
@@ -1519,15 +1533,6 @@ public class HostConfig
                 (this, oname, this.getClass().getName());
         } catch (Exception e) {
             log.error(sm.getString("hostConfig.jmx.register", oname), e);
-        }
-
-        if (host.getCreateDirs()) {
-            File[] dirs = new File[] {host.getAppBaseFile(),host.getConfigBaseFile()};
-            for (int i=0; i<dirs.length; i++) {
-                if (!dirs[i].mkdirs() && !dirs[i].isDirectory()) {
-                    log.error(sm.getString("hostConfig.createDirs",dirs[i]));
-                }
-            }
         }
 
         if (!host.getAppBaseFile().isDirectory()) {
