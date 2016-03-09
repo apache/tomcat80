@@ -192,6 +192,10 @@ public class OpenSSLCipherConfigurationParser {
      */
     private static final String AECDH = "AECDH";
     /**
+     * Cipher suites using DSS for key exchange
+     */
+    private static final String DSS = "DSS";
+    /**
      * Cipher suites using DSS authentication, i.e. the certificates carry DSS keys.
      */
     private static final String aDSS = "aDSS";
@@ -240,7 +244,7 @@ public class OpenSSLCipherConfigurationParser {
      */
     private static final String AES128 = "AES128";
     /**
-     * Cipher suites using 256 bit AE.
+     * Cipher suites using 256 bit AES.
      */
     private static final String AES256 = "AES256";
     /**
@@ -251,6 +255,14 @@ public class OpenSSLCipherConfigurationParser {
      * AES in Galois Counter Mode (GCM): these cipher suites are only supported in TLS v1.2.
      */
     private static final String AESGCM = "AESGCM";
+    /**
+     * AES in Counter with CBC-MAC Mode (CCM).
+     */
+    private static final String AESCCM = "AESCCM";
+    /**
+     * AES in Counter with CBC-MAC Mode and 8-byte authentication (CCM8).
+     */
+    private static final String AESCCM8 = "AESCCM8";
     /**
      * Cipher suites using 128 bit CAMELLIA.
      */
@@ -263,6 +275,10 @@ public class OpenSSLCipherConfigurationParser {
      * Cipher suites using either 128 or 256 bit CAMELLIA.
      */
     private static final String CAMELLIA = "CAMELLIA";
+    /**
+     * Cipher suites using CHACHA20.
+     */
+    private static final String CHACHA20 = "CHACHA20";
     /**
      * Cipher suites using triple DES.
      */
@@ -352,6 +368,17 @@ public class OpenSSLCipherConfigurationParser {
      * Cipher suites using pre-shared keys (PSK).
      */
     private static final String PSK = "PSK";
+    /**
+     * Cipher suites using PSK authentication.
+     */
+    private static final String aPSK = "aPSK";
+    /**
+     * Cipher suites using PSK key 'exchange'.
+     */
+    private static final String kPSK = "kPSK";
+    private static final String kRSAPSK = "kRSAPSK";
+    private static final String kECDHEPSK = "kECDHEPSK";
+    private static final String kDHEPSK = "kDHEPSK";
 
     private static final String DEFAULT = "DEFAULT";
     private static final String COMPLEMENTOFDEFAULT = "COMPLEMENTOFDEFAULT";
@@ -438,7 +465,7 @@ public class OpenSSLCipherConfigurationParser {
         eecdh.removeAll(filterByAuthentication(allCiphers, Collections.singleton(Authentication.aNULL)));
         addListAlias(EECDH, eecdh);
         addListAlias(aDSS, filterByAuthentication(allCiphers, Collections.singleton(Authentication.DSS)));
-        aliases.put("DSS", aliases.get(aDSS));
+        aliases.put(DSS, aliases.get(aDSS));
         addListAlias(aDH, filterByAuthentication(allCiphers, Collections.singleton(Authentication.DH)));
         Set<Cipher> aecdh = filterByKeyExchange(allCiphers, Collections.singleton(KeyExchange.EECDH));
         addListAlias(AECDH, filterByAuthentication(aecdh, Collections.singleton(Authentication.aNULL)));
@@ -462,9 +489,12 @@ public class OpenSSLCipherConfigurationParser {
         addListAlias(AES256, filterByEncryption(allCiphers, new HashSet<>(Arrays.asList(Encryption.AES256, Encryption.AES256CCM, Encryption.AES256CCM8, Encryption.AES256GCM))));
         addListAlias(AES, filterByEncryption(allCiphers, new HashSet<>(Arrays.asList(Encryption.AES128, Encryption.AES128CCM, Encryption.AES128CCM8, Encryption.AES128GCM, Encryption.AES256, Encryption.AES256CCM, Encryption.AES256CCM8, Encryption.AES256GCM))));
         addListAlias(AESGCM, filterByEncryption(allCiphers, new HashSet<>(Arrays.asList(Encryption.AES128GCM, Encryption.AES256GCM))));
+        addListAlias(AESCCM, filterByEncryption(allCiphers, new HashSet<>(Arrays.asList(Encryption.AES128CCM, Encryption.AES128CCM8, Encryption.AES256CCM, Encryption.AES256CCM8))));
+        addListAlias(AESCCM8, filterByEncryption(allCiphers, new HashSet<>(Arrays.asList(Encryption.AES128CCM8, Encryption.AES256CCM8))));
         addListAlias(CAMELLIA, filterByEncryption(allCiphers, new HashSet<>(Arrays.asList(Encryption.CAMELLIA128, Encryption.CAMELLIA256))));
         addListAlias(CAMELLIA128, filterByEncryption(allCiphers, Collections.singleton(Encryption.CAMELLIA128)));
         addListAlias(CAMELLIA256, filterByEncryption(allCiphers, Collections.singleton(Encryption.CAMELLIA256)));
+        addListAlias(CHACHA20, filterByEncryption(allCiphers, Collections.singleton(Encryption.CHACHA20POLY1305)));
         addListAlias(TRIPLE_DES, filterByEncryption(allCiphers, Collections.singleton(Encryption.TRIPLE_DES)));
         addListAlias(DES, filterByEncryption(allCiphers, Collections.singleton(Encryption.DES)));
         addListAlias(RC4, filterByEncryption(allCiphers, Collections.singleton(Encryption.RC4)));
@@ -483,13 +513,18 @@ public class OpenSSLCipherConfigurationParser {
         addListAlias(GOST94, filterByMessageDigest(allCiphers, Collections.singleton(MessageDigest.GOST94)));
         addListAlias(GOST89MAC, filterByMessageDigest(allCiphers, Collections.singleton(MessageDigest.GOST89MAC)));
         addListAlias(PSK, filter(allCiphers, null, new HashSet<>(Arrays.asList(KeyExchange.PSK, KeyExchange.RSAPSK, KeyExchange.DHEPSK, KeyExchange.ECDHEPSK)), Collections.singleton(Authentication.PSK), null, null, null));
+        addListAlias(aPSK, filterByAuthentication(allCiphers, Collections.singleton(Authentication.PSK)));
+        addListAlias(kPSK, filterByKeyExchange(allCiphers, Collections.singleton(KeyExchange.PSK)));
+        addListAlias(kRSAPSK, filterByKeyExchange(allCiphers, Collections.singleton(KeyExchange.RSAPSK)));
+        addListAlias(kECDHEPSK, filterByKeyExchange(allCiphers, Collections.singleton(KeyExchange.ECDHEPSK)));
+        addListAlias(kDHEPSK, filterByKeyExchange(allCiphers, Collections.singleton(KeyExchange.DHEPSK)));
         addListAlias(KRB5, filter(allCiphers, null, Collections.singleton(KeyExchange.KRB5), Collections.singleton(Authentication.KRB5), null, null, null));
         addListAlias(aSRP, filterByAuthentication(allCiphers, Collections.singleton(Authentication.SRP)));
         addListAlias(kSRP, filterByKeyExchange(allCiphers, Collections.singleton(KeyExchange.SRP)));
         addListAlias(SRP, filterByKeyExchange(allCiphers, Collections.singleton(KeyExchange.SRP)));
         initialized = true;
         // Despite what the OpenSSL docs say, DEFAULT also excludes SSLv2
-        addListAlias(DEFAULT, parse("ALL:!EXPORT:!eNULL:!aNULL:!SSLv2:!DES:!RC2:!RC4"));
+        addListAlias(DEFAULT, parse("ALL:!EXPORT:!eNULL:!aNULL:!SSLv2:!DES:!RC2:!RC4:!DSS:!SEED:!IDEA:!CAMELLIA:!AESCCM"));
         // COMPLEMENTOFDEFAULT is also not exactly as defined by the docs
         LinkedHashSet<Cipher> complementOfDefault = filterByKeyExchange(all, new HashSet<>(Arrays.asList(KeyExchange.EDH,KeyExchange.EECDH)));
         complementOfDefault = filterByAuthentication(complementOfDefault, Collections.singleton(Authentication.aNULL));
@@ -499,6 +534,11 @@ public class OpenSSLCipherConfigurationParser {
         complementOfDefault.addAll(aliases.get(DES));
         complementOfDefault.addAll(aliases.get(RC2));
         complementOfDefault.addAll(aliases.get(RC4));
+        complementOfDefault.addAll(aliases.get(aDSS));
+        complementOfDefault.addAll(aliases.get(SEED));
+        complementOfDefault.addAll(aliases.get(IDEA));
+        complementOfDefault.addAll(aliases.get(CAMELLIA));
+        complementOfDefault.addAll(aliases.get(AESCCM));
         defaultSort(complementOfDefault);
         addListAlias(COMPLEMENTOFDEFAULT, complementOfDefault);
     }

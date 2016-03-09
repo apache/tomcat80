@@ -182,6 +182,10 @@
         <bug>59089</bug>: Correctly ignore HTTP headers that include non-token
         characters in the header name. (markt)
       </fix>
+      <add>
+        Add support for additional OpenSSL cipher aliases from OpenSSL master
+        when specifying ciphers using the OpenSSL syntax. (markt)
+      </add>
     </changelog>
   </subsection>
   <subsection name="Jasper">
