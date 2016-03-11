@@ -71,7 +71,7 @@ public class CometConnectionManagerValve extends ValveBase
     /**
      * Name of session attribute used to store list of comet connections.
      */
-    protected final String cometRequestsAttribute =
+    protected static final String cometRequestsAttribute =
         "org.apache.tomcat.comet.connectionList";
 
 
