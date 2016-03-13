@@ -276,7 +276,7 @@ public class JspServlet extends HttpServlet implements PeriodicEventListener {
     }
 
 
-    @SuppressWarnings("deprecation") // Use of JSP_FILE to be removed in 9.0.x
+    @SuppressWarnings("deprecation") // Use of JSP_FILE to be removed in 8.5.x
     @Override
     public void service (HttpServletRequest request,
                              HttpServletResponse response)

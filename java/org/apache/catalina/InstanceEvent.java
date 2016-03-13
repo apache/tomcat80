@@ -34,7 +34,7 @@ import javax.servlet.ServletResponse;
  *
  * @author Craig R. McClanahan
  *
- * @deprecated Will be removed in 9.0.x onwards
+ * @deprecated Will be removed in 8.5.x onwards
  */
 @Deprecated
 public final class InstanceEvent extends EventObject {

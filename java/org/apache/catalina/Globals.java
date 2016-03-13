@@ -309,9 +309,9 @@ public final class Globals {
     public static final String JASPER_XML_BLOCK_EXTERNAL_INIT_PARAM =
             "org.apache.jasper.XML_BLOCK_EXTERNAL";
 
-    @Deprecated // Will be removed in Tomcat 9.0.x
+    @Deprecated // Will be removed in Tomcat 8.5.x
     public static final boolean IS_ORACLE_JVM = JreVendor.IS_ORACLE_JVM;
 
-    @Deprecated // Will be removed in Tomcat 9.0.x
+    @Deprecated // Will be removed in Tomcat 8.5.x
     public static final boolean IS_IBM_JVM = JreVendor.IS_IBM_JVM;
 }

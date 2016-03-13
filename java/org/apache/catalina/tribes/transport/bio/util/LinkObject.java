@@ -29,7 +29,7 @@ import org.apache.catalina.tribes.group.InterceptorPayload;
  *
  * @author Peter Rossbach
  *
- * @deprecated Unused. Will be removed in Tomcat 9.0.x
+ * @deprecated Unused. Will be removed in Tomcat 8.5.x
  */
 @Deprecated
 public class LinkObject {

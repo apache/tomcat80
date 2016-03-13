@@ -48,7 +48,7 @@ public class MessageDispatchInterceptor extends ChannelInterceptorBase implement
 
     protected long maxQueueSize = 1024*1024*64; //64MB
     /**
-     * @deprecated Unused. Will be removed in Tomcat 9.0.x.
+     * @deprecated Unused. Will be removed in Tomcat 8.5.x.
      */
     @Deprecated
     // Use fully qualified name to avoid deprecation warning on import.
@@ -56,7 +56,7 @@ public class MessageDispatchInterceptor extends ChannelInterceptorBase implement
             new org.apache.catalina.tribes.transport.bio.util.FastQueue();
     protected volatile boolean run = false;
     /**
-     * @deprecated Unused. Will be removed in Tomcat 9.0.x.
+     * @deprecated Unused. Will be removed in Tomcat 8.5.x.
      */
     @Deprecated
     protected Thread msgDispatchThread = null;
@@ -120,7 +120,7 @@ public class MessageDispatchInterceptor extends ChannelInterceptorBase implement
 
     /**
      * @deprecated Not used. The thread pool contains its own queue. This will
-     *             be removed in Tomcat 9.0.x onwards.
+     *             be removed in Tomcat 8.5.x onwards.
      *
      * @return Always null
      */
@@ -263,7 +263,7 @@ public class MessageDispatchInterceptor extends ChannelInterceptorBase implement
 
 
     /**
-     * @deprecated Unused. Will be removed in 9.0.x
+     * @deprecated Unused. Will be removed in 8.5.x
      */
     @Deprecated
     @Override
@@ -273,7 +273,7 @@ public class MessageDispatchInterceptor extends ChannelInterceptorBase implement
 
 
     /**
-     * @deprecated Unused. Will be removed in 9.0.x
+     * @deprecated Unused. Will be removed in 8.5.x
      */
     @Deprecated
     protected org.apache.catalina.tribes.transport.bio.util.LinkObject sendAsyncData(

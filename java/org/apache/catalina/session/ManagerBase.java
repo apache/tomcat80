@@ -77,7 +77,7 @@ public abstract class ManagerBase extends LifecycleMBeanBase implements Manager 
      * session controlled by this Manager must be Serializable.
      *
      * @deprecated Ignored. {@link Context#getDistributable()} always takes
-     *             precedence. Will be removed in Tomcat 9.0.x.
+     *             precedence. Will be removed in Tomcat 8.5.x.
      */
     @Deprecated
     protected boolean distributable;
@@ -94,7 +94,7 @@ public abstract class ManagerBase extends LifecycleMBeanBase implements Manager 
      * this Manager.
      *
      * @deprecated Ignored. {@link Context#getSessionTimeout()} always takes
-     *             precedence. Will be removed in Tomcat 9.0.x.
+     *             precedence. Will be removed in Tomcat 8.5.x.
      */
     @Deprecated
     protected int maxInactiveInterval = 30 * 60;

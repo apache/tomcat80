@@ -2970,7 +2970,7 @@ public class StandardContext extends ContainerBase
      *
      * @param listener Java class name of an InstanceListener class
      *
-     * @deprecated Will be removed in 9.0.x onwards
+     * @deprecated Will be removed in 8.5.x onwards
      */
     @Deprecated
     @Override
@@ -3462,7 +3462,7 @@ public class StandardContext extends ContainerBase
      * Return the set of InstanceListener classes that will be added to
      * newly created Wrappers automatically.
      *
-     * @deprecated Will be removed in 9.0.x onwards
+     * @deprecated Will be removed in 8.5.x onwards
      */
     @Deprecated
     @Override
@@ -4040,7 +4040,7 @@ public class StandardContext extends ContainerBase
      *
      * @param listener Class name of an InstanceListener class to be removed
      *
-     * @deprecated Will be removed in 9.0.x onwards
+     * @deprecated Will be removed in 8.5.x onwards
      */
     @Deprecated
     @Override
@@ -6240,7 +6240,7 @@ public class StandardContext extends ContainerBase
      * @return string deployment descriptor
      *
      * @deprecated The JSR-77 implementation is incomplete and will be removed
-     *             in 9.0.x
+     *             in 8.5.x
      */
     @Deprecated
     public String getDeploymentDescriptor() {
@@ -6275,7 +6275,7 @@ public class StandardContext extends ContainerBase
      * @return list of all servlets ( we know about )
      *
      * @deprecated The JSR-77 implementation is incomplete and will be removed
-     *             in 9.0.x
+     *             in 8.5.x
      */
     @Deprecated
     public String[] getServlets() {
@@ -6492,7 +6492,7 @@ public class StandardContext extends ContainerBase
      * Support for "stateManageable" JSR77
      *
      * @deprecated The JSR-77 implementation is incomplete and will be removed
-     *             in 9.0.x
+     *             in 8.5.x
      */
     @Deprecated
     public boolean isStateManageable() {

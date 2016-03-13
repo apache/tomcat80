@@ -92,7 +92,7 @@ public class StandardService extends LifecycleMBeanBase implements Service {
     /**
      * The Container associated with this Service.
      *
-     * @deprecated Will be made private in 9.0.x
+     * @deprecated Will be made private in 8.5.x
      */
     @Deprecated
     protected Container container = null;

@@ -26,7 +26,7 @@ package org.apache.catalina;
  *
  * @author Craig R. McClanahan
  *
- * @deprecated Will be removed in 9.0.x onwards
+ * @deprecated Will be removed in 8.5.x onwards
  */
 @Deprecated
 public interface InstanceListener {

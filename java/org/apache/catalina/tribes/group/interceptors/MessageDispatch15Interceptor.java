@@ -21,7 +21,7 @@ package org.apache.catalina.tribes.group.interceptors;
  *             features. Now the minimum Java version is >=5, those features
  *             have been added to {@link MessageDispatchInterceptor} which
  *             should be used instead. This class will be removed in Tomcat
- *             9.0.x onwards.
+ *             8.5.x onwards.
  */
 @Deprecated
 public class MessageDispatch15Interceptor extends MessageDispatchInterceptor {

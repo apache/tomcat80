@@ -195,7 +195,7 @@ public final class LegacyCookieProcessor implements CookieProcessor {
      * @return Always returns true
      *
      * @deprecated No longer used. Cookie headers are now always preserved. Will
-     *             be removed in Tomcat 9.0.x.
+     *             be removed in Tomcat 8.5.x.
      */
     @Deprecated
     public boolean getPreserveCookieHeader() {
@@ -209,7 +209,7 @@ public final class LegacyCookieProcessor implements CookieProcessor {
      * @param preserveCookieHeader Ignored
      *
      * @deprecated No longer used. Cookie headers are now always preserved. Will
-     *             be removed in Tomcat 9.0.x.
+     *             be removed in Tomcat 8.5.x.
      */
     @Deprecated
     public void setPreserveCookieHeader(boolean preserveCookieHeader) {

@@ -1723,7 +1723,7 @@ public class StandardSession implements HttpSession, Session, Serializable {
      * @param name the attribute's name
      *
      * @deprecated Use {@link #exclude(String, Object)}. Will be removed in
-     *             Tomcat 9.0.x.
+     *             Tomcat 8.5.x.
      */
     @Deprecated
     protected boolean exclude(String name){

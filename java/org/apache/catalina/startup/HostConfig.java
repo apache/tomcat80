@@ -1220,7 +1220,7 @@ public class HostConfig
      * Check resources for redeployment and reloading.
      *
      * @deprecated Use {@link #checkResources(DeployedApplication, boolean)}.
-     *             Will be removed in Tomcat 9.0.x
+     *             Will be removed in Tomcat 8.5.x
      */
     @Deprecated
     protected synchronized void checkResources(DeployedApplication app) {

@@ -99,7 +99,7 @@ public final class RequestUtil {
      * If an unsupported encoding is specified the parameters will not be
      * parsed and the map will not be modified
      *
-     * @deprecated Unused. This will be removed in Tomcat 9.0.x.
+     * @deprecated Unused. This will be removed in Tomcat 8.5.x.
      */
     @Deprecated
     public static void parseParameters(Map<String,String[]> map, String data,
@@ -185,7 +185,7 @@ public final class RequestUtil {
      * @exception UnsupportedEncodingException if the requested encoding is not
      * supported.
      *
-     * @deprecated Unused. This will be removed in Tomcat 9.0.x.
+     * @deprecated Unused. This will be removed in Tomcat 8.5.x.
      */
     @Deprecated
     public static void parseParameters(Map<String,String[]> map, byte[] data,

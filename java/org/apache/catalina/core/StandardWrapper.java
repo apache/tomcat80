@@ -144,7 +144,7 @@ public class StandardWrapper extends ContainerBase
     /**
      * The support object for our instance listeners.
      *
-     * @deprecated Will be removed in 9.0.x onwards
+     * @deprecated Will be removed in 8.5.x onwards
      */
     @Deprecated
     protected final InstanceSupport instanceSupport = new InstanceSupport(this);
@@ -353,7 +353,7 @@ public class StandardWrapper extends ContainerBase
     /**
      * Return the InstanceSupport object for this Wrapper instance.
      *
-     * @deprecated Will be removed in 9.0.x onwards
+     * @deprecated Will be removed in 8.5.x onwards
      */
     @Deprecated
     public InstanceSupport getInstanceSupport() {
@@ -737,7 +737,7 @@ public class StandardWrapper extends ContainerBase
      *
      * @param listener The new listener
      *
-     * @deprecated Will be removed in 9.0.x onwards
+     * @deprecated Will be removed in 8.5.x onwards
      */
     @Deprecated
     @Override
@@ -1289,7 +1289,7 @@ public class StandardWrapper extends ContainerBase
      *
      * @param listener The listener to remove
      *
-     * @deprecated Will be removed in 9.0.x onwards
+     * @deprecated Will be removed in 8.5.x onwards
      */
     @Deprecated
     @Override
@@ -1868,7 +1868,7 @@ public class StandardWrapper extends ContainerBase
      * JSR 77. Always return false.
      *
      * @deprecated The JSR-77 implementation is incomplete and will be removed
-     *             in 9.0.x
+     *             in 8.5.x
      */
     @Deprecated
     public boolean isStateManageable() {

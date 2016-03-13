@@ -69,7 +69,7 @@ public class Constants {
      * servlet definition.  If present on a request, this overrides the
      * value returned by <code>request.getServletPath()</code> to select
      * the JSP page to be executed.
-     * @deprecated  This will be removed in Tomcat 9.0.x onwards. It is replaced
+     * @deprecated  This will be removed in Tomcat 8.5.x onwards. It is replaced
      *              by the use of the jspFile servlet initialisation parameter
      */
     @Deprecated

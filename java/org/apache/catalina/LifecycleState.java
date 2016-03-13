@@ -35,7 +35,7 @@ public enum LifecycleState {
     DESTROYED(false, Lifecycle.AFTER_DESTROY_EVENT),
     FAILED(false, null),
     /**
-     * @deprecated Unused. Will be removed in Tomcat 9.0.x. The state transition
+     * @deprecated Unused. Will be removed in Tomcat 8.5.x. The state transition
      *             checking in {@link org.apache.catalina.util.LifecycleBase}
      *             makes it impossible to use this state. The intended behaviour
      *             can be obtained by setting the state to
@@ -45,7 +45,7 @@ public enum LifecycleState {
     @Deprecated
     MUST_STOP(true, null),
     /**
-     * @deprecated Unused. Will be removed in Tomcat 9.0.x. The state transition
+     * @deprecated Unused. Will be removed in Tomcat 8.5.x. The state transition
      *             checking in {@link org.apache.catalina.util.LifecycleBase}
      *             makes it impossible to use this state. The intended behaviour
      *             can be obtained by implementing {@link Lifecycle.SingleUse}.

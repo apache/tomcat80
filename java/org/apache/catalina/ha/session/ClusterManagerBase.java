@@ -83,7 +83,7 @@ public abstract class ClusterManagerBase extends ManagerBase implements ClusterM
      * @return the sessionAttributeFilter
      *
      * @deprecated Use {@link #getSessionAttributeNameFilter()}. Will be removed
-     *             in Tomcat 9.0.x
+     *             in Tomcat 8.5.x
      */
     @Deprecated
     public String getSessionAttributeFilter() {
@@ -101,7 +101,7 @@ public abstract class ClusterManagerBase extends ManagerBase implements ClusterM
      *            the filter name pattern to set
      *
      * @deprecated Use {@link #setSessionAttributeNameFilter(String)}. Will be
-     *             removed in Tomcat 9.0.x
+     *             removed in Tomcat 8.5.x
      */
     @Deprecated
     public void setSessionAttributeFilter(String sessionAttributeFilter) {
@@ -123,7 +123,7 @@ public abstract class ClusterManagerBase extends ManagerBase implements ClusterM
      * @return true if the attribute should be distributed
      *
      * @deprecated Use {@link #willAttributeDistribute(String, Object)}. Will be
-     *             removed in Tomcat 9.0.x
+     *             removed in Tomcat 8.5.x
      */
     @Deprecated
     public boolean willAttributeDistribute(String name) {

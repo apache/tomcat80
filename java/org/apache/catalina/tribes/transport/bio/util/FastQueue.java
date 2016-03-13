@@ -34,7 +34,7 @@ import org.apache.juli.logging.LogFactory;
  *
  * @author Peter Rossbach
  *
- * @deprecated Unused. Will be removed in Tomcat 9.0.x.
+ * @deprecated Unused. Will be removed in Tomcat 8.5.x.
  */
 @Deprecated
 public class FastQueue {

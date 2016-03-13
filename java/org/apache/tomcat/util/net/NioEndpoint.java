@@ -83,7 +83,7 @@ public class NioEndpoint extends AbstractEndpoint<NioChannel> {
 
 
     public static final int OP_REGISTER = 0x100; //register interest op
-    @Deprecated // Unused. Will be removed in Tomcat 9.0.x
+    @Deprecated // Unused. Will be removed in Tomcat 8.5.x
     public static final int OP_CALLBACK = 0x200; //callback interest op
 
     // ----------------------------------------------------------------- Fields
@@ -1331,9 +1331,9 @@ public class NioEndpoint extends AbstractEndpoint<NioChannel> {
 
         public Poller getPoller() { return poller;}
         public void setPoller(Poller poller){this.poller = poller;}
-        @Deprecated // Unused. NO-OP. Will be removed in Tomcat 9.0.x
+        @Deprecated // Unused. NO-OP. Will be removed in Tomcat 8.5.x
         public void setCometNotify(@SuppressWarnings("unused") boolean notify) { /* NO-OP */ }
-        @Deprecated // Unused. Always returns false. Will be removed in Tomcat 9.0.x
+        @Deprecated // Unused. Always returns false. Will be removed in Tomcat 8.5.x
         public boolean getCometNotify() { return false; }
         public int interestOps() { return interestOps;}
         public int interestOps(int ops) { this.interestOps  = ops; return ops; }

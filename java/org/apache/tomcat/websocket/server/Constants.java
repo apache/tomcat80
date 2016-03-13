@@ -35,7 +35,7 @@ public class Constants {
     public static final String EXECUTOR_CORE_SIZE_INIT_PARAM =
             "org.apache.tomcat.websocket.executorCoreSize";
     /**
-     * @deprecated No longer used and will be removed in Tomcat 9.0.x
+     * @deprecated No longer used and will be removed in Tomcat 8.5.x
      */
     @Deprecated
     public static final String EXECUTOR_MAX_SIZE_INIT_PARAM =

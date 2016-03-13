@@ -277,7 +277,7 @@ public class Membership implements Cloneable {
     /**
      * Get a copy from all member entries.
      *
-     * @deprecated Unused. Will be removed in Tomcat 9.0.x.
+     * @deprecated Unused. Will be removed in Tomcat 8.5.x.
      */
     @Deprecated
     protected synchronized MbrEntry[] getMemberEntries() {

@@ -572,7 +572,7 @@ final class ApplicationFilterChain implements FilterChain, CometFilterChain {
      *
      * @param support The InstanceSupport object for our Wrapper
      *
-     * @deprecated Will be removed in 9.0.x onwards
+     * @deprecated Will be removed in 8.5.x onwards
      */
     @Deprecated
     void setSupport(InstanceSupport support) {

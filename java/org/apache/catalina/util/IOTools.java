@@ -68,7 +68,7 @@ public class IOTools {
      * @param os output stream the output stream to write to.
      * @param buf the byte array to use as a buffer
      *
-     * @deprecated Unused. Will be removed in 9.0.x
+     * @deprecated Unused. Will be removed in 8.5.x
      */
     @Deprecated
     public static void flow( InputStream is, OutputStream os, byte[] buf )

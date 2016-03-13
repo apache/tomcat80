@@ -1075,7 +1075,7 @@ public final class CorsFilter implements Filter {
 
     /**
      * {@link Collection} of HTTP methods. Case sensitive.
-     * @deprecated Not used. Will be removed in Tomcat 9.0.x onwards.
+     * @deprecated Not used. Will be removed in Tomcat 8.5.x onwards.
      */
     @Deprecated
     public static final Collection<String> HTTP_METHODS =
@@ -1084,7 +1084,7 @@ public final class CorsFilter implements Filter {
 
     /**
      * {@link Collection} of non-simple HTTP methods. Case sensitive.
-     * @deprecated Not used. Will be removed in Tomcat 9.0.x onwards. All HTTP
+     * @deprecated Not used. Will be removed in Tomcat 8.5.x onwards. All HTTP
      *             methods not in {@link #SIMPLE_HTTP_METHODS} are assumed to be
      *             non-simple.
      */
@@ -1097,7 +1097,7 @@ public final class CorsFilter implements Filter {
      * @see  <a href="http://www.w3.org/TR/cors/#terminology"
      *       >http://www.w3.org/TR/cors/#terminology</a>
      *
-     * @deprecated Unused. Will be removed in Tomcat 9.0.x onwards.
+     * @deprecated Unused. Will be removed in Tomcat 8.5.x onwards.
      */
     @Deprecated
     public static final Collection<String> SIMPLE_HTTP_METHODS =
@@ -1109,7 +1109,7 @@ public final class CorsFilter implements Filter {
      * @see  <a href="http://www.w3.org/TR/cors/#terminology"
      *       >http://www.w3.org/TR/cors/#terminology</a>
      *
-     * @deprecated Unused. Will be removed in Tomcat 9.0.x onwards.
+     * @deprecated Unused. Will be removed in Tomcat 8.5.x onwards.
      */
     @Deprecated
     public static final Collection<String> SIMPLE_HTTP_REQUEST_HEADERS =
@@ -1122,7 +1122,7 @@ public final class CorsFilter implements Filter {
      * @see  <a href="http://www.w3.org/TR/cors/#terminology"
      *       >http://www.w3.org/TR/cors/#terminology</a>
      *
-     * @deprecated Unused. Will be removed in Tomcat 9.0.x onwards.
+     * @deprecated Unused. Will be removed in Tomcat 8.5.x onwards.
      */
     @Deprecated
     public static final Collection<String> SIMPLE_HTTP_RESPONSE_HEADERS =

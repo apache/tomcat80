@@ -739,7 +739,7 @@ public class RewriteValve extends ValveBase {
     /**
      * Determine if a URI string has a <code>scheme</code> component.
      *
-     * @deprecated Unused. Will be removed in 9.0.x.
+     * @deprecated Unused. Will be removed in 8.5.x.
      */
     @Deprecated
     protected static boolean hasScheme(StringBuffer uri) {
