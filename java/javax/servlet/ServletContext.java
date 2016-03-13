@@ -58,6 +58,13 @@ public interface ServletContext {
      */
     public static final String ORDERED_LIBS = "javax.servlet.context.orderedLibs";
 
+    /**
+     * Return the main path associated with this context.
+     *
+     * @return The main context path
+     *
+     * @since Servlet 2.5
+     */
     public String getContextPath();
 
     /**
@@ -560,8 +567,7 @@ public interface ServletContext {
      *    use this method.
      * @since Servlet 3.0
      */
-    public ServletRegistration.Dynamic addServlet(String servletName,
-            String className);
+    public ServletRegistration.Dynamic addServlet(String servletName, String className);
 
     /**
      * Register a servlet instance for use in this ServletContext.
@@ -579,14 +585,15 @@ public interface ServletContext {
      *    use this method.
      * @since Servlet 3.0
      */
-    public ServletRegistration.Dynamic addServlet(String servletName,
-            Servlet servlet);
+    public ServletRegistration.Dynamic addServlet(String servletName, Servlet servlet);
 
     /**
-     * TODO SERVLET3 - Add comments
-     * @param servletName  TODO
-     * @param servletClass TODO
-     * @return TODO
+     * Add servlet to context.
+     * @param   servletName  Name of servlet to add
+     * @param   servletClass Class of servlet to add
+     * @return  <code>null</code> if the servlet has already been fully defined,
+     *          else a {@link javax.servlet.ServletRegistration.Dynamic} object
+     *          that can be used to further configure the servlet
      * @throws IllegalStateException
      *             If the context has already been initialised
      * @throws UnsupportedOperationException    If called from a
@@ -655,10 +662,12 @@ public interface ServletContext {
     public Map<String, ? extends ServletRegistration> getServletRegistrations();
 
     /**
-     * TODO SERVLET3 - Add comments
-     * @param filterName TODO
-     * @param className  TODO
-     * @return TODO
+     * Add filter to context.
+     * @param   filterName  Name of filter to add
+     * @param   className Name of filter class
+     * @return  <code>null</code> if the filter has already been fully defined,
+     *          else a {@link javax.servlet.FilterRegistration.Dynamic} object
+     *          that can be used to further configure the filter
      * @throws UnsupportedOperationException    If called from a
      *    {@link ServletContextListener#contextInitialized(ServletContextEvent)}
      *    method of a {@link ServletContextListener} that was not defined in a
@@ -670,14 +679,15 @@ public interface ServletContext {
      *             If the context has already been initialised
      * @since Servlet 3.0
      */
-    public FilterRegistration.Dynamic addFilter(String filterName,
-            String className);
+    public FilterRegistration.Dynamic addFilter(String filterName, String className);
 
     /**
-     * TODO SERVLET3 - Add comments
-     * @param filterName TODO
-     * @param filter     TODO
-     * @return TODO
+     * Add filter to context.
+     * @param   filterName  Name of filter to add
+     * @param   filter      Filter to add
+     * @return  <code>null</code> if the filter has already been fully defined,
+     *          else a {@link javax.servlet.FilterRegistration.Dynamic} object
+     *          that can be used to further configure the filter
      * @throws UnsupportedOperationException    If called from a
      *    {@link ServletContextListener#contextInitialized(ServletContextEvent)}
      *    method of a {@link ServletContextListener} that was not defined in a
@@ -692,10 +702,12 @@ public interface ServletContext {
     public FilterRegistration.Dynamic addFilter(String filterName, Filter filter);
 
     /**
-     * TODO SERVLET3 - Add comments
-     * @param filterName  TODO
-     * @param filterClass TODO
-     * @return TODO
+     * Add filter to context.
+     * @param   filterName  Name of filter to add
+     * @param   filterClass Class of filter to add
+     * @return  <code>null</code> if the filter has already been fully defined,
+     *          else a {@link javax.servlet.FilterRegistration.Dynamic} object
+     *          that can be used to further configure the filter
      * @throws UnsupportedOperationException    If called from a
      *    {@link ServletContextListener#contextInitialized(ServletContextEvent)}
      *    method of a {@link ServletContextListener} that was not defined in a
@@ -725,8 +737,7 @@ public interface ServletContext {
      * @throws ServletException TODO
      * @since Servlet 3.
      */
-    public <T extends Filter> T createFilter(Class<T> c)
-            throws ServletException;
+    public <T extends Filter> T createFilter(Class<T> c) throws ServletException;
 
     /**
      * TODO SERVLET3 - Add comments
@@ -770,8 +781,9 @@ public interface ServletContext {
     public SessionCookieConfig getSessionCookieConfig();
 
     /**
-     * TODO SERVLET3 - Add comments
-     * @param sessionTrackingModes TODO
+     * Configures the available session tracking modes for this web application.
+     * @param sessionTrackingModes The session tracking modes to use for this
+     *        web application
      * @throws IllegalArgumentException
      *             If sessionTrackingModes specifies
      *             {@link SessionTrackingMode#SSL} in combination with any other
@@ -791,8 +803,15 @@ public interface ServletContext {
             Set<SessionTrackingMode> sessionTrackingModes);
 
     /**
-     * TODO SERVLET3 - Add comments
-     * @return TODO
+     * Obtains the default session tracking modes for this web application.
+     * By default {@link SessionTrackingMode#URL} is always supported, {@link
+     * SessionTrackingMode#COOKIE} is supported unless the <code>cookies</code>
+     * attribute has been set to <code>false</code> for the context and {@link
+     * SessionTrackingMode#SSL} is supported if at least one of the connectors
+     * used by this context has the attribute <code>secure</code> set to
+     * <code>true</code>.
+     * @return The set of default session tracking modes for this web
+     *         application
      * @throws UnsupportedOperationException    If called from a
      *    {@link ServletContextListener#contextInitialized(ServletContextEvent)}
      *    method of a {@link ServletContextListener} that was not defined in a
@@ -805,8 +824,10 @@ public interface ServletContext {
     public Set<SessionTrackingMode> getDefaultSessionTrackingModes();
 
     /**
-     * TODO SERVLET3 - Add comments
-     * @return TODO
+     * Obtains the currently enabled session tracking modes for this web
+     * application.
+     * @return The value supplied via {@link #setSessionTrackingModes(Set)} if
+     *         one was previously set, else return the defaults
      * @throws UnsupportedOperationException    If called from a
      *    {@link ServletContextListener#contextInitialized(ServletContextEvent)}
      *    method of a {@link ServletContextListener} that was not defined in a
