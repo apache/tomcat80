@@ -500,6 +500,9 @@ public class TestInternalInputBuffer extends TomcatBaseTest {
 
         private Exception doRequest() {
 
+            // Ensure body is read correctly
+            setUseContentLength(true);
+
             Tomcat tomcat = getTomcatInstance();
 
             Context root = tomcat.addContext("", TEMP_DIR);
