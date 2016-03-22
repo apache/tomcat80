@@ -45,6 +45,15 @@
   issues do not "pop up" wrt. others).
 -->
 <section name="Tomcat 8.0.34 (markt)" rtext="development in progress">
+  <subsection name="Catalina">
+    <changelog>
+      <fix>
+        <bug>59206</bug>: Ensure NPE will not be thrown by
+        <code>o.a.tomcat.util.file.ConfigFileLoader</code> when
+        <code>catalina.base</code> is not specified. (violetagg)
+      </fix>
+    </changelog>
+  </subsection>
   <subsection name="Tribes">
     <changelog>
       <fix>
