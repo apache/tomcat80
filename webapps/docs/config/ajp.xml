@@ -180,7 +180,7 @@
         <code>PATH</code> (Windows) or <code>LD_LIBRARY_PATH</code> (on most unix
         systems) environment variables contain the Tomcat native library, the
         native/APR connector will be used. If the native library cannot be
-        found, the Java based connector will be used.<br/>
+        found, the Java NIO based connector will be used.<br/>
         To use an explicit protocol rather than rely on the auto-switching
         mechanism described above, the following values may be used:<br/>
         <code>org.apache.coyote.ajp.AjpProtocol</code>
@@ -779,69 +779,69 @@
     <table class="defaultTable" style="text-align: center;">
       <tr>
         <th />
-        <th>Java Blocking Connector<br />BIO</th>
-        <th>Java Nio Connector<br />NIO</th>
-        <th>Java Nio2 Connector<br />NIO2</th>
-        <th>APR/native Connector<br />APR</th>
+        <th style="text-align: center;">Java Blocking Connector<br />BIO</th>
+        <th style="text-align: center;">Java Nio Connector<br />NIO</th>
+        <th style="text-align: center;">Java Nio2 Connector<br />NIO2</th>
+        <th style="text-align: center;">APR/native Connector<br />APR</th>
       </tr>
       <tr>
-        <th style="text-align: left;">Classname</th>
+        <th>Classname</th>
         <td><code class="noHighlight">AjpProtocol</code></td>
         <td><code class="noHighlight">AjpNioProtocol</code></td>
         <td><code class="noHighlight">AjpNio2Protocol</code></td>
         <td><code class="noHighlight">AjpAprProtocol</code></td>
       </tr>
       <tr>
-        <th style="text-align: left;">Tomcat Version</th>
+        <th>Tomcat Version</th>
         <td>3.x onwards</td>
         <td>7.x onwards</td>
         <td>8.x onwards</td>
         <td>5.5.x onwards</td>
       </tr>
       <tr>
-        <th style="text-align: left;">Support Polling</th>
+        <th>Support Polling</th>
         <td>NO</td>
         <td>YES</td>
         <td>YES</td>
         <td>YES</td>
       </tr>
       <tr>
-        <th style="text-align: left;">Polling Size</th>
+        <th>Polling Size</th>
         <td>N/A</td>
         <td><code class="noHighlight">maxConnections</code></td>
         <td><code class="noHighlight">maxConnections</code></td>
         <td><code class="noHighlight">maxConnections</code></td>
       </tr>
       <tr>
-        <th style="text-align: left;">Read Request Headers</th>
+        <th>Read Request Headers</th>
         <td>Blocking</td>
         <td>Blocking</td>
         <td>Blocking</td>
         <td>Blocking</td>
       </tr>
       <tr>
-        <th style="text-align: left;">Read Request Body</th>
+        <th>Read Request Body</th>
         <td>Blocking</td>
         <td>Blocking</td>
         <td>Blocking</td>
         <td>Blocking</td>
       </tr>
       <tr>
-        <th style="text-align: left;">Write Response</th>
+        <th>Write Response Headers and Body</th>
         <td>Blocking</td>
         <td>Blocking</td>
         <td>Blocking</td>
         <td>Blocking</td>
       </tr>
       <tr>
-        <th style="text-align: left;">Wait for next Request</th>
+        <th>Wait for next Request</th>
         <td>Blocking</td>
         <td>Non Blocking</td>
         <td>Non Blocking</td>
         <td>Non Blocking</td>
       </tr>
       <tr>
-        <th style="text-align: left;">Max Connections</th>
+        <th>Max Connections</th>
         <td><code class="noHighlight">maxConnections</code></td>
         <td><code class="noHighlight">maxConnections</code></td>
         <td><code class="noHighlight">maxConnections</code></td>
