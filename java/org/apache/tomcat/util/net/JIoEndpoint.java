@@ -27,6 +27,7 @@ import java.util.concurrent.RejectedExecutionException;
 import org.apache.juli.logging.Log;
 import org.apache.juli.logging.LogFactory;
 import org.apache.tomcat.util.ExceptionUtils;
+import org.apache.tomcat.util.compat.JreCompat;
 import org.apache.tomcat.util.net.AbstractEndpoint.Handler.SocketState;
 import org.apache.tomcat.util.net.jsse.JSSESocketFactory;
 
@@ -71,6 +72,11 @@ public class JIoEndpoint extends AbstractEndpoint<Socket> {
         // Reduce the executor timeout for BIO as threads in keep-alive will not
         // terminate when the executor interrupts them.
         setExecutorTerminationTimeoutMillis(0);
+        // If running on Java 7, the insecure DHE ciphers need to be excluded by
+        // default
+        if (!JreCompat.isJre8Available()) {
+            setCiphers(DEFAULT_CIPHERS + ":!DHE");
+        }
     }
 
     // ------------------------------------------------------------- Properties

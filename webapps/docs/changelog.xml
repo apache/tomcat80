@@ -71,6 +71,15 @@
       </fix>
     </changelog>
   </subsection>
+  <subsection name="Coyote">
+    <changelog>
+      <fix>
+        When running on Java 7, exclude DHE ciphers from the default cipher list
+        for JSSE connectors since they use weak 768 bit DH keys and cannot be
+        configured to use more secure keys. (markt) 
+      </fix>
+    </changelog>
+  </subsection>
   <subsection name="Tribes">
     <changelog>
       <fix>

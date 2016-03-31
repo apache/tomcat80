@@ -55,6 +55,7 @@ import org.apache.tomcat.util.ExceptionUtils;
 import org.apache.tomcat.util.IntrospectionUtils;
 import org.apache.tomcat.util.collections.SynchronizedQueue;
 import org.apache.tomcat.util.collections.SynchronizedStack;
+import org.apache.tomcat.util.compat.JreCompat;
 import org.apache.tomcat.util.net.AbstractEndpoint.Handler.SocketState;
 import org.apache.tomcat.util.net.SecureNioChannel.ApplicationBufferHandler;
 import org.apache.tomcat.util.net.jsse.NioX509KeyManager;
@@ -143,8 +144,18 @@ public class NioEndpoint extends AbstractEndpoint<NioChannel> {
     private SynchronizedStack<NioChannel> nioChannels;
 
 
-    // ------------------------------------------------------------- Properties
+    // ------------------------------------------------------------ Constructor
 
+    public NioEndpoint() {
+        // If running on Java 7, the insecure DHE ciphers need to be excluded by
+        // default
+        if (!JreCompat.isJre8Available()) {
+            setCiphers(DEFAULT_CIPHERS + ":!DHE");
+        }
+    }
+
+
+    // ------------------------------------------------------------- Properties
 
     /**
      * Generic properties, introspected

@@ -46,6 +46,7 @@ import org.apache.juli.logging.Log;
 import org.apache.juli.logging.LogFactory;
 import org.apache.tomcat.util.ExceptionUtils;
 import org.apache.tomcat.util.collections.SynchronizedStack;
+import org.apache.tomcat.util.compat.JreCompat;
 import org.apache.tomcat.util.net.AbstractEndpoint.Handler.SocketState;
 import org.apache.tomcat.util.net.SecureNio2Channel.ApplicationBufferHandler;
 import org.apache.tomcat.util.net.jsse.NioX509KeyManager;
@@ -120,8 +121,18 @@ public class Nio2Endpoint extends AbstractEndpoint<Nio2Channel> {
     private SynchronizedStack<Nio2Channel> nioChannels;
 
 
-    // ------------------------------------------------------------- Properties
+    // ------------------------------------------------------------ Constructor
 
+    public Nio2Endpoint() {
+        // If running on Java 7, the insecure DHE ciphers need to be excluded by
+        // default
+        if (!JreCompat.isJre8Available()) {
+            setCiphers(DEFAULT_CIPHERS + ":!DHE");
+        }
+    }
+
+
+    // ------------------------------------------------------------- Properties
 
     /**
      * Use the object caches to reduce GC at the expense of additional memory use.
