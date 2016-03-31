@@ -23,7 +23,7 @@ import javax.net.ssl.SSLEngine;
 import javax.net.ssl.SSLParameters;
 import javax.net.ssl.SSLServerSocket;
 
-class Jre8Compat extends Jre7Compat {
+class Jre8Compat extends JreCompat {
 
     private static final Method getSSLParametersMethod;
     private static final Method setUseCipherSuitesOrderMethod;
@@ -45,7 +45,7 @@ class Jre8Compat extends Jre7Compat {
         } catch (NoSuchMethodException e) {
             // Expected on Java < 8
         } catch (ClassNotFoundException e) {
-            // Expected on Java < 7
+            // Should never happen
         }
         getSSLParametersMethod = m1;
         setUseCipherSuitesOrderMethod = m2;
