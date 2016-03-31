@@ -1121,7 +1121,9 @@
       of ciphers supported and the syntax). The behaviour of this filtering is
       kept aligned with the behaviour of the OpenSSL 1.0.2 stable branch.</p>
       <p>If not specified, a default (using the OpenSSL notation) of
-      <code>HIGH:!aNULL:!eNULL:!EXPORT:!DES:!RC4:!MD5</code> will be used.</p>
+      <code>HIGH:!aNULL:!eNULL:!EXPORT:!DES:!RC4:!MD5:!kRSA</code> will be used
+      when running on Java 8 or later. On Java 7, <code>!DHE</code> will be
+      added to this default when using a JSSE based connector.</p>
       <p>Note that Java does not treat the order in which ciphers are defined as
       an order of preference. See <code>useServerCipherSuitesOrder</code>.</p>
     </attribute>

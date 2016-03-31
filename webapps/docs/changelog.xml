@@ -84,6 +84,10 @@
         The default value is <code>-Djdk.tls.ephemeralDHKeySize=2048</code>
         which protects against weak Diffie-Hellman keys with Java 8. (markt)
       </add>
+      <update>
+        Exclude ciphers that use RSA keys from the default cipher list since
+        they do not support forward secrecy. (markt)
+      </update>
     </changelog>
   </subsection>
   <subsection name="Tribes">
