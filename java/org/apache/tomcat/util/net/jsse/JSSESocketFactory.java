@@ -20,8 +20,6 @@ package org.apache.tomcat.util.net.jsse;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -52,7 +50,6 @@ import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.ManagerFactoryParameters;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLException;
-import javax.net.ssl.SSLParameters;
 import javax.net.ssl.SSLServerSocket;
 import javax.net.ssl.SSLServerSocketFactory;
 import javax.net.ssl.SSLSession;
@@ -62,6 +59,7 @@ import javax.net.ssl.TrustManager;
 import javax.net.ssl.TrustManagerFactory;
 import javax.net.ssl.X509KeyManager;
 
+import org.apache.tomcat.util.compat.JreCompat;
 import org.apache.tomcat.util.compat.JreVendor;
 import org.apache.tomcat.util.file.ConfigFileLoader;
 import org.apache.tomcat.util.net.AbstractEndpoint;
@@ -791,36 +789,10 @@ public class JSSESocketFactory implements ServerSocketFactory, SSLUtil {
 
         // Only use this feature if the user explicitly requested its use.
         if(!"".equals(useServerCipherSuitesOrderStr)) {
-            SSLParameters sslParameters = socket.getSSLParameters();
             boolean useServerCipherSuitesOrder =
                     ("true".equalsIgnoreCase(useServerCipherSuitesOrderStr)
                             || "yes".equalsIgnoreCase(useServerCipherSuitesOrderStr));
-
-            try {
-                // This method is only available in Java 8+
-                // Check to see if the method exists, and then call it.
-                Method m = SSLParameters.class.getMethod("setUseCipherSuitesOrder",
-                                                         Boolean.TYPE);
-
-                m.invoke(sslParameters, Boolean.valueOf(useServerCipherSuitesOrder));
-            }
-            catch (NoSuchMethodException nsme) {
-                throw new UnsupportedOperationException(sm.getString("endpoint.jsse.cannotHonorServerCipherOrder"),
-                                                        nsme);
-            } catch (InvocationTargetException ite) {
-                // Should not happen
-                throw new UnsupportedOperationException(sm.getString("endpoint.jsse.cannotHonorServerCipherOrder"),
-                                                        ite);
-            } catch (IllegalArgumentException iae) {
-                // Should not happen
-                throw new UnsupportedOperationException(sm.getString("endpoint.jsse.cannotHonorServerCipherOrder"),
-                                                        iae);
-            } catch (IllegalAccessException e) {
-                // Should not happen
-                throw new UnsupportedOperationException(sm.getString("endpoint.jsse.cannotHonorServerCipherOrder"),
-                                                        e);
-            }
-            socket.setSSLParameters(sslParameters);
+            JreCompat.getInstance().setUseServerCipherSuitesOrder(socket, useServerCipherSuitesOrder);
         }
     }
 
