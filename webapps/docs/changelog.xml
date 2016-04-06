@@ -87,6 +87,11 @@
         <code>o.a.catalina.valves.ErrorReportValve.showReport</code> is
         disabled. Patch is provided by Svetlin Zarev. (violetagg)
       </fix>
+      <fix>
+        Fix handling of Cluster Receiver in StoreConfig. The <code>bind</code>
+        and <code>host</code> attributes define as
+        <code>TransientAttribute</code>. (kfujino)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Coyote">
