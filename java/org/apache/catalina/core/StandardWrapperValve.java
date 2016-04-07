@@ -190,7 +190,7 @@ final class StandardWrapperValve
                     try {
                         SystemLogHandler.startCapture();
                         if (request.isAsyncDispatching()) {
-                            ((AsyncContextImpl)request.getAsyncContext()).doInternalDispatch();
+                            request.getAsyncContextInternal().doInternalDispatch();
                         } else if (comet) {
                             filterChain.doFilterEvent(request.getEvent());
                         } else {
@@ -205,7 +205,7 @@ final class StandardWrapperValve
                     }
                 } else {
                     if (request.isAsyncDispatching()) {
-                        ((AsyncContextImpl)request.getAsyncContext()).doInternalDispatch();
+                        request.getAsyncContextInternal().doInternalDispatch();
                     } else if (comet) {
                         filterChain.doFilterEvent(request.getEvent());
                     } else {

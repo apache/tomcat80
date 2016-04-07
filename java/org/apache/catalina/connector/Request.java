@@ -419,7 +419,7 @@ public class Request
     /**
      * AsyncContext
      */
-    protected volatile AsyncContextImpl asyncContext = null;
+    private volatile AsyncContextImpl asyncContext = null;
 
     protected Boolean asyncSupported = null;
 
@@ -1682,7 +1682,14 @@ public class Request
 
     @Override
     public AsyncContext getAsyncContext() {
-        return this.asyncContext;
+        if (!isAsyncStarted()) {
+            throw new IllegalStateException(sm.getString("request.notAsync"));
+        }
+        return asyncContext;
+    }
+
+    public AsyncContextImpl getAsyncContextInternal() {
+        return asyncContext;
     }
 
     @Override
