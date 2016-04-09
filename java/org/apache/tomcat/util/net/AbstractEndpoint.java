@@ -743,9 +743,18 @@ public abstract class AbstractEndpoint<S> {
     public abstract void stopInternal() throws Exception;
 
     public final void init() throws Exception {
+        testServerCipherSuitesOrderSupport();
         if (bindOnInit) {
             bind();
             bindState = BindState.BOUND_ON_INIT;
+        }
+    }
+
+    protected void testServerCipherSuitesOrderSupport() {
+        // Only test this feature if the user explicitly requested its use.
+        if(!"".equals(getUseServerCipherSuitesOrder().trim()) && !JreCompat.isJre8Available()) {
+            throw new UnsupportedOperationException(
+                    sm.getString("endpoint.jsse.cannotHonorServerCipherOrder"));
         }
     }
 

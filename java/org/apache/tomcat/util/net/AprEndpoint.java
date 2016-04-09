@@ -1022,6 +1022,14 @@ public class AprEndpoint extends AbstractEndpoint<Long> {
         return log;
     }
 
+
+
+    @Override
+    protected void testServerCipherSuitesOrderSupport() {
+        // NO_OP. This always passes for APR since it can only fail with JSSE.
+    }
+
+
     // --------------------------------------------------- Acceptor Inner Class
     /**
      * The background thread that listens for incoming TCP/IP connections and
