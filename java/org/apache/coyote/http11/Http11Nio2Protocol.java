@@ -152,7 +152,9 @@ public class Http11Nio2Protocol extends AbstractHttp11JsseProtocol<Nio2Channel> 
                 connections.remove(socket.getSocket());
             if (processor != null) {
                 processor.recycle(true);
-                recycledProcessors.push(processor);
+                if (!processor.isUpgrade()) {
+                    recycledProcessors.push(processor);
+                }
             }
         }
 

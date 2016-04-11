@@ -127,6 +127,10 @@
         Exclude ciphers that use RSA keys from the default cipher list since
         they do not support forward secrecy. (markt)
       </update>
+      <fix>
+        <bug>59289</bug>: Do not recycle upgrade processors in unexpected close
+        situations. (remm)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Web applications">
