@@ -1700,7 +1700,7 @@ public class ContextConfig implements LifecycleListener {
                     if (resources.isDirectory()) {
                         context.getResources().createWebResourceSet(
                                 WebResourceRoot.ResourceSetType.RESOURCE_JAR,
-                                "/", file.getAbsolutePath(), null, "/");
+                                "/", resources.getAbsolutePath(), null, "/");
                     }
                 }
             } catch (IOException ioe) {

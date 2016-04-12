@@ -108,6 +108,10 @@
         <bug>59247</bug>: Preload ResourceEntry as a workaround for security
         manager issues on some JVMs. (kkolinko/remm)
       </fix>
+      <fix>
+        Correctly configure the base path for a resources directory provided by
+        an expanded JAR file. Patch provided by hengyunabc. (markt)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Coyote">
