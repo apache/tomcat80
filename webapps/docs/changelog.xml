@@ -112,6 +112,10 @@
         Correctly configure the base path for a resources directory provided by
         an expanded JAR file. Patch provided by hengyunabc. (markt)
       </fix>
+      <fix>
+        Ensure that <code>/WEB-INF/classes</code> is never processed as a web
+        fragment. (markt)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Coyote">
