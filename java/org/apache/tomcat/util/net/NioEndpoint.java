@@ -801,8 +801,14 @@ public class NioEndpoint extends AbstractEndpoint<NioChannel> {
             } else {
                 final SelectionKey key = socket.getIOChannel().keyFor(socket.getPoller().getSelector());
                 try {
-                    boolean cancel = false;
-                    if (key != null) {
+                    if (key == null) {
+                        // The key was cancelled (e.g. due to socket closure)
+                        // and removed from the selector while it was being
+                        // processed. Count down the connections at this point
+                        // since it won't have been counted down when the socket
+                        // closed.
+                        socket.getPoller().getEndpoint().countDownConnection();
+                    } else {
                         final KeyAttachment att = (KeyAttachment) key.attachment();
                         if ( att!=null ) {
                             att.access();//to prevent timeout
@@ -811,16 +817,13 @@ public class NioEndpoint extends AbstractEndpoint<NioChannel> {
                             att.interestOps(ops);
                             key.interestOps(ops);
                         } else {
-                            cancel = true;
+                            socket.getPoller().cancelledKey(key, SocketStatus.ERROR);
                         }
-                    } else {
-                        cancel = true;
                     }
-                    if ( cancel ) socket.getPoller().cancelledKey(key,SocketStatus.ERROR);
-                }catch (CancelledKeyException ckx) {
+                } catch (CancelledKeyException ckx) {
                     try {
-                        socket.getPoller().cancelledKey(key,SocketStatus.DISCONNECT);
-                    }catch (Exception ignore) {}
+                        socket.getPoller().cancelledKey(key, SocketStatus.DISCONNECT);
+                    } catch (Exception ignore) {}
                 }
             }//end if
         }//run
@@ -859,6 +862,10 @@ public class NioEndpoint extends AbstractEndpoint<NioChannel> {
         public int getKeyCount() { return keyCount; }
 
         public Selector getSelector() { return selector;}
+
+        NioEndpoint getEndpoint() {
+            return NioEndpoint.this;
+        }
 
         /**
          * Destroy the poller.
