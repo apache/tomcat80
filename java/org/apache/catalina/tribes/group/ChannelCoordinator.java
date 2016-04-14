@@ -167,7 +167,6 @@ public class ChannelCoordinator extends ChannelInterceptorBase implements Messag
                             getClusterReceiver().getPort(),
                             getClusterReceiver().getSecurePort(),
                             getClusterReceiver().getUdpPort());
-                   
                 }
                 valid = true;
             }
