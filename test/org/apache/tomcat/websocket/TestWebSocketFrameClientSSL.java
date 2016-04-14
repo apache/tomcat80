@@ -34,13 +34,12 @@ import org.junit.Test;
 import org.apache.catalina.Context;
 import org.apache.catalina.servlets.DefaultServlet;
 import org.apache.catalina.startup.Tomcat;
-import org.apache.catalina.startup.TomcatBaseTest;
 import org.apache.tomcat.util.net.TesterSupport;
 import org.apache.tomcat.websocket.TesterMessageCountClient.BasicText;
 import org.apache.tomcat.websocket.TesterMessageCountClient.SleepingText;
 import org.apache.tomcat.websocket.TesterMessageCountClient.TesterProgrammaticEndpoint;
 
-public class TestWebSocketFrameClientSSL extends TomcatBaseTest {
+public class TestWebSocketFrameClientSSL extends WebSocketBaseTest {
 
 
     @Test
@@ -156,5 +155,8 @@ public class TestWebSocketFrameClientSSL extends TomcatBaseTest {
         if (openConnectionCount != 0) {
             Assert.fail("There are [" + openConnectionCount + "] connections still open");
         }
+
+        // Close the client session.
+        wsSession.close();
     }
 }
