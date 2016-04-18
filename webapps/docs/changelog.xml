@@ -116,6 +116,11 @@
         Ensure that <code>/WEB-INF/classes</code> is never processed as a web
         fragment. (markt)
       </fix>
+      <fix>
+        <bug>59310</bug>: Do not add a <code>Content-Length: 0</code> header for
+        custom responses to <code>HEAD</code> requests that do not set a
+        <code>Content-Length</code> value. (markt)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Coyote">
