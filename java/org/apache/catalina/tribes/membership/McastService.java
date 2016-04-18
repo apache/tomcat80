@@ -77,6 +77,8 @@ public class McastService implements MembershipService,MembershipListener,Messag
 
     protected byte[] domain;
 
+    private Channel channel;
+
     /**
      * Create a membership service.
      */
@@ -357,7 +359,7 @@ public class McastService implements MembershipService,MembershipListener,Messag
         impl.setRecoveryCounter(recCnt);
         long recSlpTime = Long.parseLong(properties.getProperty("recoverySleepTime","5000"));
         impl.setRecoverySleepTime(recSlpTime);
-
+        impl.setChannel(channel);
 
         impl.start(level);
 
@@ -562,6 +564,14 @@ public class McastService implements MembershipService,MembershipListener,Messag
         if ( domain == null ) return;
         if ( domain.startsWith("{") ) setDomain(Arrays.fromString(domain));
         else setDomain(Arrays.convert(domain));
+    }
+
+    public Channel getChannel() {
+        return channel;
+    }
+
+    public void setChannel(Channel channel) {
+        this.channel = channel;
     }
 
     /**

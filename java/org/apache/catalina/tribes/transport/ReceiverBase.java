@@ -26,6 +26,7 @@ import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import org.apache.catalina.tribes.Channel;
 import org.apache.catalina.tribes.ChannelMessage;
 import org.apache.catalina.tribes.ChannelReceiver;
 import org.apache.catalina.tribes.MessageListener;
@@ -79,7 +80,7 @@ public abstract class ReceiverBase implements ChannelReceiver, ListenCallback, R
     private long maxIdleTime = 60000;
 
     private ExecutorService executor;
-
+    private Channel channel;
 
     public ReceiverBase() {
     }
@@ -486,6 +487,14 @@ public abstract class ReceiverBase implements ChannelReceiver, ListenCallback, R
 
     public void setUdpTxBufSize(int udpTxBufSize) {
         this.udpTxBufSize = udpTxBufSize;
+    }
+
+    public Channel getChannel() {
+        return channel;
+    }
+
+    public void setChannel(Channel channel) {
+        this.channel = channel;
     }
 
     // ---------------------------------------------- ThreadFactory Inner Class
