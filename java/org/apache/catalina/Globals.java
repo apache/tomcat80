@@ -314,4 +314,12 @@ public final class Globals {
 
     @Deprecated // Will be removed in Tomcat 8.5.x
     public static final boolean IS_IBM_JVM = JreVendor.IS_IBM_JVM;
+
+    /**
+     * Name of the ServletContext attribute under which we store the context
+     * Realm's CredentialHandler (if both the Realm and the CredentialHandler
+     * exist).
+     */
+    public static final String CREDENTIAL_HANDLER
+            = "org.apache.catalina.CredentialHandler";
 }
