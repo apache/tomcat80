@@ -34,6 +34,7 @@ import org.apache.catalina.tribes.Channel;
 import org.apache.catalina.tribes.Member;
 import org.apache.catalina.tribes.MembershipListener;
 import org.apache.catalina.tribes.MessageListener;
+import org.apache.catalina.tribes.group.GroupChannel;
 import org.apache.catalina.tribes.io.ChannelData;
 import org.apache.catalina.tribes.io.XByteBuffer;
 import org.apache.catalina.tribes.util.ExecutorFactory;
@@ -540,7 +541,11 @@ public class McastServiceImpl
         int errorCounter = 0;
         public ReceiverThread() {
             super();
-            setName("Tribes-MembershipReceiver");
+            String channelName = "";
+            if (channel instanceof GroupChannel && ((GroupChannel)channel).getName() != null) {
+                channelName = "[" + ((GroupChannel)channel).getName() + "]";
+            }
+            setName("Tribes-MembershipReceiver" + channelName);
         }
         @Override
         public void run() {
@@ -573,7 +578,11 @@ public class McastServiceImpl
         int errorCounter=0;
         public SenderThread(long time) {
             this.time = time;
-            setName("Tribes-MembershipSender");
+            String channelName = "";
+            if (channel instanceof GroupChannel && ((GroupChannel)channel).getName() != null) {
+                channelName = "[" + ((GroupChannel)channel).getName() + "]";
+            }
+            setName("Tribes-MembershipSender" + channelName);
 
         }
         @Override
@@ -610,8 +619,12 @@ public class McastServiceImpl
             }
 
             Thread t = new RecoveryThread(parent);
-
-            t.setName("Tribes-MembershipRecovery");
+            String channelName = "";
+            if (parent.getChannel() instanceof GroupChannel
+                    && ((GroupChannel)parent.getChannel()).getName() != null) {
+                channelName = "[" + ((GroupChannel)parent.getChannel()).getName() + "]";
+            }
+            t.setName("Tribes-MembershipRecovery" + channelName);
             t.setDaemon(true);
             t.start();
         }

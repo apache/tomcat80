@@ -27,6 +27,7 @@ import org.apache.catalina.tribes.ErrorHandler;
 import org.apache.catalina.tribes.Member;
 import org.apache.catalina.tribes.UniqueId;
 import org.apache.catalina.tribes.group.ChannelInterceptorBase;
+import org.apache.catalina.tribes.group.GroupChannel;
 import org.apache.catalina.tribes.group.InterceptorPayload;
 import org.apache.catalina.tribes.util.ExecutorFactory;
 import org.apache.catalina.tribes.util.StringManager;
@@ -134,9 +135,13 @@ public class MessageDispatchInterceptor extends ChannelInterceptorBase implement
         if (run) {
             return;
         }
+        String channelName = "";
+        if (getChannel() instanceof GroupChannel && ((GroupChannel)getChannel()).getName() != null) {
+            channelName = "[" + ((GroupChannel)getChannel()).getName() + "]";
+        }
         executor = ExecutorFactory.newThreadPool(maxSpareThreads, maxThreads, keepAliveTime,
                 TimeUnit.MILLISECONDS,
-                new TcclThreadFactory("MessageDispatchInterceptor.MessageDispatchThread"));
+                new TcclThreadFactory("MessageDispatchInterceptor.MessageDispatchThread" + channelName));
         run = true;
     }
 
