@@ -107,6 +107,11 @@ public class GroupChannel extends ChannelInterceptorBase implements ManagedChann
     protected boolean optionCheck = false;
 
     /**
+     * the name of this channel.
+     */
+    protected String name = null;
+
+    /**
      * Creates a GroupChannel. This constructor will also
      * add the first interceptor in the GroupChannel.<br>
      * The first interceptor is always the channel itself.
@@ -621,6 +626,14 @@ public class GroupChannel extends ChannelInterceptorBase implements ManagedChann
      */
     public long getHeartbeatSleeptime() {
         return heartbeatSleeptime;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     /**
