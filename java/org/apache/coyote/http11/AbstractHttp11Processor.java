@@ -865,6 +865,10 @@ public abstract class AbstractHttp11Processor<S> extends AbstractProcessor<S> {
             }
             break;
         }
+        case ASYNC_POST_PROCESS: {
+            asyncStateMachine.asyncPostProcess();
+            break;
+        }
         case UPGRADE: {
             upgradeToken = (UpgradeToken) param;
             // Stop further HTTP output
