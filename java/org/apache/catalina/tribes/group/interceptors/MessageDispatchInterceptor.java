@@ -136,8 +136,8 @@ public class MessageDispatchInterceptor extends ChannelInterceptorBase implement
             return;
         }
         String channelName = "";
-        if (getChannel() instanceof GroupChannel && ((GroupChannel)getChannel()).getName() != null) {
-            channelName = "[" + ((GroupChannel)getChannel()).getName() + "]";
+        if (channel instanceof GroupChannel && ((GroupChannel)channel).getName() != null) {
+            channelName = "[" + ((GroupChannel)channel).getName() + "]";
         }
         executor = ExecutorFactory.newThreadPool(maxSpareThreads, maxThreads, keepAliveTime,
                 TimeUnit.MILLISECONDS,
