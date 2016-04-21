@@ -72,8 +72,9 @@ public class TcpPingInterceptor extends ChannelInterceptorBase {
             thread = new PingThread();
             thread.setDaemon(true);
             String channelName = "";
-            if (channel instanceof GroupChannel && ((GroupChannel)channel).getName() != null) {
-                channelName = "[" + ((GroupChannel)channel).getName() + "]";
+            if (getChannel() instanceof GroupChannel
+                    && ((GroupChannel)getChannel()).getName() != null) {
+                channelName = "[" + ((GroupChannel)getChannel()).getName() + "]";
             }
             thread.setName("TcpPingInterceptor.PingThread" + channelName +"-"+cnt.addAndGet(1));
             thread.start();
