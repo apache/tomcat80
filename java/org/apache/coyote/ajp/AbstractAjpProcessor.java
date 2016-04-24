@@ -586,10 +586,6 @@ public abstract class AbstractAjpProcessor<S> extends AbstractProcessor<S> {
             asyncStateMachine.asyncError();
             break;
         }
-        case ASYNC_IS_STARTING: {
-            ((AtomicBoolean) param).set(asyncStateMachine.isAsyncStarting());
-            break;
-        }
         case ASYNC_IS_STARTED: {
             ((AtomicBoolean) param).set(asyncStateMachine.isAsyncStarted());
             break;
