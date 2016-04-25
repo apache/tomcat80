@@ -42,7 +42,7 @@ public class Nio2ServletInputStream extends AbstractServletInputStream {
     private boolean flipped = false;
     private volatile boolean readPending = false;
     private volatile boolean interest = true;
-    private volatile boolean closed = true;
+    private volatile boolean closed = false;
 
     public Nio2ServletInputStream(SocketWrapper<Nio2Channel> wrapper, AbstractEndpoint<Nio2Channel> endpoint0) {
         this.endpoint = endpoint0;
