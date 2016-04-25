@@ -42,6 +42,7 @@ public class Nio2ServletInputStream extends AbstractServletInputStream {
     private boolean flipped = false;
     private volatile boolean readPending = false;
     private volatile boolean interest = true;
+    private volatile boolean swallowEOF = false;
 
     public Nio2ServletInputStream(SocketWrapper<Nio2Channel> wrapper, AbstractEndpoint<Nio2Channel> endpoint0) {
         this.endpoint = endpoint0;
@@ -52,7 +53,7 @@ public class Nio2ServletInputStream extends AbstractServletInputStream {
             public void completed(Integer nBytes, SocketWrapper<Nio2Channel> attachment) {
                 boolean notify = false;
                 synchronized (completionHandler) {
-                    if (nBytes.intValue() < 0) {
+                    if (!swallowEOF && nBytes.intValue() < 0) {
                         failed(new EOFException(), attachment);
                     } else {
                         readPending = false;
@@ -180,6 +181,11 @@ public class Nio2ServletInputStream extends AbstractServletInputStream {
 
     @Override
     protected void doClose() throws IOException {
+        // Closing the channel will trigger an EOF. This is expected so set the
+        // flag to swallow it.
+        if (readPending) {
+            swallowEOF = true;
+        }
         channel.close();
     }
 
