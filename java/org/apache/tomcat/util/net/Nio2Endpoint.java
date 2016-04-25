@@ -633,27 +633,38 @@ public class Nio2Endpoint extends AbstractEndpoint<Nio2Channel> {
                     processSocket0(socket, status, false);
                 }
             }
+        } catch (Throwable e) {
+            ExceptionUtils.handleThrowable(e);
+            if (log.isDebugEnabled()) log.error("",e);
+        }
+        try {
             handler.release(socket);
-            try {
-                if (socket.getSocket() != null) {
-                    socket.getSocket().close(true);
-                }
-            } catch (Exception e){
-                if (log.isDebugEnabled()) {
-                    log.debug(sm.getString(
-                            "endpoint.debug.socketCloseFail"), e);
+        } catch (Throwable e) {
+            ExceptionUtils.handleThrowable(e);
+            if (log.isDebugEnabled()) log.error("",e);
+        }
+        try {
+            if (socket.getSocket() != null) {
+                synchronized (socket.getSocket()) {
+                    if (socket.getSocket() != null && socket.getSocket().isOpen()) {
+                        countDownConnection();
+                        socket.getSocket().close(true);
+                    }
                 }
             }
+        } catch (Exception e){
+            if (log.isDebugEnabled()) {
+                log.debug(sm.getString(
+                        "endpoint.debug.socketCloseFail"), e);
+            }
+        }
+        try {
             Nio2SocketWrapper nio2Socket = (Nio2SocketWrapper) socket;
-            try {
-                if (nio2Socket.getSendfileData() != null
-                        && nio2Socket.getSendfileData().fchannel != null
-                        && nio2Socket.getSendfileData().fchannel.isOpen()) {
-                    nio2Socket.getSendfileData().fchannel.close();
-                }
-            } catch (Exception ignore) {
+            if (nio2Socket.getSendfileData() != null
+                    && nio2Socket.getSendfileData().fchannel != null
+                    && nio2Socket.getSendfileData().fchannel.isOpen()) {
+                nio2Socket.getSendfileData().fchannel.close();
             }
-            countDownConnection();
         } catch (Throwable e) {
             ExceptionUtils.handleThrowable(e);
             if (log.isDebugEnabled()) log.error("",e);
