@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.nio.ByteBuffer;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executor;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -569,8 +570,7 @@ public abstract class AbstractProtocol<S> implements ProtocolHandler,
         protected final RequestGroupInfo global = new RequestGroupInfo();
         protected final AtomicLong registerCount = new AtomicLong(0);
 
-        protected final ConcurrentHashMap<S,Processor<S>> connections =
-                new ConcurrentHashMap<>();
+        protected final Map<S,Processor<S>> connections = new ConcurrentHashMap<>();
 
         protected final RecycledProcessors<P,S> recycledProcessors =
                 new RecycledProcessors<>(this);
