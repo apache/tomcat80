@@ -137,15 +137,15 @@ public class StandardJarScanner implements JarScanner {
      * @return 
      */
     public static URL[] getURLs(URLClassLoader cl) {
-        if (cl.getParent() == null || !(cl.getParent() 
+        if (cl != ClassLoader.getSystemClassLoader() || cl.getParent() == null || !(cl.getParent() 
                 instanceof URLClassLoader)) {
             return cl.getURLs();
         }
         Set<URL> urlSet = new LinkedHashSet();
         URL[] urLs = cl.getURLs();
-        URL[] urlsFromManifest = getJarUrlsFromManifests(cl);
+        URL[] urlsFromManifest = getJarUrlsFromVisibleManifests(cl);
         URLClassLoader parentCl = (URLClassLoader) cl.getParent();
-        URL[] ancestorUrls = getJarUrlsFromManifests(parentCl);
+        URL[] ancestorUrls = getJarUrlsFromVisibleManifests(parentCl);
         
         for (int i = 0; i < urlsFromManifest.length; i++) {
             urlSet.add(urlsFromManifest[i]);
@@ -165,7 +165,7 @@ public class StandardJarScanner implements JarScanner {
      * @param cl
      * @return 
      */
-    private static URL[] getJarUrlsFromManifests(ClassLoader cl) {
+    private static URL[] getJarUrlsFromVisibleManifests(ClassLoader cl) {
         try {
             Set<URL> urlSet = new LinkedHashSet();
             Enumeration<URL> manifestUrls = 
