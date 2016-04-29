@@ -16,9 +16,7 @@
  */
 package org.apache.tomcat.util.scan;
 
-import java.io.DataInputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.JarURLConnection;
 import java.net.MalformedURLException;
@@ -30,6 +28,7 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.jar.Manifest;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
 
 import javax.servlet.ServletContext;
@@ -128,28 +127,6 @@ public class StandardJarScanner implements JarScanner {
     }
 
     /**
-     * Tests is the file is a zip file
-     *
-     * @param file
-     * @return
-     * @throws IOException
-     */
-    private static boolean isZipFile(File file) throws IOException {
-        if (file.isDirectory()) {
-            return false;
-        }
-        if (!file.canRead()) {
-            throw new IOException("Cannot read file " + file.getAbsolutePath());
-        }
-        if (file.length() < 4) {
-            return false;
-        }
-        try (DataInputStream in = new DataInputStream(new FileInputStream(file))) {
-            return in.readInt() == 0x504b0304;
-        }
-    }
-
-    /**
      * Returns the URLS of all jars managed directly or indirectly (given
      * "Class-Path" manifest relationships) by the class loader
      *
@@ -191,31 +168,27 @@ public class StandardJarScanner implements JarScanner {
         }
         visited.add(jar);
 
-        if (!isZipFile(file)) {
-            return;
-        }
-
-        try (ZipFile zipFile = new ZipFile(file)) {
-            ZipEntry manifestEntry = zipFile.getEntry("META-INF/MANIFEST.MF");
-            if (manifestEntry == null) {
-                return;
-            }
-            Manifest manifest = new Manifest(zipFile.getInputStream(manifestEntry));
-            String classPath = manifest.getMainAttributes().getValue("Class-Path");
-            if (classPath == null) {
-                return;
-            }
-            String[] entries = classPath.split(" ");
-            for (String entry : entries) {
-                File f = new File(entry);
-                if (!f.isAbsolute()) {
-                    f = new File(file.getParentFile(), entry);
+        try {
+            try (ZipFile zipFile = new ZipFile(file)) {
+                ZipEntry manifestEntry = zipFile.getEntry("META-INF/MANIFEST.MF");
+                if (manifestEntry == null) {
+                    return;
                 }
-                URL u = f.toURI().toURL();
-                if (!visited.contains(u)) {
-                    visitJar(visited, u);
+                Manifest manifest = new Manifest(zipFile.getInputStream(manifestEntry));
+                String classPath = manifest.getMainAttributes().getValue("Class-Path");
+                if (classPath == null) {
+                    return;
+                }
+                String[] entries = classPath.split(" ");
+                for (String entry : entries) {
+                        URL u = new File(file.getParentFile(), entry).toURI().toURL();
+                    if (!visited.contains(u)) {
+                        visitJar(visited, u);
+                    }
                 }
             }
+        } catch (ZipException zex) {
+            // not a zip file. log message?
         }
     }
 
