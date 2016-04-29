@@ -26,6 +26,10 @@ import java.net.URLConnection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+import java.util.jar.Manifest;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipException;
+import java.util.zip.ZipFile;
 
 import javax.servlet.ServletContext;
 
@@ -120,6 +124,72 @@ public class StandardJarScanner implements JarScanner {
     @Override
     public void setJarScanFilter(JarScanFilter jarScanFilter) {
         this.jarScanFilter = jarScanFilter;
+    }
+
+    /**
+     * Returns the URLS of all jars managed directly or indirectly (given
+     * "Class-Path" manifest relationships) by the class loader
+     *
+     * @param cl
+     * @return
+     */
+    public static URL[] getURLs(URLClassLoader cl) {
+        HashSet<URL> visited = new HashSet<>();
+        URL[] urLs = cl.getURLs();
+        if (urLs != null) {
+            for (URL urL : urLs) {
+                try {
+                    visitJar(visited, urL);
+                } catch (IOException iOException) {
+                    throw new RuntimeException(iOException);
+                }
+            }
+        }
+        URL[] ret = new URL[visited.size()];
+        int i = 0;
+        for (URL url : visited) {
+            ret[i++] = url;
+        }
+        return ret;
+    }
+
+    /**
+     * Performs a DFS traversal over the graph of jars given the "Class-Path"
+     * reference
+     *
+     * @param visited
+     * @param jar
+     * @throws IOException
+     */
+    public static void visitJar(Set<URL> visited, URL jar) throws IOException {
+        File file = new File(jar.getFile());
+        if (!file.exists()) {
+            return;
+        }
+        visited.add(jar);
+
+        try {
+            try (ZipFile zipFile = new ZipFile(file)) {
+                ZipEntry manifestEntry = zipFile.getEntry("META-INF/MANIFEST.MF");
+                if (manifestEntry == null) {
+                    return;
+                }
+                Manifest manifest = new Manifest(zipFile.getInputStream(manifestEntry));
+                String classPath = manifest.getMainAttributes().getValue("Class-Path");
+                if (classPath == null) {
+                    return;
+                }
+                String[] entries = classPath.split(" ");
+                for (String entry : entries) {
+                        URL u = new File(file.getParentFile(), entry).toURI().toURL();
+                    if (!visited.contains(u)) {
+                        visitJar(visited, u);
+                    }
+                }
+            }
+        } catch (ZipException zex) {
+            // not a zip file. log message?
+        }
     }
 
     /**
@@ -220,7 +290,7 @@ public class StandardJarScanner implements JarScanner {
                     if (isWebapp) {
                         isWebapp = isWebappClassLoader(classLoader);
                     }
-                    URL[] urls = ((URLClassLoader) classLoader).getURLs();
+                    URL[] urls = getURLs((URLClassLoader) classLoader);
                     for (int i=0; i<urls.length; i++) {
                         if (processedURLs.contains(urls[i])) {
                             // Skip this URL it has already been processed
@@ -237,7 +307,7 @@ public class StandardJarScanner implements JarScanner {
                                 scanType == JarScanType.PLUGGABILITY ||
                                 isScanAllDirectories()) &&
                                         getJarScanFilter().check(scanType,
-                                                cpe.getName())) {
+                                        cpe.getName())) {
                             if (log.isDebugEnabled()) {
                                 log.debug(sm.getString(
                                         "jarScan.classloaderJarScan", urls[i]));
@@ -251,7 +321,7 @@ public class StandardJarScanner implements JarScanner {
                             } catch (IOException ioe) {
                                 log.warn(sm.getString(
                                         "jarScan.classloaderFail", urls[i]),
-                                                ioe);
+                                        ioe);
                             }
                         } else {
                             // JAR / directory has been skipped
