@@ -93,6 +93,12 @@ public class TestStandardJarScanner {
         List<String> callbacks = new ArrayList<>();
 
         @Override
+        public void scan(URL jarUrl, String webappPath,
+                boolean isWebapp) throws IOException {
+            callbacks.add(jarUrl.toString() + "::" + webappPath + "::" + isWebapp);
+        }
+
+        @Override
         public void scan(JarURLConnection urlConn, String webappPath,
                 boolean isWebapp) throws IOException {
             callbacks.add(urlConn.toString() + "::" + webappPath + "::" + isWebapp);
