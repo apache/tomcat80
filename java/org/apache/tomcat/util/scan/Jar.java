@@ -16,10 +16,6 @@
  */
 package org.apache.tomcat.util.scan;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-
 /**
  * Provides an abstraction for use by the various classes that need to scan
  * JARs. The classes provided by the JRE for accessing JARs ({@link java.util.jar.JarFile} and
@@ -28,90 +24,10 @@ import java.net.URL;
  * For file based JAR {@link java.net.URL}s, {@link java.util.jar.JarFile} is faster but for non-file
  * based {@link java.net.URL}s, {@link java.util.jar.JarFile} creates a copy of the JAR in the
  * temporary directory so {@link java.util.jar.JarInputStream} is faster.
+ *
+ * @deprecated Use {@link org.apache.tomcat.Jar} instead.
+ *             This class will be removed from Tomcat 8.5.x onwards.
  */
-public interface Jar extends AutoCloseable {
-
-    /**
-     * Obtain the URL for accessing the JAR file.
-     */
-    URL getJarFileURL();
-
-    /**
-     * Determines if a specific entry exists within the JAR.
-     *
-     * @param name  Entry to look for
-     * @return      <code>true</code> if the specified entry exists else
-     *               <code>false</code>
-     */
-    boolean entryExists(String name) throws IOException;
-
-
-    /**
-     * Obtain an {@link InputStream} for a given entry in a JAR. The caller is
-     * responsible for closing the stream.
-     *
-     * @param name  Entry to obtain an {@link InputStream} for
-     * @return      An {@link InputStream} for the specified entry or null if
-     *              the entry does not exist
-     */
-    InputStream getInputStream(String name) throws IOException;
-
-    /**
-     * Obtain the last modified time for the given resource in the JAR.
-     *
-     * @param name  Entry to obtain the modification time for
-     *
-     * @return The time (in the same format as
-     *         {@link System#currentTimeMillis()} that the resource was last
-     *         modified. Returns -1 if the entry does not exist
-     */
-    long getLastModified(String name) throws IOException;
-
-    /**
-     * Close any resources associated with this JAR.
-     */
-    @Override
-    void close();
-
-    /**
-     * Moves the internal pointer to the next entry in the JAR.
-     */
-    void nextEntry();
-
-    /**
-     * Obtains the name of the current entry.
-     *
-     * @return  The entry name
-     */
-    String getEntryName();
-
-    /**
-     * Obtains the input stream for the current entry.
-     *
-     * @return  The input stream
-     * @throws IOException  If the stream cannot be obtained
-     */
-    InputStream getEntryInputStream() throws IOException;
-
-    /**
-     * Obtain, in String form, the URL for an entry in this JAR. Note that for
-     * JARs nested in WAR files, the Tomcat specific war:file:... form will not
-     * be used, rather the jar:jar:file:... form (that the JRE does not
-     * understand will be used). Note that this means that any code using these
-     * URLs will need to understand the jar:jar:file:... form and use the
-     * {@link JarFactory} to ensure resources are accessed correctly.
-     *
-     * @param entry The entry to generate the URL for
-     *
-     * @return a URL for the specified entry in the JAR
-     */
-    String getURL(String entry);
-
-    /**
-     * Resets the internal pointer used to track JAR entries to the beginning of
-     * the JAR.
-     *
-     * @throws IOException  If the pointer cannot be reset
-     */
-    void reset() throws IOException;
+@Deprecated
+public interface Jar extends org.apache.tomcat.Jar {
 }
