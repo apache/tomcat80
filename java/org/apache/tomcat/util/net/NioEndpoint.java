@@ -576,7 +576,7 @@ public class NioEndpoint extends AbstractEndpoint<NioChannel> {
             try {
                 log.error("",t);
             } catch (Throwable tt) {
-                ExceptionUtils.handleThrowable(t);
+                ExceptionUtils.handleThrowable(tt);
             }
             // Tell to close the socket
             return false;
