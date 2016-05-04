@@ -53,14 +53,13 @@ public class FragmentJarScannerCallback implements JarScannerCallback {
     @Override
     public void scan(JarURLConnection jarConn, String webappPath, boolean isWebapp)
             throws IOException {
-        scan(jarConn.getURL(), webappPath, isWebapp);
+        scan(JarFactory.newInstance(jarConn.getURL()), webappPath, isWebapp);
     }
 
 
     @Override
-    public void scan(URL jarUrl, String webappPath, boolean isWebapp) throws IOException {
+    public void scan(Jar jar, String webappPath, boolean isWebapp) throws IOException {
 
-        Jar jar = null;
         InputStream is = null;
         WebXml fragment = new WebXml();
         fragment.setWebappJar(isWebapp);
@@ -72,7 +71,6 @@ public class FragmentJarScannerCallback implements JarScannerCallback {
             // web-fragment.xml files don't need to be parsed if they are never
             // going to be used.
             if (isWebapp && parseRequired) {
-                jar = JarFactory.newInstance(jarUrl);
                 is = jar.getInputStream(FRAGMENT_LOCATION);
             }
 
@@ -81,7 +79,6 @@ public class FragmentJarScannerCallback implements JarScannerCallback {
                 // distributable
                 fragment.setDistributable(true);
             } else {
-                @SuppressWarnings("null") // Cannot be null here
                 String fragmentUrl = jar.getURL(FRAGMENT_LOCATION);
                 InputSource source = new InputSource(fragmentUrl);
                 source.setByteStream(is);
@@ -90,14 +87,11 @@ public class FragmentJarScannerCallback implements JarScannerCallback {
                 }
             }
         } finally {
-            if (jar != null) {
-                jar.close();
-            }
-            fragment.setURL(jarUrl);
+            fragment.setURL(jar.getJarFileURL());
             if (fragment.getName() == null) {
                 fragment.setName(fragment.getURL().toString());
             }
-            fragment.setJarName(extractJarFileName(jarUrl));
+            fragment.setJarName(extractJarFileName(jar.getJarFileURL()));
             fragments.put(fragment.getName(), fragment);
         }
     }
@@ -113,6 +107,7 @@ public class FragmentJarScannerCallback implements JarScannerCallback {
         // File name will now be whatever is after the final /
         return url.substring(url.lastIndexOf('/') + 1);
     }
+
 
     @Override
     public void scan(File file, String webappPath, boolean isWebapp) throws IOException {

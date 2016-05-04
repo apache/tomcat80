@@ -296,32 +296,29 @@ public class TldScanner {
         @Override
         public void scan(JarURLConnection jarConn, String webappPath, boolean isWebapp)
                 throws IOException {
-            scan(jarConn.getURL(), webappPath, isWebapp);
+            scan(JarFactory.newInstance(jarConn.getURL()), webappPath, isWebapp);
         }
 
 
         @Override
-        public void scan(URL jarUrl, String webappPath, boolean isWebapp) throws IOException {
+        public void scan(Jar jar, String webappPath, boolean isWebapp) throws IOException {
             boolean found = false;
-            URL jarFileUrl;
-            try (Jar jar = JarFactory.newInstance(jarUrl)) {
-                jarFileUrl = jar.getJarFileURL();
-                jar.nextEntry();
-                for (String entryName = jar.getEntryName();
-                    entryName != null;
-                    jar.nextEntry(), entryName = jar.getEntryName()) {
-                    if (!(entryName.startsWith("META-INF/") &&
-                            entryName.endsWith(TLD_EXT))) {
-                        continue;
-                    }
-                    found = true;
-                    TldResourcePath tldResourcePath =
-                            new TldResourcePath(jarFileUrl, webappPath, entryName);
-                    try {
-                        parseTld(tldResourcePath);
-                    } catch (SAXException e) {
-                        throw new IOException(e);
-                    }
+            URL jarFileUrl = jar.getJarFileURL();
+            jar.nextEntry();
+            for (String entryName = jar.getEntryName();
+                entryName != null;
+                jar.nextEntry(), entryName = jar.getEntryName()) {
+                if (!(entryName.startsWith("META-INF/") &&
+                        entryName.endsWith(TLD_EXT))) {
+                    continue;
+                }
+                found = true;
+                TldResourcePath tldResourcePath =
+                        new TldResourcePath(jarFileUrl, webappPath, entryName);
+                try {
+                    parseTld(tldResourcePath);
+                } catch (SAXException e) {
+                    throw new IOException(e);
                 }
             }
             if (found) {
