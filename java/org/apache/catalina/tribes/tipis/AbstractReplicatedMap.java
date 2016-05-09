@@ -148,7 +148,7 @@ public abstract class AbstractReplicatedMap<K,V>
     /**
      * State of this map
      */
-    private volatile transient State state = State.NEW;
+    private transient volatile State state = State.NEW;
 
 //------------------------------------------------------------------------------
 //              map owner interface
