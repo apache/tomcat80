@@ -207,6 +207,10 @@
         the <code>Content-Language</code> HTTP header to ensure the locale is
         correctly represented. Patch provided by zikfat. (markt)
       </fix>
+      <fix>
+        <bug>59451</bug>: Correct Javadoc for <code>MessageBytes</code>. Patch
+        provided by Kyohei Nakamura. (markt)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Jasper">
