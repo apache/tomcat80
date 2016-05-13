@@ -35,7 +35,7 @@ package org.apache.tomcat.dbcp.dbcp2;
     /**
      * Create a LifetimeExceededException with the given message.
      */
-    public LifetimeExceededException(String message) {
+    public LifetimeExceededException(final String message) {
         super(message);
     }
 

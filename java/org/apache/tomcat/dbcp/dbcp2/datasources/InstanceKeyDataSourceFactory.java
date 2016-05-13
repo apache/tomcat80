@@ -44,27 +44,27 @@ abstract class InstanceKeyDataSourceFactory implements ObjectFactory {
     private static final Map<String, InstanceKeyDataSource> instanceMap =
             new ConcurrentHashMap<>();
 
-    static synchronized String registerNewInstance(InstanceKeyDataSource ds) {
+    static synchronized String registerNewInstance(final InstanceKeyDataSource ds) {
         int max = 0;
-        Iterator<String> i = instanceMap.keySet().iterator();
+        final Iterator<String> i = instanceMap.keySet().iterator();
         while (i.hasNext()) {
-            String s = i.next();
+            final String s = i.next();
             if (s != null) {
                 try {
                     max = Math.max(max, Integer.parseInt(s));
-                } catch (NumberFormatException e) {
+                } catch (final NumberFormatException e) {
                     // no sweat, ignore those keys
                 }
             }
         }
-        String instanceKey = String.valueOf(max + 1);
+        final String instanceKey = String.valueOf(max + 1);
         // put a placeholder here for now, so other instances will not
         // take our key.  we will replace with a pool when ready.
         instanceMap.put(instanceKey, ds);
         return instanceKey;
     }
 
-    static void removeInstance(String key) {
+    static void removeInstance(final String key) {
         if (key != null) {
             instanceMap.remove(key);
         }
@@ -75,7 +75,7 @@ abstract class InstanceKeyDataSourceFactory implements ObjectFactory {
      */
     public static void closeAll() throws Exception {
         //Get iterator to loop over all instances of this datasource.
-        Iterator<Entry<String,InstanceKeyDataSource>> instanceIterator =
+        final Iterator<Entry<String,InstanceKeyDataSource>> instanceIterator =
             instanceMap.entrySet().iterator();
         while (instanceIterator.hasNext()) {
             instanceIterator.next().getValue().close();
@@ -89,16 +89,16 @@ abstract class InstanceKeyDataSourceFactory implements ObjectFactory {
      * or PerUserPoolDataSource
      */
     @Override
-    public Object getObjectInstance(Object refObj, Name name,
-                                    Context context, Hashtable<?,?> env)
+    public Object getObjectInstance(final Object refObj, final Name name,
+                                    final Context context, final Hashtable<?,?> env)
         throws IOException, ClassNotFoundException {
         // The spec says to return null if we can't create an instance
         // of the reference
         Object obj = null;
         if (refObj instanceof Reference) {
-            Reference ref = (Reference) refObj;
+            final Reference ref = (Reference) refObj;
             if (isCorrectClass(ref.getClassName())) {
-                RefAddr ra = ref.get("instanceKey");
+                final RefAddr ra = ref.get("instanceKey");
                 if (ra != null && ra.getContent() != null) {
                     // object was bound to jndi via Referenceable api.
                     obj = instanceMap.get(ra.getContent());
@@ -116,7 +116,7 @@ abstract class InstanceKeyDataSourceFactory implements ObjectFactory {
                     }
                     if (obj == null)
                     {
-                        InstanceKeyDataSource ds = getNewInstance(ref);
+                        final InstanceKeyDataSource ds = getNewInstance(ref);
                         setCommonProperties(ref, ds);
                         obj = ds;
                         if (key != null)
@@ -130,8 +130,8 @@ abstract class InstanceKeyDataSourceFactory implements ObjectFactory {
         return obj;
     }
 
-    private void setCommonProperties(Reference ref,
-                                     InstanceKeyDataSource ikds)
+    private void setCommonProperties(final Reference ref,
+                                     final InstanceKeyDataSource ikds)
         throws IOException, ClassNotFoundException {
 
         RefAddr ra = ref.get("dataSourceName");
@@ -146,7 +146,7 @@ abstract class InstanceKeyDataSourceFactory implements ObjectFactory {
 
         ra = ref.get("jndiEnvironment");
         if (ra != null  && ra.getContent() != null) {
-            byte[] serialized = (byte[]) ra.getContent();
+            final byte[] serialized = (byte[]) ra.getContent();
             ikds.setJndiEnvironment((Properties) deserialize(serialized));
         }
 
@@ -310,7 +310,7 @@ abstract class InstanceKeyDataSourceFactory implements ObjectFactory {
     /**
      * used to set some properties saved within a Reference
      */
-    protected static final Object deserialize(byte[] data)
+    protected static final Object deserialize(final byte[] data)
         throws IOException, ClassNotFoundException {
         ObjectInputStream in = null;
         try {
@@ -320,7 +320,7 @@ abstract class InstanceKeyDataSourceFactory implements ObjectFactory {
             if (in != null) {
                 try {
                     in.close();
-                } catch (IOException ex) {
+                } catch (final IOException ex) {
                 }
             }
         }
