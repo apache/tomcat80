@@ -17,23 +17,29 @@
 package org.apache.tomcat.dbcp.pool2;
 
 /**
- * This interface may be implemented by an object pool to enable clients
- * (primarily those clients that wrap pools to provide pools with extended
- * features) to provide additional information to the pool relating to object
- * using allowing more informed decisions and reporting to be made regarding
- * abandoned objects.
+ * A base class for common functionality.
  *
- * @param <T>   The type of object provided by the pool.
- *
- * @since 2.0
+ * @since 2.4.3
  */
-public interface UsageTracking<T> {
+public abstract class BaseObject {
+
+    @Override
+    public String toString() {
+        final StringBuilder builder = new StringBuilder();
+        builder.append(getClass().getSimpleName());
+        builder.append(" [");
+        toStringAppendFields(builder);
+        builder.append("]");
+        return builder.toString();
+    }
 
     /**
-     * This method is called every time a pooled object is used to enable the pool to
-     * better track borrowed objects.
+     * Used by sub-classes to include the fields defined by the sub-class in the
+     * {@link #toString()} output.
      *
-     * @param pooledObject  The object that is being used
+     * @param builder Field names and values are appended to this object
      */
-    void use(T pooledObject);
+    protected void toStringAppendFields(final StringBuilder builder) {
+        // do nothing by default, needed for b/w compatibility.
+    }
 }

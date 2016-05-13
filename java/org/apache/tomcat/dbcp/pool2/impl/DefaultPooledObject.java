@@ -54,7 +54,7 @@ public class DefaultPooledObject<T> implements PooledObject<T> {
      *
      * @param object The object to wrap
      */
-    public DefaultPooledObject(T object) {
+    public DefaultPooledObject(final T object) {
         this.object = object;
     }
 
@@ -71,14 +71,13 @@ public class DefaultPooledObject<T> implements PooledObject<T> {
     @Override
     public long getActiveTimeMillis() {
         // Take copies to avoid threading issues
-        long rTime = lastReturnTime;
-        long bTime = lastBorrowTime;
+        final long rTime = lastReturnTime;
+        final long bTime = lastBorrowTime;
 
         if (rTime > bTime) {
             return rTime - bTime;
-        } else {
-            return System.currentTimeMillis() - bTime;
         }
+        return System.currentTimeMillis() - bTime;
     }
 
     @Override
@@ -122,13 +121,12 @@ public class DefaultPooledObject<T> implements PooledObject<T> {
     public long getLastUsedTime() {
         if (object instanceof TrackedUse) {
             return Math.max(((TrackedUse) object).getLastUsed(), lastUseTime);
-        } else {
-            return lastUseTime;
         }
+        return lastUseTime;
     }
 
     @Override
-    public int compareTo(PooledObject<T> other) {
+    public int compareTo(final PooledObject<T> other) {
         final long lastActiveDiff = this.getLastReturnTime() - other.getLastReturnTime();
         if (lastActiveDiff == 0) {
             // Make sure the natural ordering is broadly consistent with equals
@@ -143,7 +141,7 @@ public class DefaultPooledObject<T> implements PooledObject<T> {
 
     @Override
     public String toString() {
-        StringBuilder result = new StringBuilder();
+        final StringBuilder result = new StringBuilder();
         result.append("Object: ");
         result.append(object.toString());
         result.append(", State: ");
@@ -166,7 +164,7 @@ public class DefaultPooledObject<T> implements PooledObject<T> {
 
     @Override
     public synchronized boolean endEvictionTest(
-            Deque<PooledObject<T>> idleQueue) {
+            final Deque<PooledObject<T>> idleQueue) {
         if (state == PooledObjectState.EVICTION) {
             state = PooledObjectState.IDLE;
             return true;
@@ -240,14 +238,14 @@ public class DefaultPooledObject<T> implements PooledObject<T> {
     }
 
     @Override
-    public void printStackTrace(PrintWriter writer) {
+    public void printStackTrace(final PrintWriter writer) {
         boolean written = false;
-        Exception borrowedByCopy = this.borrowedBy;
+        final Exception borrowedByCopy = this.borrowedBy;
         if (borrowedByCopy != null) {
             borrowedByCopy.printStackTrace(writer);
             written = true;
         }
-        Exception usedByCopy = this.usedBy;
+        final Exception usedByCopy = this.usedBy;
         if (usedByCopy != null) {
             usedByCopy.printStackTrace(writer);
             written = true;
@@ -283,7 +281,7 @@ public class DefaultPooledObject<T> implements PooledObject<T> {
     }
 
     @Override
-    public void setLogAbandoned(boolean logAbandoned) {
+    public void setLogAbandoned(final boolean logAbandoned) {
         this.logAbandoned = logAbandoned;
     }
 

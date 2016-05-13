@@ -58,11 +58,11 @@ class EvictionTimer {
      * @param delay     Delay in milliseconds before task is executed
      * @param period    Time in milliseconds between executions
      */
-    static synchronized void schedule(TimerTask task, long delay, long period) {
+    static synchronized void schedule(final TimerTask task, final long delay, final long period) {
         if (null == _timer) {
             // Force the new Timer thread to be created with a context class
             // loader set to the class loader that loaded this library
-            ClassLoader ccl = AccessController.doPrivileged(
+            final ClassLoader ccl = AccessController.doPrivileged(
                     new PrivilegedGetTccl());
             try {
                 AccessController.doPrivileged(new PrivilegedSetTccl(
@@ -80,7 +80,7 @@ class EvictionTimer {
      * Remove the specified eviction task from the timer.
      * @param task      Task to be scheduled
      */
-    static synchronized void cancel(TimerTask task) {
+    static synchronized void cancel(final TimerTask task) {
         task.cancel();
         _usageCount--;
         if (_usageCount == 0) {
@@ -109,14 +109,14 @@ class EvictionTimer {
     private static class PrivilegedSetTccl implements PrivilegedAction<Void> {
 
         /** ClassLoader */
-        private final ClassLoader cl;
+        private final ClassLoader classLoader;
 
         /**
          * Create a new PrivilegedSetTccl using the given classloader
-         * @param cl ClassLoader to use
+         * @param classLoader ClassLoader to use
          */
-        PrivilegedSetTccl(ClassLoader cl) {
-            this.cl = cl;
+        PrivilegedSetTccl(final ClassLoader cl) {
+            this.classLoader = cl;
         }
 
         /**
@@ -124,8 +124,17 @@ class EvictionTimer {
          */
         @Override
         public Void run() {
-            Thread.currentThread().setContextClassLoader(cl);
+            Thread.currentThread().setContextClassLoader(classLoader);
             return null;
+        }
+
+        @Override
+        public String toString() {
+            final StringBuilder builder = new StringBuilder();
+            builder.append("PrivilegedSetTccl [classLoader=");
+            builder.append(classLoader);
+            builder.append("]");
+            return builder.toString();
         }
     }
 
@@ -146,5 +155,15 @@ class EvictionTimer {
         public Timer run() {
             return new Timer("commons-pool-EvictionTimer", true);
         }
+    }
+
+    /**
+     * @since 2.4.3
+     */
+    @Override
+    public String toString() {
+        final StringBuilder builder = new StringBuilder();
+        builder.append("EvictionTimer []");
+        return builder.toString();
     }
 }
