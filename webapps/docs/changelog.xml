@@ -59,6 +59,11 @@
         Ensure NPE will not be thrown during deployment when scanning jar files
         without MANIFEST.MF file. (violetagg)
       </fix>
+      <fix>
+        <bug>59608</bug>: Skip over any invalid <code>Class-Path</code> attribute
+        from JAR manifests. Log errors at debug level due to many bad libraries.
+        (remm)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Coyote">
