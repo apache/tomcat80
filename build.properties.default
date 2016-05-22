@@ -236,11 +236,11 @@ dojo-js.loc=http://download.dojotoolkit.org/release-1.1.1/dojo-release-1.1.1.tar
 dojo-js.jar=${dojo-js.home}/dojo/dojo.js
 
 # ----- Cobertura code coverage tool -----
-cobertura.version=2.0.3
+cobertura.version=2.1.1
 cobertura.home=${base.path}/cobertura-${cobertura.version}
 cobertura.jar=${cobertura.home}/cobertura-${cobertura.version}.jar
 cobertura.lib=${cobertura.home}/lib
-cobertura.loc=${base-sf.loc}/cobertura/cobertura-2.0.3-bin.tar.gz
+cobertura.loc=${base-sf.loc}/cobertura/cobertura-2.1.1-bin.tar.gz
 
 # ----- Findbugs -----
 findbugs.version=3.0.1
