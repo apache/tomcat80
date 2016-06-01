@@ -95,6 +95,9 @@
         the class loader of the first web application to use expressions to be
         pinned in memory. (markt)
       </fix>
+      <fix>
+        <bug>59640</bug>: NPEs with not found TLDs. (remm)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Web applications">

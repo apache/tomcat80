@@ -174,8 +174,14 @@ class TagLibraryInfoImpl extends TagLibraryInfo implements TagConstants {
             }
 
             // Get the representation of the TLD
+            if (tldResourcePath.getUrl() == null) {
+                err.jspError("jsp.error.tld.missing", prefix, uri);
+            }
             TaglibXml taglibXml =
                     ctxt.getOptions().getTldCache().getTaglibXml(tldResourcePath);
+            if (taglibXml == null) {
+                err.jspError("jsp.error.tld.missing", prefix, uri);
+            }
 
             // Populate the TagLibraryInfo attributes
             this.jspversion = taglibXml.getJspVersion();
