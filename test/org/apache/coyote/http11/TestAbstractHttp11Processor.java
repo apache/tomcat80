@@ -922,11 +922,9 @@ public class TestAbstractHttp11Processor extends TomcatBaseTest {
     private void validateResponse(BufferedReader reader) throws IOException {
         // First line has the response code and should always be 200
         String line = reader.readLine();
-        System.out.println(line);
         Assert.assertEquals("HTTP/1.1 200 OK", line);
         while (!"OK".equals(line)) {
             line = reader.readLine();
-            System.out.println(line);
         }
     }
 
