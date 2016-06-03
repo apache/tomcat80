@@ -648,16 +648,14 @@ public abstract class AbstractProtocol<S> implements ProtocolHandler,
                     } else if (status == SocketStatus.DISCONNECT) {
                         // Comet and upgrade need to see DISCONNECT but the
                         // others don't. NO-OP and let socket close.
-                    } else if (processor.isAsync()) {
+                    } else if (processor.isAsync() || state == SocketState.ASYNC_END) {
                         state = processor.asyncDispatch(status);
-                    } else if (state == SocketState.ASYNC_END) {
-                        state = processor.asyncDispatch(status);
-                        // release() won't get called so in case this request
-                        // takes a long time to process remove the socket from
-                        // the waiting requests now else the async timeout will
-                        // fire
-                        getProtocol().endpoint.removeWaitingRequest(wrapper);
                         if (state == SocketState.OPEN) {
+                            // release() won't get called so in case this request
+                            // takes a long time to process, remove the socket from
+                            // the waiting requests now else the async timeout will
+                            // fire
+                            getProtocol().endpoint.removeWaitingRequest(wrapper);
                             // There may be pipe-lined data to read. If the data
                             // isn't processed now, execution will exit this
                             // loop and call release() which will recycle the
