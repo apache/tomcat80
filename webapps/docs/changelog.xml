@@ -107,6 +107,10 @@
       <fix>
         <bug>59640</bug>: NPEs with not found TLDs. (remm)
       </fix>
+      <fix>
+        <bug>59654</bug>: Improve error message when attempting to use a TLD
+        file from an invalid location. Patch provided by Huxing Zhang. (markt)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Web applications">
