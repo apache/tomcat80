@@ -45,6 +45,15 @@
   issues do not "pop up" wrt. others).
 -->
 <section name="Tomcat 8.0.37 (markt)" rtext="In development">
+  <subsection name="Catalina">
+    <changelog>
+      <add>
+        <bug>59399</bug>: Add a new option to the Realm implementations that
+        ship with Tomcat that allows the HTTP status code used for HTTP -> HTTPS
+        redirects to be controlled per Realm. (markt)
+      </add>
+    </changelog>
+  </subsection>
 </section>
 <section name="Tomcat 8.0.36 (markt)" rtext="release in progress">
   <subsection name="Catalina">
