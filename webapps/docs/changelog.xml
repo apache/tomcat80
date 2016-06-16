@@ -47,6 +47,11 @@
 <section name="Tomcat 8.0.37 (markt)" rtext="In development">
   <subsection name="Catalina">
     <changelog>
+      <fix>
+        <bug>57705</bug>: Add debug logging for requests denied by the remote
+        host and remote address valves and filters. Based on a patch by Graham
+        Leggett. (markt)
+      </fix>
       <add>
         <bug>59399</bug>: Add a new option to the Realm implementations that
         ship with Tomcat that allows the HTTP status code used for HTTP -> HTTPS
