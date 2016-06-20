@@ -64,6 +64,12 @@
         caused when a Servlet is mapped to <code>/*</code> are more significant
         than the security risk of not enabling this option by default. (markt)
       </update>
+      <fix>
+        Do not attempt to start web resources during a web application's
+        initialisation phase since the web application is not fully configured
+        at that point and the web resources may not be correctly configured.
+        (markt)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Other">
