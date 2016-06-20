@@ -35,7 +35,7 @@ import org.apache.juli.logging.LogFactory;
 /**
  * A channel to handle RPC messaging
  */
-public class RpcChannel implements ChannelListener{
+public class RpcChannel implements ChannelListener {
     private static final Log log = LogFactory.getLog(RpcChannel.class);
     protected static final StringManager sm =
             StringManager.getManager(RpcChannel.class.getPackage().getName());
@@ -50,8 +50,7 @@ public class RpcChannel implements ChannelListener{
     private byte[] rpcId;
     private int replyMessageOptions = 0;
 
-    private final HashMap<RpcCollectorKey, RpcCollector> responseMap =
-            new HashMap<>();
+    private final HashMap<RpcCollectorKey, RpcCollector> responseMap = new HashMap<>();
 
     /**
      * Create an RPC channel. You can have several RPC channels attached to a group
@@ -101,7 +100,7 @@ public class RpcChannel implements ChannelListener{
             }
         } catch ( InterruptedException ix ) {
             Thread.currentThread().interrupt();
-        }finally {
+        } finally {
             responseMap.remove(key);
         }
         return collector.getResponses();
@@ -130,7 +129,7 @@ public class RpcChannel implements ChannelListener{
                     }
                 }//synchronized
             }//end if
-        } else{
+        } else {
             boolean finished = false;
             final ExtendedRpcCallback excallback = (callback instanceof ExtendedRpcCallback)?((ExtendedRpcCallback)callback) : null;
             boolean asyncReply = ((replyMessageOptions & Channel.SEND_OPTIONS_ASYNCHRONOUS) == Channel.SEND_OPTIONS_ASYNCHRONOUS);
@@ -160,7 +159,7 @@ public class RpcChannel implements ChannelListener{
                     channel.send(new Member[] {sender}, rmsg,replyMessageOptions & ~Channel.SEND_OPTIONS_SYNCHRONIZED_ACK);
                 }
                 finished = true;
-            }catch ( Exception x )  {
+            } catch ( Exception x )  {
                 if (excallback != null && !asyncReply) {
                     excallback.replyFailed(rmsg.message, reply, sender, x);
                 } else {
@@ -188,7 +187,7 @@ public class RpcChannel implements ChannelListener{
         if ( msg instanceof RpcMessage ) {
             RpcMessage rmsg = (RpcMessage)msg;
             return Arrays.equals(rmsg.rpcId,rpcId);
-        }else return false;
+        } else return false;
     }
 
     public Channel getChannel() {
@@ -240,7 +239,7 @@ public class RpcChannel implements ChannelListener{
             this.destcnt = destcnt;
         }
 
-        public void addResponse(Serializable message, Member sender){
+        public void addResponse(Serializable message, Member sender) {
             Response resp = new Response(sender,message);
             responses.add(resp);
         }
