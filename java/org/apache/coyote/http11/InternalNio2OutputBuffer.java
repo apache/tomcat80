@@ -382,59 +382,59 @@ public class InternalNio2OutputBuffer extends AbstractOutputBuffer<Nio2Channel> 
             return false;
 
         ByteBuffer byteBuffer = socket.getSocket().getBufHandler().getWriteBuffer();
-        if (block) {
-            if (!isBlocking()) {
-                // The final flush is blocking, but the processing was using
-                // non blocking so wait until an async write is done
-                try {
-                    if (writePending.tryAcquire(socket.getTimeout(), TimeUnit.MILLISECONDS)) {
-                        writePending.release();
+        synchronized (completionHandler) {
+            if (block) {
+                if (!isBlocking()) {
+                    // The final flush is blocking, but the processing was using
+                    // non blocking so wait until an async write is done
+                    try {
+                        if (writePending.tryAcquire(socket.getTimeout(), TimeUnit.MILLISECONDS)) {
+                            writePending.release();
+                        }
+                    } catch (InterruptedException e) {
+                        // Ignore timeout
                     }
-                } catch (InterruptedException e) {
-                    // Ignore timeout
                 }
-            }
-            Future<Integer> future = null;
-            try {
-                if (bufferedWrites.size() > 0) {
-                    for (ByteBuffer buffer : bufferedWrites) {
-                        buffer.flip();
-                        while (buffer.hasRemaining()) {
-                            future = socket.getSocket().write(buffer);
-                            if (future.get(socket.getTimeout(), TimeUnit.MILLISECONDS).intValue() < 0) {
-                                throw new EOFException(sm.getString("iob.failedwrite"));
+                Future<Integer> future = null;
+                try {
+                    if (bufferedWrites.size() > 0) {
+                        for (ByteBuffer buffer : bufferedWrites) {
+                            buffer.flip();
+                            while (buffer.hasRemaining()) {
+                                future = socket.getSocket().write(buffer);
+                                if (future.get(socket.getTimeout(), TimeUnit.MILLISECONDS).intValue() < 0) {
+                                    throw new EOFException(sm.getString("iob.failedwrite"));
+                                }
                             }
                         }
+                        bufferedWrites.clear();
                     }
-                    bufferedWrites.clear();
-                }
-                if (!flipped) {
-                    byteBuffer.flip();
-                    flipped = true;
-                }
-                while (byteBuffer.hasRemaining()) {
-                    future = socket.getSocket().write(byteBuffer);
-                    if (future.get(socket.getTimeout(), TimeUnit.MILLISECONDS).intValue() < 0) {
-                        throw new EOFException(sm.getString("iob.failedwrite"));
+                    if (!flipped) {
+                        byteBuffer.flip();
+                        flipped = true;
                     }
-                }
-            } catch (ExecutionException e) {
-                if (e.getCause() instanceof IOException) {
-                    throw (IOException) e.getCause();
-                } else {
+                    while (byteBuffer.hasRemaining()) {
+                        future = socket.getSocket().write(byteBuffer);
+                        if (future.get(socket.getTimeout(), TimeUnit.MILLISECONDS).intValue() < 0) {
+                            throw new EOFException(sm.getString("iob.failedwrite"));
+                        }
+                    }
+                } catch (ExecutionException e) {
+                    if (e.getCause() instanceof IOException) {
+                        throw (IOException) e.getCause();
+                    } else {
+                        throw new IOException(e);
+                    }
+                } catch (InterruptedException e) {
                     throw new IOException(e);
+                } catch (TimeoutException e) {
+                    future.cancel(true);
+                    throw new SocketTimeoutException();
                 }
-            } catch (InterruptedException e) {
-                throw new IOException(e);
-            } catch (TimeoutException e) {
-                future.cancel(true);
-                throw new SocketTimeoutException();
-            }
-            byteBuffer.clear();
-            flipped = false;
-            return false;
-        } else {
-            synchronized (completionHandler) {
+                byteBuffer.clear();
+                flipped = false;
+                return false;
+            } else {
                 if (hasPermit || writePending.tryAcquire()) {
                     //prevent timeout for async
                     socket.access();

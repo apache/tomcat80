@@ -89,6 +89,11 @@
         <code>InstanceManager.destroy()</code> to ensure that the method is
         executed. (markt)
       </fix>
+      <fix>
+        Extend synchronization for NIO2 writes to avoid
+        <code>ConcurrentModificationException</code> observed during testing.
+        (markt)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Jasper">
