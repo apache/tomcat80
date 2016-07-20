@@ -1286,7 +1286,7 @@ public class ConnectionPool {
                 Thread.currentThread().setContextClassLoader(loader);
             }
         }
-        poolCleanTimer.scheduleAtFixedRate(cleaner, cleaner.sleepTime,cleaner.sleepTime);
+        poolCleanTimer.schedule(cleaner, cleaner.sleepTime,cleaner.sleepTime);
     }
 
     private static synchronized void unregisterCleaner(PoolCleaner cleaner) {
@@ -1326,7 +1326,6 @@ public class ConnectionPool {
     protected static class PoolCleaner extends TimerTask {
         protected WeakReference<ConnectionPool> pool;
         protected long sleepTime;
-        protected volatile long lastRun = 0;
 
         PoolCleaner(ConnectionPool pool, long sleepTime) {
             this.pool = new WeakReference<>(pool);
@@ -1344,9 +1343,7 @@ public class ConnectionPool {
             ConnectionPool pool = this.pool.get();
             if (pool == null) {
                 stopRunning();
-            } else if (!pool.isClosed() &&
-                    (System.currentTimeMillis() - lastRun) > sleepTime) {
-                lastRun = System.currentTimeMillis();
+            } else if (!pool.isClosed()) {
                 try {
                     if (pool.getPoolProperties().isRemoveAbandoned())
                         pool.checkAbandoned();
