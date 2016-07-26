@@ -665,7 +665,7 @@ public class DefaultServlet extends HttpServlet {
      * @param path Path which has to be rewritten
      */
     protected String rewriteUrl(String path) {
-        return URLEncoder.DEFAULT.encode( path );
+        return URLEncoder.DEFAULT.encode(path, "UTF-8");
     }
 
 
