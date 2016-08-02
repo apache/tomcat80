@@ -196,6 +196,11 @@
         documented examples for configuring the <code>AccessLogValve</code>.
         Patch provided by Mike Noordermeer. (markt)
       </fix>
+      <fix>
+        <bug>59868</bug>: Clarify the documentation for the Manager web
+        application to make clearer that the host name and IP address in the
+        server section are the primary host name and IP address. (markt)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Tribes">
