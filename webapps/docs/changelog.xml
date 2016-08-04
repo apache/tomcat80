@@ -264,6 +264,10 @@
         pick up the latest fixes and make 1.2.8 the minimum recommended version.
         (markt)
       </update>
+      <fix>
+        <bug>59899</bug>: Update Tomcat&apos;s copy of the Java Persistence
+        annotations to include the changes made in 2.1 / JavaEE 7. (markt)
+      </fix>
     </changelog>
   </subsection>
 </section>
