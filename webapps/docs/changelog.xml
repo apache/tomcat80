@@ -135,6 +135,10 @@
         <bug>59888</bug>: Correctly handle tabs and spaces in quoted version one
         cookies when using the <code>Rfc6265CookieProcessor</code>. (markt)
       </fix>
+      <fix>
+        <bug>59960</bug>: Fix Javadoc so it builds with Java 8. Patch by Coty
+        Sutherland. (markt)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Coyote">
