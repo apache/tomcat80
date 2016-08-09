@@ -153,6 +153,12 @@
         <code>ConcurrentModificationException</code> observed during testing.
         (markt)
       </fix>
+      <fix>
+        <bug>59925</bug>: Correct regression in r1628368 and ensure that HTTP
+        separators are handled as configured in the
+        <code>LegacyCookieProcessor</code>. Patch provided by Kyohei Nakamura.
+        (markt)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Jasper">
