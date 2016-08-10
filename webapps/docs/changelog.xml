@@ -136,6 +136,11 @@
         cookies when using the <code>Rfc6265CookieProcessor</code>. (markt)
       </fix>
       <fix>
+        <bug>59912</bug>: Fix an edge case in input stream handling where an
+        <code>IOException</code> could be thrown when reading a POST body.
+        (markt)
+      </fix>
+      <fix>
         <bug>59960</bug>: Fix Javadoc so it builds with Java 8. Patch by Coty
         Sutherland. (markt)
       </fix>
