@@ -186,6 +186,10 @@
         <code>InstanceManager.destroy()</code> to ensure that the method is
         executed. (markt)
       </fix>
+      <fix>
+        <bug>59908</bug>: Ensure that a reason phrase is included in the close
+        message if a session is closed due to a timeout. (markt)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Web Applications">
