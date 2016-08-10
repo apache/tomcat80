@@ -215,6 +215,11 @@
         application to make clearer that the host name and IP address in the
         server section are the primary host name and IP address. (markt)
       </fix>
+      <fix>
+        MBeans Descriptors How-To is moved to
+        <code>mbeans-descriptors-howto.html</code>. Patch provided by Radoslav
+        Husar. (violetagg)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Tribes">
