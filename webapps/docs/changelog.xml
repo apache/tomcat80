@@ -278,6 +278,9 @@
         <bug>59899</bug>: Update Tomcat&apos;s copy of the Java Persistence
         annotations to include the changes made in 2.1 / JavaEE 7. (markt)
       </fix>
+      <fix>
+        Fixed typos in mbeans-descriptors.xml files. (violetagg)
+      </fix>
     </changelog>
   </subsection>
 </section>
