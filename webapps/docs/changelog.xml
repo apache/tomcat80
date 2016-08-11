@@ -144,6 +144,10 @@
         <bug>59960</bug>: Fix Javadoc so it builds with Java 8. Patch by Coty
         Sutherland. (markt)
       </fix>
+      <fix>
+        <bug>59966</bug>: Do not start the web application if the error page
+        configuration in web.xml is invalid. (markt)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Coyote">
