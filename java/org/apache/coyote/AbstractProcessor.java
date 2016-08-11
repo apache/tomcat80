@@ -40,6 +40,8 @@ public abstract class AbstractProcessor<S> implements ActionHook, Processor<S> {
     protected final Request request;
     protected final Response response;
     protected volatile SocketWrapper<S> socketWrapper = null;
+    private int maxCookieCount = 200;
+
 
     /**
      * Error state for the request/response currently being processed.
@@ -210,6 +212,16 @@ public abstract class AbstractProcessor<S> implements ActionHook, Processor<S> {
      */
     @Override
     public abstract SocketState upgradeDispatch(SocketStatus status) throws IOException;
+
+    public int getMaxCookieCount() {
+        return maxCookieCount;
+    }
+
+
+    public void setMaxCookieCount(int maxCookieCount) {
+        this.maxCookieCount = maxCookieCount;
+    }
+
 
     @Override
     public abstract UpgradeToken getUpgradeToken();
