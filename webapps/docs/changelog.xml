@@ -158,6 +158,11 @@
         Switch the CGI servlet to the standard logging mechanism and remove
         support for the debug attribute. (markt)
       </fix>
+      <fix>
+        Changes to the <code>allowLinking</code> attribute of a
+        <code>StandardRoot</code> instance now invalidate the cache if caching
+        is enabled. (markt)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Coyote">
