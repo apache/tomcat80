@@ -22,7 +22,7 @@ package org.apache.tomcat.util.bcel;
  *
  * @author  <A HREF="mailto:m.dahm@gmx.de">M. Dahm</A>
  */
-public interface Constants {
+public interface Const {
 
   /**
    * One of the access flags for fields, methods, or classes.
