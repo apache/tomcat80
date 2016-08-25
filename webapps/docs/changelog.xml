@@ -215,6 +215,10 @@
         <code>LegacyCookieProcessor</code>. Patch provided by Kyohei Nakamura.
         (markt)
       </fix>
+      <fix>
+        OpenSSl now disables 3DES by default so reflect this when using OpenSSL
+        syntax to select ciphers. (markt)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Jasper">
