@@ -323,7 +323,7 @@ public class TesterOpenSSL {
         if (specification == null) {
             stdout = executeOpenSSLCommand("ciphers", "-v");
         } else {
-            stdout = executeOpenSSLCommand("ciphers", "-v", specification);
+                stdout = executeOpenSSLCommand("ciphers", "-v", specification);
         }
 
         if (stdout.length() == 0) {
