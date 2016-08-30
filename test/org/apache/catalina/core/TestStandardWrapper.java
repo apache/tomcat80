@@ -279,7 +279,7 @@ public class TestStandardWrapper extends TomcatBaseTest {
 
         Wrapper wrapper = Tomcat.addServlet(ctx, "servlet", servletClassName);
         wrapper.setAsyncSupported(true);
-        ctx.addServletMapping("/", "servlet");
+        ctx.addServletMappingDecoded("/", "servlet");
 
         if (useRole) {
             TesterMapRealm realm = new TesterMapRealm();
@@ -427,7 +427,7 @@ public class TestStandardWrapper extends TomcatBaseTest {
         Context ctx = tomcat.addContext("", null);
 
         Tomcat.addServlet(ctx, "Bug51445", new Bug51445Servlet());
-        ctx.addServletMapping("/", "Bug51445");
+        ctx.addServletMappingDecoded("/", "Bug51445");
 
         tomcat.start();
 
@@ -473,7 +473,7 @@ public class TestStandardWrapper extends TomcatBaseTest {
         wrapper.setServletName("Bug51445");
         wrapper.setServletClass(Bug51445Servlet.class.getName());
         ctx.addChild(wrapper);
-        ctx.addServletMapping("/", "Bug51445");
+        ctx.addServletMappingDecoded("/", "Bug51445");
 
         tomcat.start();
 

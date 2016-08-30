@@ -16,7 +16,9 @@
  */
 package org.apache.tomcat.util.descriptor.web;
 
+import java.io.UnsupportedEncodingException;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.EnumSet;
@@ -37,7 +39,9 @@ import javax.servlet.descriptor.JspConfigDescriptor;
 import javax.servlet.descriptor.JspPropertyGroupDescriptor;
 import javax.servlet.descriptor.TaglibDescriptor;
 
+import org.apache.tomcat.util.buf.UDecoder;
 import org.apache.tomcat.util.descriptor.XmlIdentifiers;
+import org.apache.tomcat.util.digester.DocumentProperties;
 import org.apache.tomcat.util.res.StringManager;
 
 /**
@@ -48,7 +52,7 @@ import org.apache.tomcat.util.res.StringManager;
  * This class checks for invalid duplicates (eg filter/servlet names)
  * StandardContext will check validity of values (eg URL formats etc)
  */
-public class WebXml {
+public class WebXml extends XmlEncodingBase implements DocumentProperties.Encoding {
 
     protected static final String ORDER_OTHERS =
         "org.apache.catalina.order.others";
@@ -119,7 +123,6 @@ public class WebXml {
     public Set<String> getBeforeOrdering() { return before; }
 
     // Common elements and attributes
-
     // Required attribute of web-app element
     public String getVersion() {
         StringBuilder sb = new StringBuilder(3);
@@ -298,9 +301,14 @@ public class WebXml {
     public Map<String,ServletDef> getServlets() { return servlets; }
 
     // servlet-mapping
+    // Note: URLPatterns from web.xml may be URL encoded
+    //       (http://svn.apache.org/r285186)
     private final Map<String,String> servletMappings = new HashMap<>();
     private final Set<String> servletMappingNames = new HashSet<>();
     public void addServletMapping(String urlPattern, String servletName) {
+        addServletMappingDecoded(UDecoder.URLDecode(urlPattern, getEncoding()), servletName);
+    }
+    public void addServletMappingDecoded(String urlPattern, String servletName) {
         String oldServletName = servletMappings.put(urlPattern, servletName);
         if (oldServletName != null) {
             // Duplicate mapping. As per clarification from the Servlet EG,
@@ -380,6 +388,7 @@ public class WebXml {
     // jsp-config/jsp-property-group
     private final Set<JspPropertyGroup> jspPropertyGroups = new LinkedHashSet<>();
     public void addJspPropertyGroup(JspPropertyGroup propertyGroup) {
+        propertyGroup.setEncoding(getEncoding());
         jspPropertyGroups.add(propertyGroup);
     }
     public Set<JspPropertyGroup> getJspPropertyGroups() {
@@ -391,6 +400,7 @@ public class WebXml {
     // TODO: Should support multiple description elements with language
     private final Set<SecurityConstraint> securityConstraints = new HashSet<>();
     public void addSecurityConstraint(SecurityConstraint securityConstraint) {
+        securityConstraint.setEncoding(getEncoding());
         securityConstraints.add(securityConstraint);
     }
     public Set<SecurityConstraint> getSecurityConstraints() {
@@ -630,7 +640,6 @@ public class WebXml {
      */
     public String toXml() {
         StringBuilder sb = new StringBuilder(2048);
-
         // TODO - Various, icon, description etc elements are skipped - mainly
         //        because they are ignored when web.xml is parsed - see above
 
@@ -754,7 +763,7 @@ public class WebXml {
                     sb.append("    <url-pattern>*</url-pattern>\n");
                 } else {
                     for (String urlPattern : filterMap.getURLPatterns()) {
-                        appendElement(sb, INDENT4, "url-pattern", urlPattern);
+                        appendElement(sb, INDENT4, "url-pattern", encodeUrl(urlPattern));
                     }
                 }
                 // dispatcher was added in Servlet 2.4
@@ -845,7 +854,7 @@ public class WebXml {
         for (Map.Entry<String, String> entry : servletMappings.entrySet()) {
             sb.append("  <servlet-mapping>\n");
             appendElement(sb, INDENT4, "servlet-name", entry.getValue());
-            appendElement(sb, INDENT4, "url-pattern", entry.getKey());
+            appendElement(sb, INDENT4, "url-pattern", encodeUrl(entry.getKey()));
             sb.append("  </servlet-mapping>\n");
         }
         sb.append('\n');
@@ -929,7 +938,7 @@ public class WebXml {
                 for (JspPropertyGroup jpg : jspPropertyGroups) {
                     sb.append("    <jsp-property-group>\n");
                     for (String urlPattern : jpg.getUrlPatterns()) {
-                        appendElement(sb, INDENT6, "url-pattern", urlPattern);
+                        appendElement(sb, INDENT6, "url-pattern", encodeUrl(urlPattern));
                     }
                     appendElement(sb, INDENT6, "el-ignored", jpg.getElIgnored());
                     appendElement(sb, INDENT6, "page-encoding",
@@ -1024,7 +1033,7 @@ public class WebXml {
                 appendElement(sb, INDENT6, "description",
                         collection.getDescription());
                 for (String urlPattern : collection.findPatterns()) {
-                    appendElement(sb, INDENT6, "url-pattern", urlPattern);
+                    appendElement(sb, INDENT6, "url-pattern", encodeUrl(urlPattern));
                 }
                 for (String method : collection.findMethods()) {
                     appendElement(sb, INDENT6, "http-method", method);
@@ -1296,6 +1305,17 @@ public class WebXml {
         sb.append("</web-app>");
         return sb.toString();
     }
+
+
+    private String encodeUrl(String input) {
+        try {
+            return URLEncoder.encode(input, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            // Impossible. UTF-8 is a required character set
+            return null;
+        }
+    }
+
 
     private static void appendElement(StringBuilder sb, String indent,
             String elementName, String value) {
@@ -1611,7 +1631,7 @@ public class WebXml {
 
         // Add fragment mappings
         for (Map.Entry<String,String> mapping : servletMappingsToAdd) {
-            addServletMapping(mapping.getKey(), mapping.getValue());
+            addServletMappingDecoded(mapping.getKey(), mapping.getValue());
         }
 
         for (WebXml fragment : fragments) {

@@ -38,6 +38,25 @@ public class SecurityCollection implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    private String encoding = null;
+    public void setEncoding(String encoding) {
+        this.encoding = encoding;
+    }
+    /**
+     * Obtain the encoding of the XML source that was used to populated this
+     * object.
+     *
+     * @return The encoding of the associated XML source or <code>UTF-8</code>
+     *         if the encoding could not be determined
+     */
+    public String getEncoding() {
+        if (encoding == null || encoding.length() == 0) {
+            return "UTF-8";
+        }
+        return encoding;
+    }
+
+
     // ----------------------------------------------------------- Constructors
 
 
@@ -205,6 +224,9 @@ public class SecurityCollection implements Serializable {
      * Add a URL pattern to be part of this web resource collection.
      */
     public void addPattern(String pattern) {
+        addPatternDecoded(UDecoder.URLDecode(pattern, "UTF-8"));
+    }
+    public void addPatternDecoded(String pattern) {
 
         if (pattern == null)
             return;
@@ -216,7 +238,6 @@ public class SecurityCollection implements Serializable {
         }
         results[patterns.length] = decodedPattern;
         patterns = results;
-
     }
 
 

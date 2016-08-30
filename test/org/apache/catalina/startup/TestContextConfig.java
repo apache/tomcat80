@@ -111,7 +111,7 @@ public class TestContextConfig extends TomcatBaseTest {
 
         Tomcat.addServlet(context, "TestServlet",
                 "org.apache.catalina.startup.TesterServletWithLifeCycleMethods");
-        context.addServletMapping("/testServlet", "TestServlet");
+        context.addServletMappingDecoded("/testServlet", "TestServlet");
 
         tomcat.enableNaming();
 
@@ -130,7 +130,7 @@ public class TestContextConfig extends TomcatBaseTest {
 
         Tomcat.addServlet(context, "TestServlet",
                 "org.apache.catalina.startup.TesterServletWithAnnotations");
-        context.addServletMapping("/testServlet", "TestServlet");
+        context.addServletMappingDecoded("/testServlet", "TestServlet");
 
         tomcat.enableNaming();
 

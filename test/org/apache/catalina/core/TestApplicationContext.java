@@ -189,7 +189,7 @@ public class TestApplicationContext extends TomcatBaseTest {
         ctx.setCrossContext(true);
 
         Tomcat.addServlet(ctx, "Bug57190Servlet", new Bug57190Servlet());
-        ctx.addServletMapping("/", "Bug57190Servlet");
+        ctx.addServletMappingDecoded("/", "Bug57190Servlet");
 
         tomcat.start();
 

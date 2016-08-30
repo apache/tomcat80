@@ -79,7 +79,7 @@ public class TestAbstractHttp11Processor extends TomcatBaseTest {
         // Add protected servlet
         Tomcat.addServlet(ctx, "ChunkedResponseWithErrorServlet",
                 new ResponseWithErrorServlet(true));
-        ctx.addServletMapping("/*", "ChunkedResponseWithErrorServlet");
+        ctx.addServletMappingDecoded("/*", "ChunkedResponseWithErrorServlet");
 
         tomcat.start();
 
@@ -333,7 +333,7 @@ public class TestAbstractHttp11Processor extends TomcatBaseTest {
 
         // Add protected servlet
         Tomcat.addServlet(ctx, "TesterServlet", new TesterServlet());
-        ctx.addServletMapping("/foo", "TesterServlet");
+        ctx.addServletMappingDecoded("/foo", "TesterServlet");
 
         tomcat.start();
 
@@ -393,7 +393,7 @@ public class TestAbstractHttp11Processor extends TomcatBaseTest {
 
         Tomcat.addServlet(ctx, "NoContentLengthFlushingServlet",
                 new NoContentLengthFlushingServlet());
-        ctx.addServletMapping("/test", "NoContentLengthFlushingServlet");
+        ctx.addServletMappingDecoded("/test", "NoContentLengthFlushingServlet");
 
         tomcat.start();
 
@@ -420,7 +420,7 @@ public class TestAbstractHttp11Processor extends TomcatBaseTest {
 
         Tomcat.addServlet(ctx, "NoContentLengthConnectionCloseFlushingServlet",
                 new NoContentLengthConnectionCloseFlushingServlet());
-        ctx.addServletMapping("/test",
+        ctx.addServletMappingDecoded("/test",
                 "NoContentLengthConnectionCloseFlushingServlet");
 
         tomcat.start();
@@ -460,7 +460,7 @@ public class TestAbstractHttp11Processor extends TomcatBaseTest {
 
         Tomcat.addServlet(ctx, "LargeHeaderServlet",
                 new LargeHeaderServlet(flush));
-        ctx.addServletMapping("/test", "LargeHeaderServlet");
+        ctx.addServletMappingDecoded("/test", "LargeHeaderServlet");
 
         tomcat.start();
 
@@ -495,7 +495,7 @@ public class TestAbstractHttp11Processor extends TomcatBaseTest {
         Context ctx = tomcat.addContext("", null);
 
         Tomcat.addServlet(ctx, "async", new Bug55772Servlet());
-        ctx.addServletMapping("/*", "async");
+        ctx.addServletMappingDecoded("/*", "async");
 
         tomcat.start();
 
@@ -568,7 +568,7 @@ public class TestAbstractHttp11Processor extends TomcatBaseTest {
         Context ctx = tomcat.addContext("", null);
 
         Tomcat.addServlet(ctx, "echo", new EchoBodyServlet());
-        ctx.addServletMapping("/echo", "echo");
+        ctx.addServletMappingDecoded("/echo", "echo");
 
         SecurityCollection collection = new SecurityCollection("All", "");
         collection.addPattern("/*");
@@ -723,7 +723,7 @@ public class TestAbstractHttp11Processor extends TomcatBaseTest {
         Context root = tomcat.addContext("", null);
         Wrapper w = Tomcat.addServlet(root, "Bug57621", new Bug57621Servlet());
         w.setAsyncSupported(true);
-        root.addServletMapping("/test", "Bug57621");
+        root.addServletMappingDecoded("/test", "Bug57621");
 
         tomcat.start();
 
@@ -819,7 +819,7 @@ public class TestAbstractHttp11Processor extends TomcatBaseTest {
         Context ctx = tomcat.addContext("", null);
 
         Tomcat.addServlet(ctx, "Bug59310", new Bug59310Servlet());
-        ctx.addServletMapping("/test", "Bug59310");
+        ctx.addServletMappingDecoded("/test", "Bug59310");
 
         tomcat.start();
 
@@ -866,7 +866,7 @@ public class TestAbstractHttp11Processor extends TomcatBaseTest {
         SempahoreServlet servlet = new SempahoreServlet();
         Wrapper w = Tomcat.addServlet(ctx, "Test", servlet);
         w.setAsyncSupported(true);
-        ctx.addServletMapping("/test", "Test");
+        ctx.addServletMappingDecoded("/test", "Test");
 
         tomcat.start();
 

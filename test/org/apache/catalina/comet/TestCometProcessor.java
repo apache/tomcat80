@@ -59,9 +59,9 @@ public class TestCometProcessor extends TomcatBaseTest {
         Tomcat tomcat = getTomcatInstance();
         Context root = tomcat.addContext("", TEMP_DIR);
         Tomcat.addServlet(root, "comet", new SimpleCometServlet());
-        root.addServletMapping("/comet", "comet");
+        root.addServletMappingDecoded("/comet", "comet");
         Tomcat.addServlet(root, "hello", new HelloWorldServlet());
-        root.addServletMapping("/hello", "hello");
+        root.addServletMappingDecoded("/hello", "hello");
         root.getPipeline().addValve(new AsyncCometCloseValve());
         tomcat.getConnector().setProperty("connectionTimeout", "5000");
         tomcat.start();
@@ -126,9 +126,9 @@ public class TestCometProcessor extends TomcatBaseTest {
         Tomcat tomcat = getTomcatInstance();
         Context root = tomcat.addContext("", TEMP_DIR);
         Tomcat.addServlet(root, "comet", new CometCloseServlet());
-        root.addServletMapping("/comet", "comet");
+        root.addServletMappingDecoded("/comet", "comet");
         Tomcat.addServlet(root, "hello", new HelloWorldServlet());
-        root.addServletMapping("/hello", "hello");
+        root.addServletMappingDecoded("/hello", "hello");
         tomcat.getConnector().setProperty("connectionTimeout", "5000");
         tomcat.start();
 
@@ -197,9 +197,9 @@ public class TestCometProcessor extends TomcatBaseTest {
         Tomcat tomcat = getTomcatInstance();
         Context root = tomcat.addContext("", TEMP_DIR);
         Tomcat.addServlet(root, "comet", new ConnectionCloseServlet());
-        root.addServletMapping("/comet", "comet");
+        root.addServletMappingDecoded("/comet", "comet");
         Tomcat.addServlet(root, "hello", new HelloWorldServlet());
-        root.addServletMapping("/hello", "hello");
+        root.addServletMappingDecoded("/hello", "hello");
         tomcat.getConnector().setProperty("connectionTimeout", "5000");
         tomcat.start();
 
@@ -273,7 +273,7 @@ public class TestCometProcessor extends TomcatBaseTest {
         if (initParam != null) {
             w.addInitParameter(initParam, "true");
         }
-        root.addServletMapping("/", "comet");
+        root.addServletMappingDecoded("/", "comet");
 
         TesterAccessLogValve alv = new TesterAccessLogValve();
         root.getPipeline().addValve(alv);
@@ -365,7 +365,7 @@ public class TestCometProcessor extends TomcatBaseTest {
         Tomcat tomcat = getTomcatInstance();
         Context root = tomcat.addContext("", TEMP_DIR);
         Tomcat.addServlet(root, "comet", servlet);
-        root.addServletMapping("/", "comet");
+        root.addServletMappingDecoded("/", "comet");
         tomcat.start();
 
         // Create connection to Comet servlet
