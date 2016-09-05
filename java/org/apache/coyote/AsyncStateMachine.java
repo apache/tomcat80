@@ -260,6 +260,7 @@ public class AsyncStateMachine {
 
     public synchronized boolean asyncComplete() {
         pauseNonContainerThread();
+        clearNonBlockingListeners();
         boolean doComplete = false;
         if (state == AsyncState.STARTING) {
             state = AsyncState.MUST_COMPLETE;
@@ -270,7 +271,6 @@ public class AsyncStateMachine {
                 state == AsyncState.ERROR) {
             state = AsyncState.MUST_COMPLETE;
         } else if (state == AsyncState.READ_WRITE_OP) {
-            clearNonBlockingListeners();
             state = AsyncState.MUST_COMPLETE;
         } else {
             throw new IllegalStateException(
