@@ -89,6 +89,11 @@
         track this. This removes the possibility that blocking the non-container
         thread could trigger a deadlock. (markt)
       </add>
+      <fix>
+        <bug>60123</bug>: Avoid potential threading issues that could cause
+        excessively large vales to be returned for the processing time of
+        a current request. (markt)  
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Jasper">
