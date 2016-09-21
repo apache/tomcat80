@@ -307,7 +307,7 @@ public class StatementCache extends StatementDecoratorInterceptor {
         }
         return key;
     }
-    
+
 
     private static final class CacheKey {
         private final String stmtType;
