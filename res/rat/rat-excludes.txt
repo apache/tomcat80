@@ -64,6 +64,7 @@ output/deployer/deployer-howto.html
 
 output/dist/webapps/docs/*/package-list
 
+output/dist/src/test/webapp/index.html.br
 output/dist/src/test/webapp/bug53257/*.txt
 output/dist/src/test/webapp-fragments/WEB-INF/classes/*.txt
 test/webapp/bug53257/*.txt
