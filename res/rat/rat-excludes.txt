@@ -29,8 +29,8 @@
 
   - package-list files in API documentation (javadoc) are generated
 
-  - other trivial test files, such as textual files containing only "OK' string,
-    are also excluded.
+  - other test files, such as trivial textual files containing only "OK' string
+    or compressed files are also excluded.
 
   - JSON files (RFC7159) are data and cannot contain comments
 
@@ -51,6 +51,7 @@
   - unused modules
 
 output/build/logs/*
+output/test-tmp/**
 
 output/build/webapps/docs/**/*.html
 output/dist/webapps/docs/**/*.html
@@ -67,6 +68,7 @@ output/dist/webapps/docs/*/package-list
 output/dist/src/test/webapp/index.html.br
 output/dist/src/test/webapp/bug53257/*.txt
 output/dist/src/test/webapp-fragments/WEB-INF/classes/*.txt
+test/webapp/index.html.br
 test/webapp/bug53257/*.txt
 test/webapp-fragments/WEB-INF/classes/*.txt
 
@@ -86,4 +88,4 @@ output/dist/temp/safeToDelete.tmp
 **/*.bmp
 **/*.dia
 
-modules/tomcat-lite/*
+modules/tomcat-lite/**
