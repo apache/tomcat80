@@ -45,6 +45,13 @@
   issues do not "pop up" wrt. others).
 -->
 <section name="Tomcat 8.0.39 (markt)" rtext="In development">
+  <subsection name="other">
+    <changelog>
+      <update>
+        Update the ECJ compiler to version 4.5.1. (markt)
+      </update>
+    </changelog>
+  </subsection>
 </section>
 <section name="Tomcat 8.0.38 (markt)" rtext="release in progress">
   <subsection name="Catalina">
