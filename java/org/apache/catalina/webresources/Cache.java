@@ -200,9 +200,12 @@ public class Cache {
     }
 
     private boolean noCache(String path) {
-        // Don't cache resources used by the class loader (it has its own cache)
-        if (path.startsWith("/WEB-INF/classes/") ||
-                path.startsWith("/WEB-INF/lib/")) {
+        // Don't cache classes. The class loader handles this.
+        // Don't cache JARs. The ResourceSet handles this.
+        if ((path.endsWith(".class") &&
+                (path.startsWith("/WEB-INF/classes/") || path.startsWith("/WEB-INF/lib/")))
+                ||
+                (path.startsWith("/WEB-INF/lib/") && path.endsWith(".jar"))) {
             return true;
         }
         return false;
