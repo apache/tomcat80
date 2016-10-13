@@ -111,6 +111,10 @@ public class FileResource extends AbstractResource {
 
     @Override
     public long getContentLength() {
+        if (isDirectory()) {
+            return -1;
+        }
+
         return resource.length();
     }
 
@@ -153,6 +157,11 @@ public class FileResource extends AbstractResource {
                     Long.valueOf(len)));
         }
 
+        if (len < 0) {
+            // Content is not applicable here (e.g. is a directory)
+            return null;
+        }
+
         int size = (int) len;
         byte[] result = new byte[size];
 
@@ -170,6 +179,7 @@ public class FileResource extends AbstractResource {
                 getLog().debug(sm.getString("abstractResource.getContentFail",
                         getWebappPath()), ioe);
             }
+            return null;
         }
 
         return result;
