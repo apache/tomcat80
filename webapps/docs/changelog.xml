@@ -74,6 +74,10 @@
       <update>
         Update the ECJ compiler to version 4.5.1. (markt)
       </update>
+      <fix>
+        Remove classes from tomcat-util-scan.jar that are duplicates of those in
+        tomcat-util.jar. (markt)
+      </fix>
     </changelog>
   </subsection>
 </section>
