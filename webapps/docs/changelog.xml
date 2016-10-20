@@ -77,7 +77,7 @@
     <changelog>
       <fix>
         Correct the HTTP header parser so that DEL is not treated as a valid
-        token character. (markt) 
+        token character. (markt)
       </fix>
     </changelog>
   </subsection>
