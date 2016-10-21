@@ -66,7 +66,7 @@ public class JmxRemoteLifecycleListener implements LifecycleListener {
     private static final Log log = LogFactory.getLog(JmxRemoteLifecycleListener.class);
 
     protected static final StringManager sm =
-            StringManager.getManager(Constants.Package);
+            StringManager.getManager(JmxRemoteLifecycleListener.class);
 
     protected String rmiBindAddress = null;
     protected int rmiRegistryPortPlatform = -1;
