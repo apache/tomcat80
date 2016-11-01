@@ -916,7 +916,11 @@ public abstract class AbstractHttp11Processor<S> extends AbstractProcessor<S> {
         case CLOSE_NOW: {
             // Block further output
             getOutputBuffer().finished = true;
-            setErrorState(ErrorState.CLOSE_NOW, null);
+            if (param instanceof Throwable) {
+                setErrorState(ErrorState.CLOSE_NOW, (Throwable) param);
+            } else {
+                setErrorState(ErrorState.CLOSE_NOW, null);
+            }
             break;
         }
         case END_REQUEST: {
@@ -1690,7 +1694,7 @@ public abstract class AbstractHttp11Processor<S> extends AbstractProcessor<S> {
                 if (getLog().isDebugEnabled()) {
                     getLog().debug("Unable to write async data.",x);
                 }
-                status = SocketStatus.ASYNC_WRITE_ERROR;
+                status = SocketStatus.ERROR;
                 request.setAttribute(RequestDispatcher.ERROR_EXCEPTION, x);
             }
         } else if (status == SocketStatus.OPEN_READ && request.getReadListener() != null) {
@@ -1707,7 +1711,7 @@ public abstract class AbstractHttp11Processor<S> extends AbstractProcessor<S> {
                 if (getLog().isDebugEnabled()) {
                     getLog().debug("Unable to read async data.",x);
                 }
-                status = SocketStatus.ASYNC_READ_ERROR;
+                status = SocketStatus.ERROR;
                 request.setAttribute(RequestDispatcher.ERROR_EXCEPTION, x);
             }
         }

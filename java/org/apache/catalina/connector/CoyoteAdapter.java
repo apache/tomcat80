@@ -292,43 +292,24 @@ public class CoyoteAdapter implements Adapter {
                 if (!asyncConImpl.timeout()) {
                     asyncConImpl.setErrorState(null, false);
                 }
-            } else if (status==SocketStatus.ASYNC_READ_ERROR) {
-                // A async read error is an IO error which means the socket
-                // needs to be closed so set success to false to trigger a
-                // close
+            } else if (status==SocketStatus.ERROR) {
+                // An I/O error occurred on a non-container thread which means
+                // that the socket needs to be closed so set success to false to
+                // trigger a close
                 success = false;
-                Throwable t = (Throwable)req.getAttribute(
-                        RequestDispatcher.ERROR_EXCEPTION);
+                Throwable t = (Throwable)req.getAttribute(RequestDispatcher.ERROR_EXCEPTION);
                 req.getAttributes().remove(RequestDispatcher.ERROR_EXCEPTION);
-                ReadListener readListener = req.getReadListener();
-                if (readListener != null) {
-                    ClassLoader oldCL = null;
-                    try {
-                        oldCL = request.getContext().bind(false, null);
-                        readListener.onError(t);
-                    } finally {
-                        request.getContext().unbind(false, oldCL);
+                ClassLoader oldCL = null;
+                try {
+                    oldCL = request.getContext().bind(false, null);
+                    if (req.getReadListener() != null) {
+                        req.getReadListener().onError(t);
                     }
-                }
-                if (t != null) {
-                    asyncConImpl.setErrorState(t, true);
-                }
-            } else if (status==SocketStatus.ASYNC_WRITE_ERROR) {
-                // A async write error is an IO error which means the socket
-                // needs to be closed so set success to false to trigger a
-                // close
-                success = false;
-                Throwable t = (Throwable)req.getAttribute(
-                        RequestDispatcher.ERROR_EXCEPTION);
-                req.getAttributes().remove(RequestDispatcher.ERROR_EXCEPTION);
-                if (res.getWriteListener() != null) {
-                    ClassLoader oldCL = null;
-                    try {
-                        oldCL = request.getContext().bind(false, null);
+                    if (res.getWriteListener() != null) {
                         res.getWriteListener().onError(t);
-                    } finally {
-                        request.getContext().unbind(false, oldCL);
                     }
+                } finally {
+                    request.getContext().unbind(false, oldCL);
                 }
                 if (t != null) {
                     asyncConImpl.setErrorState(t, true);

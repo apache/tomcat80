@@ -19,6 +19,8 @@ package org.apache.coyote;
 import java.io.IOException;
 import java.util.concurrent.Executor;
 
+import javax.servlet.RequestDispatcher;
+
 import org.apache.juli.logging.Log;
 import org.apache.tomcat.util.net.AbstractEndpoint;
 import org.apache.tomcat.util.net.AbstractEndpoint.Handler.SocketState;
@@ -88,7 +90,10 @@ public abstract class AbstractProcessor<S> implements ActionHook, Processor<S> {
                 response.setStatus(500);
             }
             getLog().info(sm.getString("abstractProcessor.nonContainerThreadError"), t);
-            getEndpoint().processSocket(socketWrapper, SocketStatus.CLOSE_NOW, true);
+            // Set the request attribute so that the async onError() event is
+            // fired when the error event is processed
+            request.setAttribute(RequestDispatcher.ERROR_EXCEPTION, t);
+            getEndpoint().processSocket(socketWrapper, SocketStatus.ERROR, true);
         }
     }
 

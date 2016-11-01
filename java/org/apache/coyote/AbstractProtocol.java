@@ -643,10 +643,7 @@ public abstract class AbstractProtocol<S> implements ProtocolHandler,
                 SocketState state = SocketState.CLOSED;
                 Iterator<DispatchType> dispatches = null;
                 do {
-                    if (status == SocketStatus.CLOSE_NOW) {
-                        processor.errorDispatch();
-                        state = SocketState.CLOSED;
-                    } else if (dispatches != null) {
+                    if (dispatches != null) {
                         // Associate the processor with the connection as
                         // these calls may result in a nested call to process()
                         connections.put(socket, processor);
