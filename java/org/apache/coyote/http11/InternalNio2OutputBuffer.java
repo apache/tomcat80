@@ -31,6 +31,7 @@ import java.util.concurrent.TimeoutException;
 
 import javax.servlet.RequestDispatcher;
 
+import org.apache.coyote.ActionCode;
 import org.apache.coyote.OutputBuffer;
 import org.apache.coyote.Response;
 import org.apache.juli.logging.Log;
@@ -523,12 +524,18 @@ public class InternalNio2OutputBuffer extends AbstractOutputBuffer<Nio2Channel> 
          */
         @Override
         public int doWrite(ByteChunk chunk, Response res) throws IOException {
-            int len = chunk.getLength();
-            int start = chunk.getStart();
-            byte[] b = chunk.getBuffer();
-            addToBB(b, start, len);
-            byteCount += len;
-            return len;
+            try {
+                int len = chunk.getLength();
+                int start = chunk.getStart();
+                byte[] b = chunk.getBuffer();
+                addToBB(b, start, len);
+                byteCount += len;
+                return len;
+            } catch (IOException ioe) {
+                response.action(ActionCode.CLOSE_NOW, ioe);
+                // Re-throw
+                throw ioe;
+            }
         }
 
         @Override

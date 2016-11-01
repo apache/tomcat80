@@ -23,6 +23,7 @@ import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.util.Iterator;
 
+import org.apache.coyote.ActionCode;
 import org.apache.coyote.ByteBufferHolder;
 import org.apache.coyote.OutputBuffer;
 import org.apache.coyote.Response;
@@ -313,13 +314,18 @@ public class InternalNioOutputBuffer extends AbstractOutputBuffer<NioChannel> {
          */
         @Override
         public int doWrite(ByteChunk chunk, Response res) throws IOException {
-
-            int len = chunk.getLength();
-            int start = chunk.getStart();
-            byte[] b = chunk.getBuffer();
-            addToBB(b, start, len);
-            byteCount += chunk.getLength();
-            return chunk.getLength();
+            try {
+                int len = chunk.getLength();
+                int start = chunk.getStart();
+                byte[] b = chunk.getBuffer();
+                addToBB(b, start, len);
+                byteCount += chunk.getLength();
+                return chunk.getLength();
+            } catch (IOException ioe) {
+                response.action(ActionCode.CLOSE_NOW, ioe);
+                // Re-throw
+                throw ioe;
+            }
         }
 
         @Override

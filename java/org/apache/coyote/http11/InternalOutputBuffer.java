@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.net.Socket;
 
+import org.apache.coyote.ActionCode;
 import org.apache.coyote.OutputBuffer;
 import org.apache.coyote.Response;
 import org.apache.tomcat.util.buf.ByteChunk;
@@ -208,27 +209,30 @@ public class InternalOutputBuffer extends AbstractOutputBuffer<Socket>
      * This class is an output buffer which will write data to an output
      * stream.
      */
-    protected class OutputStreamOutputBuffer
-        implements OutputBuffer {
+    protected class OutputStreamOutputBuffer implements OutputBuffer {
 
 
         /**
          * Write chunk.
          */
         @Override
-        public int doWrite(ByteChunk chunk, Response res)
-            throws IOException {
-
-            int length = chunk.getLength();
-            if (useSocketBuffer) {
-                socketBuffer.append(chunk.getBuffer(), chunk.getStart(),
-                                    length);
-            } else {
-                outputStream.write(chunk.getBuffer(), chunk.getStart(),
-                                   length);
+        public int doWrite(ByteChunk chunk, Response res) throws IOException {
+            try {
+                int length = chunk.getLength();
+                if (useSocketBuffer) {
+                    socketBuffer.append(chunk.getBuffer(), chunk.getStart(),
+                                        length);
+                } else {
+                    outputStream.write(chunk.getBuffer(), chunk.getStart(),
+                                       length);
+                }
+                byteCount += chunk.getLength();
+                return chunk.getLength();
+            } catch (IOException ioe) {
+                response.action(ActionCode.CLOSE_NOW, ioe);
+                // Re-throw
+                throw ioe;
             }
-            byteCount += chunk.getLength();
-            return chunk.getLength();
         }
 
         @Override

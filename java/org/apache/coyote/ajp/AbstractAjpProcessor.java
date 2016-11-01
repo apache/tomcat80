@@ -1822,7 +1822,13 @@ public abstract class AbstractAjpProcessor<S> extends AbstractProcessor<S> {
             }
 
             if (!swallowResponse) {
-                writeData(chunk);
+                try {
+                    writeData(chunk);
+                } catch (IOException ioe) {
+                    response.action(ActionCode.CLOSE_NOW, ioe);
+                    // Re-throw
+                    throw ioe;
+                }
             }
             return chunk.getLength();
         }
