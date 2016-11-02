@@ -28,6 +28,7 @@ import org.apache.juli.logging.Log;
 import org.apache.juli.logging.LogFactory;
 import org.apache.tomcat.util.buf.ByteChunk;
 import org.apache.tomcat.util.buf.MessageBytes;
+import org.apache.tomcat.util.http.parser.HttpParser;
 import org.apache.tomcat.util.net.AbstractEndpoint;
 import org.apache.tomcat.util.net.SocketWrapper;
 
@@ -142,7 +143,7 @@ public class InternalInputBuffer extends AbstractInputBuffer<Socket> {
             if (buf[pos] == Constants.SP || buf[pos] == Constants.HT) {
                 space = true;
                 request.method().setBytes(buf, start, pos - start);
-            } else if (!HTTP_TOKEN_CHAR[buf[pos]]) {
+            } else if (!HttpParser.isToken(buf[pos])) {
                 throw new IllegalArgumentException(sm.getString("iib.invalidmethod"));
             }
 
@@ -193,9 +194,10 @@ public class InternalInputBuffer extends AbstractInputBuffer<Socket> {
                 eol = true;
                 space = true;
                 end = pos;
-            } else if ((buf[pos] == Constants.QUESTION)
-                       && (questionPos == -1)) {
+            } else if ((buf[pos] == Constants.QUESTION) && (questionPos == -1)) {
                 questionPos = pos;
+            } else if (HttpParser.isNotRequestTarget(buf[pos])) {
+                throw new IllegalArgumentException(sm.getString("iib.invalidRequestTarget"));
             }
 
             pos++;
@@ -230,9 +232,8 @@ public class InternalInputBuffer extends AbstractInputBuffer<Socket> {
 
         //
         // Reading the protocol
-        // Protocol is always US-ASCII
+        // Protocol is always "HTTP/" DIGIT "." DIGIT
         //
-
         while (!eol) {
 
             // Read new bytes if needed
@@ -247,6 +248,8 @@ public class InternalInputBuffer extends AbstractInputBuffer<Socket> {
                 if (end == 0)
                     end = pos;
                 eol = true;
+            } else if (!HttpParser.isHttpProtocol(buf[pos])) {
+                throw new IllegalArgumentException(sm.getString("iib.invalidHttpProtocol"));
             }
 
             pos++;
@@ -345,7 +348,7 @@ public class InternalInputBuffer extends AbstractInputBuffer<Socket> {
             if (buf[pos] == Constants.COLON) {
                 colon = true;
                 headerValue = headers.addValue(buf, start, pos - start);
-            } else if (buf[pos] < 0 || !HTTP_TOKEN_CHAR[buf[pos]]) {
+            } else if (!HttpParser.isToken(buf[pos])) {
                 // If a non-token header is detected, skip the line and
                 // ignore the header
                 skipLine(start);

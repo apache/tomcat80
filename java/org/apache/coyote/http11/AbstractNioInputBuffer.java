@@ -21,6 +21,7 @@ import java.nio.charset.StandardCharsets;
 
 import org.apache.coyote.Request;
 import org.apache.tomcat.util.buf.MessageBytes;
+import org.apache.tomcat.util.http.parser.HttpParser;
 
 public abstract class AbstractNioInputBuffer<S> extends AbstractInputBuffer<S> {
 
@@ -228,7 +229,7 @@ public abstract class AbstractNioInputBuffer<S> extends AbstractInputBuffer<S> {
                 if (buf[pos] == Constants.SP || buf[pos] == Constants.HT) {
                     space = true;
                     request.method().setBytes(buf, parsingRequestLineStart, pos - parsingRequestLineStart);
-                } else if (!HTTP_TOKEN_CHAR[buf[pos]]) {
+                } else if (!HttpParser.isToken(buf[pos])) {
                     throw new IllegalArgumentException(sm.getString("iib.invalidmethod"));
                 }
                 pos++;
@@ -276,9 +277,10 @@ public abstract class AbstractNioInputBuffer<S> extends AbstractInputBuffer<S> {
                     parsingRequestLineEol = true;
                     space = true;
                     end = pos;
-                } else if ((buf[pos] == Constants.QUESTION)
-                           && (parsingRequestLineQPos == -1)) {
+                } else if ((buf[pos] == Constants.QUESTION) && (parsingRequestLineQPos == -1)) {
                     parsingRequestLineQPos = pos;
+                } else if (HttpParser.isNotRequestTarget(buf[pos])) {
+                    throw new IllegalArgumentException(sm.getString("iib.invalidRequestTarget"));
                 }
                 pos++;
             }
@@ -315,7 +317,7 @@ public abstract class AbstractNioInputBuffer<S> extends AbstractInputBuffer<S> {
         if (parsingRequestLinePhase == 6) {
             //
             // Reading the protocol
-            // Protocol is always US-ASCII
+            // Protocol is always "HTTP/" DIGIT "." DIGIT
             //
             while (!parsingRequestLineEol) {
                 // Read new bytes if needed
@@ -330,6 +332,8 @@ public abstract class AbstractNioInputBuffer<S> extends AbstractInputBuffer<S> {
                     if (end == 0)
                         end = pos;
                     parsingRequestLineEol = true;
+                } else if (!HttpParser.isHttpProtocol(buf[pos])) {
+                    throw new IllegalArgumentException(sm.getString("iib.invalidHttpProtocol"));
                 }
                 pos++;
             }
@@ -470,7 +474,7 @@ public abstract class AbstractNioInputBuffer<S> extends AbstractInputBuffer<S> {
                 headerData.realPos = pos;
                 headerData.lastSignificantChar = pos;
                 break;
-            } else if (chr < 0 || !HTTP_TOKEN_CHAR[chr]) {
+            } else if (!HttpParser.isToken(chr)) {
                 // If a non-token header is detected, skip the line and
                 // ignore the header
                 headerData.lastSignificantChar = pos;
