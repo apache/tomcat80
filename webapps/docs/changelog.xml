@@ -44,6 +44,17 @@
   They eventually become mixed with the numbered issues. (I.e., numbered
   issues do not "pop up" wrt. others).
 -->
+<section name="Tomcat 8.0.40 (violetagg)">
+  <subsection name="Catalina">
+    <changelog>
+      <fix>
+        <bug>60351</bug>: Delay creating <code>META-INF/war-tracker</code> file
+        until after the WAR has been expanded to address the case where the
+        Tomcat process terminates during the expansion. (markt)
+      </fix>
+    </changelog>
+  </subsection>
+</section>
 <section name="Tomcat 8.0.39 (violetagg)">
   <subsection name="Catalina">
     <changelog>
