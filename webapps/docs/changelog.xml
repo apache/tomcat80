@@ -52,6 +52,10 @@
         until after the WAR has been expanded to address the case where the
         Tomcat process terminates during the expansion. (markt)
       </fix>
+      <fix>
+        Correctly handle the <code>configClass</code> attribute of a Host when
+        embedding Tomcat. (markt)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Tribes">
