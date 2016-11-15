@@ -66,6 +66,15 @@
       </fix>
     </changelog>
   </subsection>
+  <subsection name="jdbc-pool">
+    <changelog>
+      <fix>
+        <bug>60194</bug>: If <code>validationQuery</code> is not specified,
+        connection validation is done by calling the <code>isValid()</code>
+        method. (kfujino)
+      </fix>
+    </changelog>
+  </subsection>
 </section>
 <section name="Tomcat 8.0.39 (violetagg)" rtext="2016-11-14">
   <subsection name="Catalina">
