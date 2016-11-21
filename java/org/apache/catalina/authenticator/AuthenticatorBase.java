@@ -36,6 +36,7 @@ import org.apache.catalina.LifecycleException;
 import org.apache.catalina.Manager;
 import org.apache.catalina.Realm;
 import org.apache.catalina.Session;
+import org.apache.catalina.TomcatPrincipal;
 import org.apache.catalina.Valve;
 import org.apache.catalina.Wrapper;
 import org.apache.catalina.connector.Request;
@@ -47,6 +48,7 @@ import org.apache.catalina.valves.ValveBase;
 import org.apache.coyote.ActionCode;
 import org.apache.juli.logging.Log;
 import org.apache.juli.logging.LogFactory;
+import org.apache.tomcat.util.ExceptionUtils;
 import org.apache.tomcat.util.descriptor.web.LoginConfig;
 import org.apache.tomcat.util.descriptor.web.SecurityConstraint;
 import org.apache.tomcat.util.http.FastHttpDateFormat;
@@ -956,9 +958,17 @@ public abstract class AuthenticatorBase extends ValveBase
 
     @Override
     public void logout(Request request) {
-        register(request, request.getResponse(), null,
-                null, null, null);
+        Principal p = request.getPrincipal();
+        if (p instanceof TomcatPrincipal) {
+            try {
+                ((TomcatPrincipal) p).logout();
+            } catch (Throwable t) {
+                ExceptionUtils.handleThrowable(t);
+                log.debug(sm.getString("authenticator.tomcatPrincipalLogoutFail"), t);
+            }
+        }
 
+        register(request, request.getResponse(), null, null, null, null);
     }
 
     /**
