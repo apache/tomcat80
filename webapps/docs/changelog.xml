@@ -82,6 +82,10 @@
         in the <code>Authenticator</code>. Patch provided by Michael Osipov.
         (markt)
       </fix>
+      <fix>
+        Correctly generate URLs for resources located inside JARs that are
+        themselves located inside a packed WAR file. (markt)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Web applications">
