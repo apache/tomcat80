@@ -443,6 +443,7 @@
     <patternset refid="files.catalina" />
     <patternset refid="files.servlet-api" />
     <patternset refid="files.tomcat-api" />
+    <patternset refid="files.tomcat-juli" />
     <!-- These pattern sets conflict so include files directly
       <patternset refid="files.tomcat-coyote" />
       <patternset refid="files.tomcat-util" />
