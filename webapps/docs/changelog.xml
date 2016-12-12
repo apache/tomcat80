@@ -48,6 +48,11 @@
   <subsection name="Catalina">
     <changelog>
       <fix>
+        <bug>60446</bug>: Handle the case where the stored user credential uses
+        a different key length than the length currently configured for the
+        <code>CredentialHandler</code>. Based on a patch by Niklas Holm. (markt)
+      </fix>
+      <fix>
         <bug>60351</bug>: Delay creating <code>META-INF/war-tracker</code> file
         until after the WAR has been expanded to address the case where the
         Tomcat process terminates during the expansion. (markt)
