@@ -108,6 +108,10 @@
         when generating the re-written URL. Based on a patch by Michael Osipov.
         (markt)
       </fix>
+      <fix>
+        <bug>60467</bug>: remove problematic characters from XML document
+       (schultz). Based upon a patch by Michael Osipov.
+      </fix>
       <update>
         Update the warnings that reference required options for running on Java
         9 to use the latest syntax for those options. (markt)
