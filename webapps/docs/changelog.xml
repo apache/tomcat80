@@ -161,6 +161,10 @@
         Issue reported via comments.apache.org. (violetagg)
       </fix>
       <fix>
+        <bug>60344</bug>: Add a note to BUILDING.txt regarding using the source
+        bundle with the correct line endings. (markt)
+      </fix>
+      <fix>
         <bug>60412</bug>: Add information on the comment syntax for the
         <code>RewriteValve</code> configuration. (markt)
       </fix>
