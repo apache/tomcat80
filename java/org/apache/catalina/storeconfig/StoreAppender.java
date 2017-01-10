@@ -202,7 +202,7 @@ public class StoreAppender {
      * @param bean
      *            Bean whose properties are to be rendered as attributes,
      * @param desc
-     *            RegistryDescrpitor from this bean
+     *            RegistryDescriptor from this bean
      *
      * @exception Exception
      *                if an exception occurs while storing

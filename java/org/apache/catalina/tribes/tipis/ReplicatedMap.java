@@ -65,7 +65,7 @@ public class ReplicatedMap<K,V> extends AbstractReplicatedMap<K,V> {
     /**
      * Creates a new map
      * @param channel The channel to use for communication
-     * @param timeout long - timeout for RPC messags
+     * @param timeout long - timeout for RPC messages
      * @param mapContextName String - unique name for this map, to allow multiple maps per channel
      * @param initialCapacity int - the size of this map, see HashMap
      * @param loadFactor float - load factor, see HashMap
@@ -77,7 +77,7 @@ public class ReplicatedMap<K,V> extends AbstractReplicatedMap<K,V> {
     /**
      * Creates a new map
      * @param channel The channel to use for communication
-     * @param timeout long - timeout for RPC messags
+     * @param timeout long - timeout for RPC messages
      * @param mapContextName String - unique name for this map, to allow multiple maps per channel
      * @param initialCapacity int - the size of this map, see HashMap
      */
@@ -88,7 +88,7 @@ public class ReplicatedMap<K,V> extends AbstractReplicatedMap<K,V> {
     /**
      * Creates a new map
      * @param channel The channel to use for communication
-     * @param timeout long - timeout for RPC messags
+     * @param timeout long - timeout for RPC messages
      * @param mapContextName String - unique name for this map, to allow multiple maps per channel
      */
     public ReplicatedMap(MapOwner owner, Channel channel, long timeout, String mapContextName, ClassLoader[] cls) {
@@ -98,7 +98,7 @@ public class ReplicatedMap<K,V> extends AbstractReplicatedMap<K,V> {
     /**
      * Creates a new map
      * @param channel The channel to use for communication
-     * @param timeout long - timeout for RPC messags
+     * @param timeout long - timeout for RPC messages
      * @param mapContextName String - unique name for this map, to allow multiple maps per channel
      * @param terminate boolean - Flag for whether to terminate this map that failed to start.
      */

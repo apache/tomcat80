@@ -76,7 +76,7 @@ public class StoreConfigLifecycleListener implements LifecycleListener {
      }
 
     /**
-     * create StoreConfig MBean and load StoreRgistry MBeans name is
+     * create StoreConfig MBean and load StoreRegistry MBeans name is
      * <i>Catalina:type=StoreConfig </i>
      */
     protected void createMBean(Server server) {

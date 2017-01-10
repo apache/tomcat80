@@ -731,7 +731,7 @@ public class RewriteValve extends ValveBase {
 
 
     /**
-     * Parser for ReweriteRule flags.
+     * Parser for RewriteRule flags.
      *
      * @param rule
      * @param flag

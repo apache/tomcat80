@@ -117,7 +117,7 @@ public class CoyoteOutputStream extends ServletOutputStream {
     /**
      * Checks for concurrent writes which are not permitted. This object has no
      * state information so the call chain is
-     * CoyoyeOutputStream->OutputBuffer->CoyoteResponse.
+     * CoyoteOutputStream->OutputBuffer->CoyoteResponse.
      *
      * @return <code>true</code> if this OutputStream is currently in
      *         non-blocking mode.
