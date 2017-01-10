@@ -185,7 +185,7 @@
   <property name="test.jvmarg.egd" value="" />
 
   <!-- Location of OpenSSL binary (file name, not directory) -->
-  <!-- The OpenSSL tests cases be disabled by specifing an invalid path here -->
+  <!-- The OpenSSL tests cases be disabled by specifying an invalid path here -->
   <property name="test.openssl.path" value="" />
 
   <!-- Include .gitignore in src distributions. -->

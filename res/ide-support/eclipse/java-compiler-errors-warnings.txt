@@ -93,7 +93,7 @@ Eclipse IDE is documented here:
 
 The following configuration of "Organize Imports" setting can be
 recommended for a quick setup. The order is enforced by checkstyle, so for
-the authorative definition look at <module name="ImportOrder"> in
+the authoritative definition look at <module name="ImportOrder"> in
 res/checkstyle/checkstyle.xml
 
  - java
