@@ -54,6 +54,13 @@
       </add>
     </changelog>
   </subsection>
+  <subsection name="Web applications">
+    <changelog>
+      <fix>
+        Ensure the ASF logo image is displayed in host-manager. (violetagg)
+      </fix>
+    </changelog>
+  </subsection>
 </section>
 <section name="Tomcat 8.0.40 (violetagg)" rtext="release in progress">
   <subsection name="Catalina">
