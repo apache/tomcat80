@@ -53,6 +53,15 @@
       </update>
     </changelog>
   </subsection>
+  <subsection name="WebSocket">
+    <changelog>
+      <fix>
+        <bug>60617</bug>: Correctly create a <code>CONNECT</code> request when
+        establishing a WebSocket connection via a proxy. Patch provided by
+        Svetlin Zarev. (markt)
+      </fix>
+    </changelog>
+  </subsection>
 </section>
 <section name="Tomcat 8.0.41 (violetagg)" rtext="2017-01-24">
   <subsection name="Cluster">
