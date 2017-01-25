@@ -5694,6 +5694,16 @@ public class StandardContext extends ContainerBase
                         resources), e);
             }
         }
+        InstanceManager instanceManager = getInstanceManager();
+        if (instanceManager instanceof DefaultInstanceManager) {
+            try {
+                ((DefaultInstanceManager) instanceManager).backgroundProcess();
+            } catch (Exception e) {
+                log.warn(sm.getString(
+                        "standardContext.backgroundProcess.instanceManager",
+                        resources), e);
+            }
+        }
         super.backgroundProcess();
     }
 

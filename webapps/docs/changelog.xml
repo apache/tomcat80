@@ -51,6 +51,11 @@
         <bug>60596</bug>: Improve performance of DefaultServlet when sendfile
         feature is disabled on connector. (kkolinko)
       </update>
+      <fix>
+        Reduce the contention in the default <code>InstanceManager</code>
+        implementation when multiple threads are managing objects and need to
+        reference the annotation cache. (markt)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="WebSocket">
