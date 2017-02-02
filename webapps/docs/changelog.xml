@@ -81,6 +81,14 @@
       </fix>
     </changelog>
   </subsection>
+  <subsection name="Tribes">
+    <changelog>
+      <fix>
+        Ensure that <code>NoRpcChannelReply</code> messages are not received on
+        <code>RpcCallback</code>. (kfujino)
+      </fix>
+    </changelog>
+  </subsection>
 </section>
 <section name="Tomcat 8.0.41 (violetagg)" rtext="2017-01-24">
   <subsection name="Cluster">
