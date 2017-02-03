@@ -2410,14 +2410,6 @@ class Generator {
             // includes setting the context
             generateSetters(n, tagHandlerVar, handlerInfo, false);
 
-            // JspIdConsumer (after context has been set)
-            if (n.implementsJspIdConsumer()) {
-                out.printin(tagHandlerVar);
-                out.print(".setJspId(\"");
-                out.print(createJspId());
-                out.println("\");");
-            }
-
             if (n.implementsTryCatchFinally()) {
                 out.printin("int[] ");
                 out.print(tagPushBodyCountVar);
@@ -2452,7 +2444,6 @@ class Generator {
                     out.println(" != javax.servlet.jsp.tagext.Tag.EVAL_BODY_INCLUDE) {");
                     // Assume EVAL_BODY_BUFFERED
                     out.pushIndent();
-                    out.printil("out = _jspx_page_context.pushBody();");
                     if (n.implementsTryCatchFinally()) {
                         out.printin(tagPushBodyCountVar);
                         out.println("[0]++;");
@@ -2460,11 +2451,10 @@ class Generator {
                         out.printin(pushBodyCountVar);
                         out.println("[0]++;");
                     }
-                    out.printin(tagHandlerVar);
-                    out.println(".setBodyContent((javax.servlet.jsp.tagext.BodyContent) out);");
-                    out.printin(tagHandlerVar);
-                    out.println(".doInitBody();");
-
+                    out.printin("out = org.apache.jasper.runtime.JspRuntimeLibrary.startBufferedBody(");
+                    out.print("_jspx_page_context, ");
+                    out.print(tagHandlerVar);
+                    out.println(");");
                     out.popIndent();
                     out.printil("}");
 
@@ -2488,24 +2478,21 @@ class Generator {
         }
 
         private void writeNewInstance(String tagHandlerVar, String tagHandlerClassName) {
+            out.printin(tagHandlerClassName);
+            out.print(" ");
+            out.print(tagHandlerVar);
+            out.print(" = ");
             if (Constants.USE_INSTANCE_MANAGER_FOR_TAGS) {
-                out.printin(tagHandlerClassName);
-                out.print(" ");
-                out.print(tagHandlerVar);
-                out.print(" = (");
+                out.print("(");
                 out.print(tagHandlerClassName);
                 out.print(")");
                 out.print("_jsp_getInstanceManager().newInstance(\"");
                 out.print(tagHandlerClassName);
                 out.println("\", this.getClass().getClassLoader());");
             } else {
-                out.printin(tagHandlerClassName);
-                out.print(" ");
-                out.print(tagHandlerVar);
-                out.print(" = (");
                 out.print("new ");
                 out.print(tagHandlerClassName);
-                out.println("());");
+                out.println("();");
                 out.printin("_jsp_getInstanceManager().newInstance(");
                 out.print(tagHandlerVar);
                 out.println(");");
@@ -2615,21 +2602,18 @@ class Generator {
             }
 
             // Ensure clean-up takes place
+            // Use JspRuntimeLibrary to minimise code in _jspService()
             out.popIndent();
             out.printil("} finally {");
             out.pushIndent();
+            out.printin("org.apache.jasper.runtime.JspRuntimeLibrary.releaseTag(");
+            out.print(tagHandlerVar);
+            out.print(", _jsp_getInstanceManager(), ");
             if (isPoolingEnabled && !(n.implementsJspIdConsumer())) {
-                out.printin("if (!");
                 out.print(tagHandlerVar);
-                out.println("_reused) {");
-                out.pushIndent();
-            }
-            out.printin(tagHandlerVar);
-            out.println(".release();");
-            writeDestroyInstance(tagHandlerVar);
-            if (isPoolingEnabled && !(n.implementsJspIdConsumer())) {
-                out.popIndent();
-                out.printil("}");
+                out.println("_reused);");
+            } else {
+                out.println("false);");
             }
             out.popIndent();
             out.printil("}");
@@ -2661,14 +2645,6 @@ class Generator {
             writeNewInstance(tagHandlerVar, tagHandlerClassName);
 
             generateSetters(n, tagHandlerVar, handlerInfo, true);
-
-            // JspIdConsumer (after context has been set)
-            if (n.implementsJspIdConsumer()) {
-                out.printin(tagHandlerVar);
-                out.print(".setJspId(\"");
-                out.print(createJspId());
-                out.println("\");");
-            }
 
             // Set the body
             if (findJspBody(n) == null) {
@@ -3263,6 +3239,14 @@ class Generator {
                     out.print(attrValue);
                     out.println(");");
                 }
+            }
+
+            // JspIdConsumer (after context has been set)
+            if (n.implementsJspIdConsumer()) {
+                out.printin(tagHandlerVar);
+                out.print(".setJspId(\"");
+                out.print(createJspId());
+                out.println("\");");
             }
         }
 
