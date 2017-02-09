@@ -21,7 +21,6 @@ import java.io.StringReader;
 
 import org.apache.juli.logging.Log;
 import org.apache.juli.logging.LogFactory;
-
 import org.apache.tomcat.util.res.StringManager;
 
 /**
@@ -61,7 +60,8 @@ public class HttpParser {
                 if (c == '{' || c == '}' || c == '|') {
                     REQUEST_TARGET_ALLOW[c] = true;
                 } else {
-                    log.warn(sm.getString("httpparser.invalidRequestTargetCharacter", c));
+                    log.warn(sm.getString("httpparser.invalidRequestTargetCharacter",
+                            Character.valueOf(c)));
                 }
             }
         }
