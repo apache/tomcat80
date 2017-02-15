@@ -274,7 +274,7 @@ public class CoyoteAdapter implements Adapter {
         AsyncContextImpl asyncConImpl = request.getAsyncContextInternal();
         req.getRequestProcessor().setWorkerThreadName(Thread.currentThread().getName());
         try {
-            if (!request.isAsync() && !comet) {
+            if (!request.isAsync()) {
                 // Error or timeout - need to tell listeners the request is over
                 // Have to test this first since state may change while in this
                 // method and this is only required if entering this method in
