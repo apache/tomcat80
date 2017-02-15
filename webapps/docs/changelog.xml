@@ -129,15 +129,6 @@
       </fix>
     </changelog>
   </subsection>
-  <subsection name="Other">
-    <changelog>
-      <add>
-        <bug>60632</bug>: Add support for the <code>CATALINA_EXIT_DELAY</code>
-        environment variable that can be used to work around a known systemd
-        bug. Based on a patch by Jeff Turner. (markt)
-      </add>
-    </changelog>
-  </subsection>
 </section>
 <section name="Tomcat 8.0.41 (violetagg)" rtext="2017-01-24">
   <subsection name="Cluster">
