@@ -148,6 +148,14 @@
       </fix>
     </changelog>
   </subsection>
+  <subsection name="Other">
+    <changelog>
+      <update>
+        Update the packaged version of the Tomcat Native Library to 1.2.12 to
+        pick up the latest Windows binaries built with OpenSSL 1.0.2k. (violetagg)
+      </update>
+    </changelog>
+  </subsection>
 </section>
 <section name="Tomcat 8.0.41 (violetagg)" rtext="2017-01-24">
   <subsection name="Cluster">
