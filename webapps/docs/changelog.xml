@@ -98,6 +98,11 @@
         character in <code>jar:file:...</code> URLs. The default separator of
         <code>*</code> remains unchanged. (markt)
       </fix>
+      <fix>
+        <bug>60798</bug>: Correct a bug in the handling of JARs in unpacked WARs
+        that meant multiple attempts to read the same entry from a JAR in
+        succession would fail for the second and subsequent attempts. (markt)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Coyote">
