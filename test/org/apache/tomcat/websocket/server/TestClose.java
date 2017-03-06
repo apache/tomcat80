@@ -155,8 +155,11 @@ public class TestClose extends WebSocketBaseTest {
         client.httpUpgrade(BaseEndpointConfig.PATH);
         client.sendCloseFrame(CloseCodes.GOING_AWAY);
         client.closeSocket();
-
-        awaitOnClose(CloseCodes.GOING_AWAY);
+        // The close code seen by the server endpoint depends on how quickly the
+        // server processes the socket close. If it processes it before it
+        // finishes processing the GOING_AWAY (NIO2 can do this) then the server
+        // endpoint will see CLOSED_ABNORMALLY rather than GOING_AWAY.
+        awaitOnClose(CloseCodes.GOING_AWAY, CloseCodes.CLOSED_ABNORMALLY);
     }
 
 
