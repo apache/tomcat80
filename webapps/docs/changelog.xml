@@ -151,6 +151,9 @@
         Refactor code generated for JSPs to reduce the size of the code required
         for tags. (markt)
       </fix>
+      <update>
+        Update to the Eclipse JDT Compiler 4.6.1. (markt)
+      </update>
     </changelog>
   </subsection>
   <subsection name="Cluster">
