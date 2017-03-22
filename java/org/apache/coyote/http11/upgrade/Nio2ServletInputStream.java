@@ -52,7 +52,7 @@ public class Nio2ServletInputStream extends AbstractServletInputStream {
             @Override
             public void completed(Integer nBytes, SocketWrapper<Nio2Channel> attachment) {
                 boolean notify = false;
-                synchronized (completionHandler) {
+                synchronized (Nio2ServletInputStream.this.wrapper) {
                     if (nBytes.intValue() < 0) {
                         if (closed) {
                             readPending = false;
@@ -87,7 +87,7 @@ public class Nio2ServletInputStream extends AbstractServletInputStream {
 
     @Override
     protected boolean doIsReady() throws IOException {
-        synchronized (completionHandler) {
+        synchronized (wrapper) {
             if (readPending) {
                 interest = true;
                 return false;
@@ -122,7 +122,7 @@ public class Nio2ServletInputStream extends AbstractServletInputStream {
     protected int doRead(boolean block, byte[] b, int off, int len)
             throws IOException {
 
-        synchronized (completionHandler) {
+        synchronized (wrapper) {
             if (readPending) {
                 return 0;
             }

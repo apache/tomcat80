@@ -59,6 +59,15 @@
       </fix>
     </changelog>
   </subsection>
+  <subsection name="Coyote">
+    <changelog>
+      <fix>
+        When using the NIO2 connector, ensure a WebSocket close frame is
+        processed before the end of stream is processed to ensure that the end
+        of stream is processed correctly. (markt)
+      </fix>
+    </changelog>
+  </subsection>
   <subsection name="Jasper">
     <changelog>
       <fix>
