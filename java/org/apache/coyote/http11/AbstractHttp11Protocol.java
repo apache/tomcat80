@@ -100,16 +100,26 @@ public abstract class AbstractHttp11Protocol<S> extends AbstractProtocol<S> {
     }
 
 
-    private String compressableMimeTypes = "text/html,text/xml,text/plain,text/css,text/javascript,application/javascript";
-    public String getCompressableMimeType() { return compressableMimeTypes; }
+    private String compressibleMimeTypes = "text/html,text/xml,text/plain,text/css,text/javascript,application/javascript";
+    @Deprecated
+    public String getCompressableMimeType() {
+        return getCompressibleMimeType();
+    }
+    @Deprecated
     public void setCompressableMimeType(String valueS) {
-        compressableMimeTypes = valueS;
+        setCompressibleMimeType(valueS);
     }
+    @Deprecated
     public String getCompressableMimeTypes() {
-        return getCompressableMimeType();
+        return getCompressibleMimeType();
     }
+    @Deprecated
     public void setCompressableMimeTypes(String valueS) {
-        setCompressableMimeType(valueS);
+        setCompressibleMimeType(valueS);
+    }
+    public String getCompressibleMimeType() { return compressibleMimeTypes; }
+    public void setCompressibleMimeType(String valueS) {
+        compressibleMimeTypes = valueS;
     }
 
 
@@ -283,7 +293,7 @@ public abstract class AbstractHttp11Protocol<S> extends AbstractProtocol<S> {
         processor.setCompressionMinSize(getCompressionMinSize());
         processor.setCompression(getCompression());
         processor.setNoCompressionUserAgents(getNoCompressionUserAgents());
-        processor.setCompressableMimeTypes(getCompressableMimeTypes());
+        processor.setCompressibleMimeTypes(getCompressibleMimeType());
         processor.setRestrictedUserAgents(getRestrictedUserAgents());
         processor.setSocketBuffer(getSocketBuffer());
         processor.setMaxSavePostSize(getMaxSavePostSize());
