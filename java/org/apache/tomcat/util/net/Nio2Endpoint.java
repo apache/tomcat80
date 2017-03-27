@@ -914,17 +914,22 @@ public class Nio2Endpoint extends AbstractEndpoint<Nio2Channel> {
                     } catch (IOException e) {
                         // Ignore
                     }
-                    if (attachment.keepAlive) {
-                        if (!isInline()) {
-                            awaitBytes(attachment.socket);
-                        } else {
-                            attachment.doneInline = true;
-                        }
+                    if (isInline()) {
+                        attachment.doneInline = true;
                     } else {
-                        if (!isInline()) {
+                        switch (attachment.keepAliveState) {
+                        case NONE: {
                             processSocket(attachment.socket, SocketStatus.DISCONNECT, false);
-                        } else {
-                            attachment.doneInline = true;
+                            break;
+                        }
+                        case PIPELINED: {
+                            processSocket(attachment.socket, SocketStatus.OPEN_READ, true);
+                            break;
+                        }
+                        case OPEN: {
+                            awaitBytes(attachment.socket);
+                            break;
+                        }
                         }
                     }
                     return;
@@ -1162,7 +1167,7 @@ public class Nio2Endpoint extends AbstractEndpoint<Nio2Channel> {
         public long pos;
         public long length;
         // KeepAlive flag
-        public boolean keepAlive;
+        public SendfileKeepAliveState keepAliveState = SendfileKeepAliveState.NONE;
         // Internal use only
         private Nio2SocketWrapper socket;
         private ByteBuffer buffer;
