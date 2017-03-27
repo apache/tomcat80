@@ -48,6 +48,7 @@ public class HttpMessages {
     private final String st_302;
     private final String st_400;
     private final String st_404;
+    private final String st_500;
 
     private HttpMessages(StringManager sm) {
         // There is a performance tradeoff here. This implementation incurs
@@ -66,6 +67,7 @@ public class HttpMessages {
         st_302 = sm.getString("sc.302");
         st_400 = sm.getString("sc.400");
         st_404 = sm.getString("sc.404");
+        st_500 = sm.getString("sc.500");
     }
 
 
@@ -88,6 +90,8 @@ public class HttpMessages {
             return st_400;
         case 404:
             return st_404;
+        case 500:
+            return st_500;
         default:
             return sm.getString("sc."+ status);
         }
