@@ -297,7 +297,7 @@ public abstract class AbstractHttp11Processor<S> extends AbstractProcessor<S> {
 
 
     /**
-     * @deprecated Use {@link #setCompressibleMimeTypes(String[])
+     * @deprecated Use {@link #setCompressibleMimeTypes(String[])}
      */
     @Deprecated
     public void setCompressableMimeTypes(String[] compressibleMimeTypes) {
