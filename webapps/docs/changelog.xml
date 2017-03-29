@@ -45,6 +45,14 @@
   issues do not "pop up" wrt. others).
 -->
 <section name="Tomcat 8.0.44 (violetagg)" rtext="In development">
+  <subsection name="Other">
+    <changelog>
+      <fix>
+        Correct comments about Java 8 in <code>Jre8Compat</code>.
+        Patch provided by fibbers via Github. (violetagg)
+      </fix>
+    </changelog>
+  </subsection>
 </section>
 <section name="Tomcat 8.0.43 (violetagg)" rtext="release in progress">
   <subsection name="Catalina">
