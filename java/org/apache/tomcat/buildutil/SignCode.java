@@ -62,7 +62,8 @@ public class SignCode extends Task {
 
     static {
         try {
-            SIGNING_SERVICE_URL = new URL("https://api.ws.symantec.com/webtrust/SigningService");
+            SIGNING_SERVICE_URL = new URL(
+                    "https://api-appsec-cws.ws.symantec.com/webtrust/SigningService");
         } catch (MalformedURLException e) {
             throw new IllegalArgumentException(e);
         }
@@ -77,9 +78,12 @@ public class SignCode extends Task {
     private String userName;
     private String password;
     private String partnerCode;
+    private String keyStore;
+    private String keyStorePassword;
     private String applicationName;
     private String applicationVersion;
     private String signingService;
+    private boolean debug;
 
     public void addFileset(FileSet fileset) {
         filesets.add(fileset);
@@ -101,6 +105,16 @@ public class SignCode extends Task {
     }
 
 
+    public void setKeyStore(String keyStore) {
+        this.keyStore = keyStore;
+    }
+
+
+    public void setKeyStorePassword(String keyStorePassword) {
+        this.keyStorePassword = keyStorePassword;
+    }
+
+
     public void setApplicationName(String applicationName) {
         this.applicationName = applicationName;
     }
@@ -113,6 +127,11 @@ public class SignCode extends Task {
 
     public void setSigningService(String signingService) {
         this.signingService = signingService;
+    }
+
+
+    public void setDebug(String debug) {
+        this.debug = Boolean.parseBoolean(debug);
     }
 
 
@@ -134,6 +153,10 @@ public class SignCode extends Task {
                 }
             }
         }
+
+        // Set up the TLS client
+        System.setProperty("javax.net.ssl.keyStore", keyStore);
+        System.setProperty("javax.net.ssl.keyStorePassword", keyStorePassword);
 
         try {
             String signingSetID = makeSigningRequest(filesToSign);
@@ -184,6 +207,12 @@ public class SignCode extends Task {
 
         log("Sending singing request to server and waiting for response");
         SOAPMessage response = connection.call(message, SIGNING_SERVICE_URL);
+
+        if (debug) {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream(2 * 1024);
+            response.writeTo(baos);
+            log(baos.toString("UTF-8"));
+        }
 
         log("Processing response");
         SOAPElement responseBody = response.getSOAPBody();
