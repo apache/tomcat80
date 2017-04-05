@@ -150,9 +150,9 @@ public final class ExtensionValidator {
                 String jarName = manifestResource.getURL().toExternalForm();
                 Manifest jmanifest = manifestResource.getManifest();
                 if (jmanifest != null) {
-	                ManifestResource mre = new ManifestResource(jarName,
-	                        jmanifest, ManifestResource.APPLICATION);
-	                appManifestResources.add(mre);
+                    ManifestResource mre = new ManifestResource(jarName,
+                            jmanifest, ManifestResource.APPLICATION);
+                    appManifestResources.add(mre);
                 }
             }
         }
