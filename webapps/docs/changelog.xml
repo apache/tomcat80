@@ -48,6 +48,9 @@
   <subsection name="General">
     <changelog>
       <add>
+        Document <code>test.threads</code> option in BUILDING.txt. (kkolinko, rjung)
+      </add>
+      <add>
         Allow to exclude JUnit test classes using the build property
         <code>test.exclude</code> and document the property in
         BUILDING.txt. (rjung)
