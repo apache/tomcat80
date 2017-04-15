@@ -48,9 +48,6 @@
   <subsection name="General">
     <changelog>
       <add>
-        Document <code>test.threads</code> option in BUILDING.txt. (kkolinko, rjung)
-      </add>
-      <add>
         Allow to exclude JUnit test classes using the build property
         <code>test.exclude</code> and document the property in
         BUILDING.txt. (rjung)
@@ -80,6 +77,14 @@
         by interfaces when a <code>BeanELResolver</code> is used under a
         <code>SecurityManager</code>. (markt)
       </fix>
+    </changelog>
+  </subsection>
+  <subsection name="Web applications">
+    <changelog>
+      <add>
+        Document <code>test.threads</code> option in BUILDING.txt.
+        (kkolinko, rjung)
+      </add>
     </changelog>
   </subsection>
   <subsection name="jdbc-pool">
