@@ -85,6 +85,10 @@
         Document <code>test.threads</code> option in BUILDING.txt.
         (kkolinko, rjung)
       </add>
+      <add>
+        Add documents for <code>maxIdleTime</code> attribute to Channel Receiver
+        docs. (kfujino)
+      </add>
     </changelog>
   </subsection>
   <subsection name="jdbc-pool">
