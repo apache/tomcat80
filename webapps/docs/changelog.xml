@@ -68,6 +68,11 @@
         failure to load this class masking the true problem during error
         handling. (markt)
       </fix>
+      <fix>
+        Review those places where Tomcat re-encodes a URI or URI component and
+        ensure that that correct encoding (path differs from query string) is
+        applied and that the encoding is applied consistently. (markt)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Jasper">
