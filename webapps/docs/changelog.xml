@@ -103,6 +103,11 @@
         by interfaces when a <code>BeanELResolver</code> is used under a
         <code>SecurityManager</code>. (markt)
       </fix>
+      <fix>
+        <bug>61065</bug>: Ensure that once the class is resolved by
+        <code>javax.el.ImportHandler#resolveClass</code> it will be cached with
+        the proper name. (violetagg)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Web applications">
