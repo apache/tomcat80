@@ -107,6 +107,9 @@
         by interfaces when a <code>BeanELResolver</code> is used under a
         <code>SecurityManager</code>. (markt)
       </fix>
+      <update>
+        <bug>61057</bug>: Update to Eclipse JDT Compiler 4.6.3. (violetagg)
+      </update>
       <fix>
         <bug>61065</bug>: Ensure that once the class is resolved by
         <code>javax.el.ImportHandler#resolveClass</code> it will be cached with
