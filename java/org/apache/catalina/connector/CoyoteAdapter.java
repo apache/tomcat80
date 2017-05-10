@@ -1192,7 +1192,7 @@ public class CoyoteAdapter implements Adapter {
 
 
     /**
-     * Parse session id in URL.
+     * Parse session id in Cookie.
      */
     protected void parseSessionCookiesId(Request request) {
 
