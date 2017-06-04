@@ -107,7 +107,6 @@ public class SSLValve extends ValveBase {
         this.sslCipherUserKeySizeHeader = sslCipherUserKeySizeHeader;
     }
 
-
     public String mygetHeader(Request request, String header) {
         String strcert0 = request.getHeader(header);
         if (strcert0 == null) {
@@ -119,14 +118,16 @@ public class SSLValve extends ValveBase {
         }
         return strcert0;
     }
+
     @Override
     public void invoke(Request request, Response response)
         throws IOException, ServletException {
 
-        /* mod_header converts the '\n' into ' ' so we have to rebuild the client certificate */
+        /* mod_header converts the '\n' into ' ' but do it into '\t',
+         * so we have to rebuild the client certificate in a smarter way */
         String strcert0 = mygetHeader(request, sslClientCertHeader);
         if (strcert0 != null && strcert0.length()>28) {
-            String strcert1 = strcert0.replace(' ', '\n');
+            String strcert1 = strcert0.replaceAll("\\s+", "\n");
             String strcert2 = strcert1.substring(28, strcert1.length()-26);
             String strcert3 = "-----BEGIN CERTIFICATE-----\n";
             String strcert4 = strcert3.concat(strcert2);
