@@ -76,8 +76,7 @@ import java.util.logging.LogRecord;
  *    <code>java.util.logging.SimpleFormatter</code></li>
  * </ul>
  */
-public class FileHandler
-    extends Handler {
+public class FileHandler extends Handler {
 
 
     // ------------------------------------------------------------ Constructor
@@ -200,13 +199,14 @@ public class FileHandler
             }
 
             try {
-                if (writer!=null) {
+                if (writer != null) {
                     writer.write(result);
                     if (bufferSize < 0) {
                         writer.flush();
                     }
                 } else {
-                    reportError("FileHandler is closed or not yet initialized, unable to log ["+result+"]", null, ErrorManager.WRITE_FAILURE);
+                    reportError("FileHandler is closed or not yet initialized, unable to log [" + result + "]", null,
+                            ErrorManager.WRITE_FAILURE);
                 }
             } catch (Exception e) {
                 reportError(null, e, ErrorManager.WRITE_FAILURE);
@@ -233,8 +233,9 @@ public class FileHandler
 
         writerLock.writeLock().lock();
         try {
-            if (writer == null)
+            if (writer == null) {
                 return;
+            }
             writer.write(getFormatter().getTail(this));
             writer.flush();
             writer.close();
@@ -256,8 +257,9 @@ public class FileHandler
 
         writerLock.readLock().lock();
         try {
-            if (writer == null)
+            if (writer == null) {
                 return;
+            }
             writer.flush();
         } catch (Exception e) {
             reportError(null, e, ErrorManager.FLUSH_FAILURE);
@@ -283,12 +285,15 @@ public class FileHandler
 
         // Retrieve configuration of logging file name
         rotatable = Boolean.parseBoolean(getProperty(className + ".rotatable", "true"));
-        if (directory == null)
+        if (directory == null) {
             directory = getProperty(className + ".directory", "logs");
-        if (prefix == null)
+        }
+        if (prefix == null) {
             prefix = getProperty(className + ".prefix", "juli.");
-        if (suffix == null)
+        }
+        if (suffix == null) {
             suffix = getProperty(className + ".suffix", ".log");
+        }
         String sBufferSize = getProperty(className + ".bufferSize", String.valueOf(bufferSize));
         try {
             bufferSize = Integer.parseInt(sBufferSize);
@@ -360,8 +365,7 @@ public class FileHandler
         // Create the directory if necessary
         File dir = new File(directory);
         if (!dir.mkdirs() && !dir.isDirectory()) {
-            reportError("Unable to create [" + dir + "]", null,
-                    ErrorManager.OPEN_FAILURE);
+            reportError("Unable to create [" + dir + "]", null, ErrorManager.OPEN_FAILURE);
             writer = null;
             return;
         }
@@ -375,14 +379,13 @@ public class FileHandler
                     + (rotatable ? date : "") + suffix);
             File parent = pathname.getParentFile();
             if (!parent.mkdirs() && !parent.isDirectory()) {
-                reportError("Unable to create [" + parent + "]", null,
-                        ErrorManager.OPEN_FAILURE);
+                reportError("Unable to create [" + parent + "]", null, ErrorManager.OPEN_FAILURE);
                 writer = null;
                 return;
             }
             String encoding = getEncoding();
             fos = new FileOutputStream(pathname, true);
-            os = bufferSize>0?new BufferedOutputStream(fos,bufferSize):fos;
+            os = bufferSize > 0 ? new BufferedOutputStream(fos, bufferSize) : fos;
             writer = new PrintWriter(
                     (encoding != null) ? new OutputStreamWriter(os, encoding)
                                        : new OutputStreamWriter(os), false);
