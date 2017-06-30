@@ -905,12 +905,7 @@ public class DefaultServlet extends HttpServlet {
             } catch (IllegalStateException e) {
                 // If it fails, we try to get a Writer instead if we're
                 // trying to serve a text file
-                if (!usingGzippedVersion &&
-                        ((contentType == null) ||
-                                (contentType.startsWith("text")) ||
-                                (contentType.endsWith("xml")) ||
-                                (contentType.contains("/javascript")))
-                        ) {
+                if (!usingGzippedVersion && isText(contentType)) {
                     writer = response.getWriter();
                     // Cannot reliably serve partial content with a Writer
                     ranges = FULL;
@@ -985,7 +980,7 @@ public class DefaultServlet extends HttpServlet {
                         // Check to see if conversion is required
                         String outputEncoding = response.getCharacterEncoding();
                         Charset charset = B2CConverter.getCharset(outputEncoding);
-                        if (charset.equals(fileEncodingCharset)) {
+                        if (!isText(contentType) || charset.equals(fileEncodingCharset)) {
                             if (!checkSendfile(request, response, resource,
                                     contentLength, null)) {
                                 // sendfile not possible so check if resource
@@ -1084,6 +1079,13 @@ public class DefaultServlet extends HttpServlet {
             }
         }
     }
+
+
+    private boolean isText(String contentType) {
+        return  contentType == null || contentType.startsWith("text") ||
+                contentType.endsWith("xml") || contentType.contains("/javascript");
+    }
+
 
     private void doDirectoryRedirect(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
