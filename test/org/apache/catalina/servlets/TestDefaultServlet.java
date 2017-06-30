@@ -472,7 +472,7 @@ public class TestDefaultServlet extends TomcatBaseTest {
         } else {
             res.setCharset(StandardCharsets.ISO_8859_1);
         }
-        Assert.assertEquals("½", res.toString());
+        Assert.assertEquals("\u00bd", res.toString());
     }
 
     @Test
@@ -508,7 +508,7 @@ public class TestDefaultServlet extends TomcatBaseTest {
         } else {
             res.setCharset(StandardCharsets.ISO_8859_1);
         }
-        Assert.assertEquals("½", res.toString());
+        Assert.assertEquals("\u00bd", res.toString());
     }
 
     private static class EncodingServlet extends HttpServlet {
