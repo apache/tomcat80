@@ -216,6 +216,11 @@ public class JspC extends Task implements Options {
     protected boolean failOnError = true;
 
     /**
+     * Should a separate process be forked to perform the compilation?
+     */
+    private boolean fork = false;
+
+    /**
      * The file extensions to be handled as JSP files.
      * Default list is .jsp and .jspx.
      */
@@ -787,7 +792,11 @@ public class JspC extends Task implements Options {
      */
     @Override
     public boolean getFork() {
-        return false;
+        return fork;
+    }
+
+    public void setFork(boolean fork) {
+        this.fork = fork;
     }
 
     /**
