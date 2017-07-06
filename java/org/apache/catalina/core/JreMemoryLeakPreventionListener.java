@@ -467,7 +467,7 @@ public class JreMemoryLeakPreventionListener implements LifecycleListener {
                 /*
                  * Present in Java 8 onwards
                  */
-                if (forkJoinCommonPoolProtection & JreCompat.isJre8Available()) {
+                if (forkJoinCommonPoolProtection && JreCompat.isJre8Available()) {
                     // Don't override any explicitly set property
                     if (System.getProperty(FORK_JOIN_POOL_THREAD_FACTORY_PROPERTY) == null) {
                         System.setProperty(FORK_JOIN_POOL_THREAD_FACTORY_PROPERTY,
