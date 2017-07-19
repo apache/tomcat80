@@ -71,6 +71,11 @@
         <code>catalina..log</code>. Patch provided by Katya Stoycheva.
         (violetagg)
       </fix>
+      <fix>
+        Performance improvements for service loader look-ups (and look-ups of
+        other class loader resources) when the web application is deployed in a
+        packed WAR file. (markt)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Jasper">
