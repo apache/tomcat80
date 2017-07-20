@@ -93,6 +93,10 @@
         <code>searchExternalFirst</code> from the documentation since the
         attribute is no longer supported. (markt)
       </fix>
+      <fix>
+        Correct the documentation for how <code>StandardRoot</code> is
+        configured. (markt)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Other">
