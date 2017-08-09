@@ -219,7 +219,6 @@ public class WsWebSocketContainer
     }
 
 
-    @SuppressWarnings("resource") // socketChannel is closed with channel
     @Override
     public Session connectToServer(Endpoint endpoint,
             ClientEndpointConfig clientEndpointConfiguration, URI path)
