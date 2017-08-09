@@ -1010,10 +1010,4 @@ public class SecureNio2Channel extends Nio2Channel  {
     public void setBufHandler(ApplicationBufferHandler bufHandler) {
         this.bufHandler = bufHandler;
     }
-
-    @Override
-    public AsynchronousSocketChannel getIOChannel() {
-        return sc;
-    }
-
 }
