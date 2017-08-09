@@ -105,6 +105,10 @@
         <code>maxThreads</code> from the Executor when calculating the point at
         which to disable keep-alive. (markt)
       </fix>
+      <fix>
+        Prevent exceptions being thrown during normal shutdown of NIO
+        connections. This enables TLS connections to close cleanly. (markt)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Jasper">
