@@ -45,6 +45,14 @@
   issues do not "pop up" wrt. others).
 -->
 <section name="Tomcat 8.0.47 (violetagg)" rtext="In development">
+  <subsection name="Coyote">
+    <changelog>
+      <fix>
+        Fix possible race condition when setting IO listeners on an upgraded
+        connection. (remm)
+      </fix>
+    </changelog>
+  </subsection>
 </section>
 <section name="Tomcat 8.0.46 (violetagg)" rtext="release in progress">
   <subsection name="Catalina">
