@@ -57,6 +57,11 @@
         running under a <code>SecurityManager</code> and using
         <code>Subject.doAs()</code>. (markt)
       </fix>
+      <fix>
+        <bug>61437</bug>: Fix a possible <code>AccessControlException</code>
+        accessing the WebSocket examples when running under a
+        <code>SecurityManager</code>. (markt)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Coyote">

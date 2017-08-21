@@ -47,6 +47,7 @@ public final class SecurityClassLoad {
         loadSessionPackage(loader);
         loadUtilPackage(loader);
         loadValvesPackage(loader);
+        loadWebResourcesPackage(loader);
         loadJavaxPackage(loader);
         loadConnectorPackage(loader);
         loadTomcatPackage(loader);
@@ -161,6 +162,13 @@ public final class SecurityClassLoad {
             throws Exception {
         final String basePackage = "org.apache.catalina.valves.";
         loader.loadClass(basePackage + "AbstractAccessLogValve$3");
+    }
+
+
+    private static final void loadWebResourcesPackage(ClassLoader loader)
+            throws Exception {
+        final String basePackage = "org.apache.catalina.webresources.";
+        loader.loadClass(basePackage + "WarResourceSet");
     }
 
 
