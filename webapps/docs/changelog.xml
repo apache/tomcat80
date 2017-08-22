@@ -83,6 +83,15 @@
       </fix>
     </changelog>
   </subsection>
+  <subsection name="Tribes">
+    <changelog>
+      <fix>
+        To avoid unexpected session timeout notification from backup session,
+        update the access time when receiving the map member notification
+        message. (kfujino)
+      </fix>
+    </changelog>
+  </subsection>
 </section>
 <section name="Tomcat 8.0.46 (violetagg)" rtext="2017-08-18">
   <subsection name="Catalina">
