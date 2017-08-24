@@ -62,6 +62,10 @@
         accessing the WebSocket examples when running under a
         <code>SecurityManager</code>. (markt)
       </fix>
+      <fix>
+        <bug>61452</bug>: Fix a copy paste error that caused an
+        <code>UnsupportedEncodingException</code> when using WebDAV. (markt)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Coyote">

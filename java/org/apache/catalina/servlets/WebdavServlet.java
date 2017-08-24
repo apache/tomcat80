@@ -393,7 +393,7 @@ public class WebdavServlet extends DefaultServlet {
      */
     @Override
     protected String rewriteUrl(String path) {
-        return URL_ENCODER_XML.encode(path, "UTF_8");
+        return URL_ENCODER_XML.encode(path, "UTF-8");
     }
 
 
