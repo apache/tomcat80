@@ -98,7 +98,13 @@ public class SocketWrapper<E> {
         }
     }
     public void access(long access) { lastAccess = access; }
-    public void setTimeout(long timeout) {this.timeout = timeout;}
+    public void setTimeout(long timeout) {
+        if (timeout > 0) {
+            this.timeout = timeout;
+        } else {
+            this.timeout = -1;
+        }
+    }
     public long getTimeout() {return this.timeout;}
     // error is used by NIO2 - will move to Nio2SocketWraper in Tomcat 9
     public boolean getError() { return error; }
