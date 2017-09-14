@@ -47,6 +47,12 @@
 <section name="Tomcat 8.0.47 (violetagg)" rtext="In development">
   <subsection name="Catalina">
     <changelog>
+      <fix>
+        <bug>60963</bug>: Add <code>ExtractingRoot</code>, a new
+        <code>WebResourceRoot</code> implementation that extracts JARs to the
+        work directory for improved performance when deploying packed WAR files.
+        (markt)
+      </fix>
       <add>
         <bug>61189</bug>: Add the ability to set environment variables for
         individual CGI scripts. Based on a patch by jm009. (markt)

@@ -5083,6 +5083,9 @@ public class StandardContext extends ContainerBase
             namingResources.start();
         }
 
+        // Post work directory
+        postWorkDirectory();
+
         // Add missing components as necessary
         if (getResources() == null) {   // (1) Required by Loader
             if (log.isDebugEnabled())
@@ -5112,9 +5115,6 @@ public class StandardContext extends ContainerBase
 
         // Initialize character set mapper
         getCharsetMapper();
-
-        // Post work directory
-        postWorkDirectory();
 
         // Validate required extensions
         boolean dependencyCheck = true;
