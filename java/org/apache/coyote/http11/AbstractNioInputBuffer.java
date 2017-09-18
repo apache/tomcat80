@@ -76,12 +76,14 @@ public abstract class AbstractNioInputBuffer<S> extends AbstractInputBuffer<S> {
     /**
      * Alternate constructor.
      */
-    public AbstractNioInputBuffer(Request request, int headerBufferSize) {
+    public AbstractNioInputBuffer(Request request, int headerBufferSize,
+            boolean rejectIllegalHeaderName) {
 
         this.request = request;
         headers = request.getMimeHeaders();
 
         this.headerBufferSize = headerBufferSize;
+        this.rejectIllegalHeaderName = rejectIllegalHeaderName;
 
         filterLibrary = new InputFilter[0];
         activeFilters = new InputFilter[0];
@@ -475,9 +477,10 @@ public abstract class AbstractNioInputBuffer<S> extends AbstractInputBuffer<S> {
                 headerData.lastSignificantChar = pos;
                 break;
             } else if (!HttpParser.isToken(chr)) {
-                // If a non-token header is detected, skip the line and
-                // ignore the header
+                // Non-token characters are illegal in header names
+                // Parsing continues so the error can be reported in context
                 headerData.lastSignificantChar = pos;
+                // skipLine() will handle the error
                 return skipLine();
             }
 
@@ -616,11 +619,14 @@ public abstract class AbstractNioInputBuffer<S> extends AbstractInputBuffer<S> {
 
             pos++;
         }
-        if (getLog().isDebugEnabled()) {
-            getLog().debug(sm.getString("iib.invalidheader", new String(buf,
-                    headerData.start,
+        if (rejectIllegalHeaderName || getLog().isDebugEnabled()) {
+            String message = sm.getString("iib.invalidheader", new String(buf, headerData.start,
                     headerData.lastSignificantChar - headerData.start + 1,
-                    StandardCharsets.ISO_8859_1)));
+                    StandardCharsets.ISO_8859_1));
+            if (rejectIllegalHeaderName) {
+                throw new IllegalArgumentException(message);
+            }
+            getLog().debug(message);
         }
 
         headerParsePos = HeaderParsePosition.HEADER_START;
