@@ -39,6 +39,8 @@
   - file fragments that are combined during the build process and therefore can
     not contain a license header in every fragment
 
+  - JavaEE XML schemas that are CDDL licensed
+
   - Checkstyle configuration file that defines how to check for the presence of
     ALv2 headers
 
@@ -93,6 +95,70 @@ output/dist/confinstall/tomcat-users_2.xml
 output/dist/src/res/confinstall/tomcat-users_2.xml
 res/confinstall/tomcat-users_2.xml
 
+java/javax/servlet/resources/javaee_5.xsd
+java/javax/servlet/resources/javaee_6.xsd
+java/javax/servlet/resources/javaee_7.xsd
+java/javax/servlet/resources/javaee_8.xsd
+java/javax/servlet/resources/javaee_web_services_1_2.xsd
+java/javax/servlet/resources/javaee_web_services_1_3.xsd
+java/javax/servlet/resources/javaee_web_services_1_4.xsd
+java/javax/servlet/resources/javaee_web_services_client_1_2.xsd
+java/javax/servlet/resources/javaee_web_services_client_1_3.xsd
+java/javax/servlet/resources/javaee_web_services_client_1_4.xsd
+java/javax/servlet/resources/jsp_2_2.xsd
+java/javax/servlet/resources/jsp_2_3.xsd
+java/javax/servlet/resources/web-app_3_0.xsd
+java/javax/servlet/resources/web-app_3_1.xsd
+java/javax/servlet/resources/web-app_4_0.xsd
+java/javax/servlet/resources/web-common_3_0.xsd
+java/javax/servlet/resources/web-common_3_1.xsd
+java/javax/servlet/resources/web-common_4_0.xsd
+java/javax/servlet/resources/web-fragment_3_0.xsd
+java/javax/servlet/resources/web-fragment_3_1.xsd
+java/javax/servlet/resources/web-fragment_4_0.xsd
+output/classes/javax/servlet/resources/javaee_5.xsd
+output/classes/javax/servlet/resources/javaee_6.xsd
+output/classes/javax/servlet/resources/javaee_7.xsd
+output/classes/javax/servlet/resources/javaee_8.xsd
+output/classes/javax/servlet/resources/javaee_web_services_1_2.xsd
+output/classes/javax/servlet/resources/javaee_web_services_1_3.xsd
+output/classes/javax/servlet/resources/javaee_web_services_1_4.xsd
+output/classes/javax/servlet/resources/javaee_web_services_client_1_2.xsd
+output/classes/javax/servlet/resources/javaee_web_services_client_1_3.xsd
+output/classes/javax/servlet/resources/javaee_web_services_client_1_4.xsd
+output/classes/javax/servlet/resources/jsp_2_2.xsd
+output/classes/javax/servlet/resources/jsp_2_3.xsd
+output/classes/javax/servlet/resources/web-app_3_0.xsd
+output/classes/javax/servlet/resources/web-app_3_1.xsd
+output/classes/javax/servlet/resources/web-app_4_0.xsd
+output/classes/javax/servlet/resources/web-common_3_0.xsd
+output/classes/javax/servlet/resources/web-common_3_1.xsd
+output/classes/javax/servlet/resources/web-common_4_0.xsd
+output/classes/javax/servlet/resources/web-fragment_3_0.xsd
+output/classes/javax/servlet/resources/web-fragment_3_1.xsd
+output/classes/javax/servlet/resources/web-fragment_4_0.xsd
+output/dist/src/java/javax/servlet/resources/javaee_5.xsd
+output/dist/src/java/javax/servlet/resources/javaee_6.xsd
+output/dist/src/java/javax/servlet/resources/javaee_7.xsd
+output/dist/src/java/javax/servlet/resources/javaee_8.xsd
+output/dist/src/java/javax/servlet/resources/javaee_web_services_1_2.xsd
+output/dist/src/java/javax/servlet/resources/javaee_web_services_1_3.xsd
+output/dist/src/java/javax/servlet/resources/javaee_web_services_1_4.xsd
+output/dist/src/java/javax/servlet/resources/javaee_web_services_client_1_2.xsd
+output/dist/src/java/javax/servlet/resources/javaee_web_services_client_1_3.xsd
+output/dist/src/java/javax/servlet/resources/javaee_web_services_client_1_4.xsd
+output/dist/src/java/javax/servlet/resources/jsp_2_2.xsd
+output/dist/src/java/javax/servlet/resources/jsp_2_3.xsd
+output/dist/src/java/javax/servlet/resources/web-app_3_0.xsd
+output/dist/src/java/javax/servlet/resources/web-app_3_1.xsd
+output/dist/src/java/javax/servlet/resources/web-app_4_0.xsd
+output/dist/src/java/javax/servlet/resources/web-common_3_0.xsd
+output/dist/src/java/javax/servlet/resources/web-common_3_1.xsd
+output/dist/src/java/javax/servlet/resources/web-common_4_0.xsd
+output/dist/src/java/javax/servlet/resources/web-fragment_3_0.xsd
+output/dist/src/java/javax/servlet/resources/web-fragment_3_1.xsd
+output/dist/src/java/javax/servlet/resources/web-fragment_4_0.xsd
+
 output/dist/src/res/checkstyle/header-al2.txt
 res/checkstyle/header-al2.txt
 
@@ -101,7 +167,8 @@ output/dist/temp/safeToDelete.tmp
 **/*.bmp
 **/*.dia
 
+modules/bayeux/**
 modules/tomcat-lite/**
 
-output/dist/src/README.md
-README.md
+output/dist/src/*.md
+*.md
