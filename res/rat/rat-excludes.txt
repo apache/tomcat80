@@ -79,7 +79,11 @@ output/dist/src/test/webapp/bug49nnn/bug49464-iso-8859-1.txt
 output/dist/src/test/webapp/bug49nnn/bug49464-utf-8-bom.txt
 output/dist/src/test/webapp/bug49nnn/bug49464-utf-8.txt
 output/dist/src/test/webapp/bug53257/*.txt
+output/dist/src/test/webapp/bug53257/foo bar/foobar.txt
 output/dist/src/test/webapp-fragments/WEB-INF/classes/*.txt
+output/dist/src/test/webresources/dir1/d1/d1-f1.txt
+output/dist/src/test/webresources/dir1/d2/d2-f1.txt
+output/dist/src/test/webresources/dir1/*.txt
 test/webapp/index.html.br
 test/webapp/bug49nnn/bug49464-cp1252.txt
 test/webapp/bug49nnn/bug49464-ibm850.txt
@@ -87,7 +91,11 @@ test/webapp/bug49nnn/bug49464-iso-8859-1.txt
 test/webapp/bug49nnn/bug49464-utf-8-bom.txt
 test/webapp/bug49nnn/bug49464-utf-8.txt
 test/webapp/bug53257/*.txt
+test/webapp/bug53257/foo bar/foobar.txt
 test/webapp-fragments/WEB-INF/classes/*.txt
+test/webresources/dir1/d1/d1-f1.txt
+test/webresources/dir1/d2/d2-f1.txt
+test/webresources/dir1/*.txt
 
 **/*.json
 
