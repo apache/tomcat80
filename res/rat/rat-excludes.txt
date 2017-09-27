@@ -29,8 +29,8 @@
 
   - package-list files in API documentation (javadoc) are generated
 
-  - other test files, such as trivial textual files containing only "OK' string
-    or compressed files are also excluded.
+  - other test files, such as trivial textual files containing only "OK' string,
+    files in unusual encodings or compressed files are also excluded.
 
   - JSON files (RFC7159) are data and cannot contain comments
 
@@ -50,6 +50,9 @@
 
   - unused modules
 
+  - Markdown files for display in ther GitHub UI
+
+
 output/build/logs/*
 output/test-tmp/**
 
@@ -66,9 +69,19 @@ output/deployer/deployer-howto.html
 output/dist/webapps/docs/*/package-list
 
 output/dist/src/test/webapp/index.html.br
+output/dist/src/test/webapp/bug49nnn/bug49464-cp1252.txt
+output/dist/src/test/webapp/bug49nnn/bug49464-ibm850.txt
+output/dist/src/test/webapp/bug49nnn/bug49464-iso-8859-1.txt
+output/dist/src/test/webapp/bug49nnn/bug49464-utf-8-bom.txt
+output/dist/src/test/webapp/bug49nnn/bug49464-utf-8.txt
 output/dist/src/test/webapp/bug53257/*.txt
 output/dist/src/test/webapp-fragments/WEB-INF/classes/*.txt
 test/webapp/index.html.br
+test/webapp/bug49nnn/bug49464-cp1252.txt
+test/webapp/bug49nnn/bug49464-ibm850.txt
+test/webapp/bug49nnn/bug49464-iso-8859-1.txt
+test/webapp/bug49nnn/bug49464-utf-8-bom.txt
+test/webapp/bug49nnn/bug49464-utf-8.txt
 test/webapp/bug53257/*.txt
 test/webapp-fragments/WEB-INF/classes/*.txt
 
@@ -89,3 +102,6 @@ output/dist/temp/safeToDelete.tmp
 **/*.dia
 
 modules/tomcat-lite/**
+
+output/dist/src/README.md
+README.md
