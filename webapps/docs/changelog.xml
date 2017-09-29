@@ -44,6 +44,16 @@
   They eventually become mixed with the numbered issues. (I.e., numbered
   issues do not "pop up" wrt. others).
 -->
+<section name="Tomcat 8.0.48 (violetagg)" rtext="In development">
+  <subsection name="Other">
+    <changelog>
+      <fix>
+        Improve the fix for <bug>61439</bug> and exclude the JPA, JAX-WS and EJB
+        annotations completely from the Tomcat distributions. (markt)
+      </fix>
+    </changelog>
+  </subsection>
+</section>
 <section name="Tomcat 8.0.47 (violetagg)" rtext="In development">
   <subsection name="Catalina">
     <changelog>
@@ -218,9 +228,7 @@
         <bug>61439</bug>: Remove the Java Annotation API classes from
         tomcat-embed-core.jar and package them in a separate JAR in the
         embedded distribution to provide end users with greater flexibility to
-        handle potential conflicts with the JRE and/or other JARs and exclude
-        the JPA, JAX-WS and EJB annotations completely from the Tomcat
-        distributions. (markt)
+        handle potential conflicts with the JRE and/or other JARs. (markt)
       </fix>
       <fix>
         <bug>61441</bug>: Improve the detection of <code>JAVA_HOME</code> by the
