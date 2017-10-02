@@ -45,6 +45,13 @@
   issues do not "pop up" wrt. others).
 -->
 <section name="Tomcat 8.0.48 (violetagg)" rtext="In development">
+  <subsection name="Web applications">
+    <changelog>
+      <fix>
+        Enable Javadoc to be built with Java 9. (markt)
+      </fix>
+    </changelog>
+  </subsection>
   <subsection name="Other">
     <changelog>
       <fix>
