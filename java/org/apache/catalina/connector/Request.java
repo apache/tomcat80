@@ -1923,7 +1923,9 @@ public class Request
         try {
             instanceManager = getContext().getInstanceManager();
             handler = (T) instanceManager.newInstance(httpUpgradeHandlerClass);
-        } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NamingException e) {
+        } catch (InstantiationException | IllegalAccessException | InvocationTargetException |
+                NamingException | IllegalArgumentException | NoSuchMethodException |
+                SecurityException e) {
             throw new ServletException(e);
         }
         UpgradeToken upgradeToken = new UpgradeToken(handler,
