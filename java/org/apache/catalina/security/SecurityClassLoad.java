@@ -179,7 +179,7 @@ public final class SecurityClassLoad {
         loader.loadClass(basePackage + "http11.Constants");
         // Make sure system property is read at this point
         Class<?> clazz = loader.loadClass(basePackage + "Constants");
-        clazz.newInstance();
+        clazz.getConstructor().newInstance();
     }
 
 
@@ -288,7 +288,7 @@ public final class SecurityClassLoad {
         // Make sure system property is read at this point
         Class<?> clazz = loader.loadClass(
                 basePackage + "util.http.FastHttpDateFormat");
-        clazz.newInstance();
+        clazz.getConstructor().newInstance();
         loader.loadClass(basePackage + "util.http.HttpMessages");
         loader.loadClass(basePackage + "util.http.parser.HttpParser");
         loader.loadClass(basePackage + "util.http.parser.MediaType");

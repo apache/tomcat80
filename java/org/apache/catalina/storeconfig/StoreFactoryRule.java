@@ -104,14 +104,11 @@ public class StoreFactoryRule extends Rule {
      * @param attr class Name attribute
      * @param defaultName Default Class
      * @param attributes current digester attribute elements
-     * @return new config object instance
-     * @throws ClassNotFoundException
-     * @throws InstantiationException
-     * @throws IllegalAccessException
+     * @return new configured object instance
+     * @throws ReflectiveOperationException Error creating an instance
      */
     protected Object newInstance(String attr, String defaultName,
-            Attributes attributes) throws ClassNotFoundException,
-            InstantiationException, IllegalAccessException {
+            Attributes attributes) throws ReflectiveOperationException {
         String className = defaultName;
         if (attr != null) {
             String value = attributes.getValue(attr);
@@ -119,6 +116,6 @@ public class StoreFactoryRule extends Rule {
                 className = value;
         }
         Class<?> clazz = Class.forName(className);
-        return clazz.newInstance();
+        return clazz.getConstructor().newInstance();
     }
 }

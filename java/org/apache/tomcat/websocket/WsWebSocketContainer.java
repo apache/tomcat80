@@ -163,8 +163,8 @@ public class WsWebSocketContainer
         if (!ClientEndpointConfig.Configurator.class.equals(
                 configuratorClazz)) {
             try {
-                configurator = configuratorClazz.newInstance();
-            } catch (InstantiationException | IllegalAccessException e) {
+                configurator = configuratorClazz.getConstructor().newInstance();
+            } catch (ReflectiveOperationException e) {
                 throw new DeploymentException(sm.getString(
                         "wsWebSocketContainer.defaultConfiguratorFail"), e);
             }
@@ -190,8 +190,8 @@ public class WsWebSocketContainer
 
         Object pojo;
         try {
-            pojo = annotatedEndpointClass.newInstance();
-        } catch (InstantiationException | IllegalAccessException e) {
+            pojo = annotatedEndpointClass.getConstructor().newInstance();
+        } catch (ReflectiveOperationException e) {
             throw new DeploymentException(sm.getString(
                     "wsWebSocketContainer.endpointCreateFail",
                     annotatedEndpointClass.getName()), e);
@@ -208,8 +208,8 @@ public class WsWebSocketContainer
 
         Endpoint endpoint;
         try {
-            endpoint = clazz.newInstance();
-        } catch (InstantiationException | IllegalAccessException e) {
+            endpoint = clazz.getConstructor().newInstance();
+        } catch (ReflectiveOperationException e) {
             throw new DeploymentException(sm.getString(
                     "wsWebSocketContainer.endpointCreateFail", clazz.getName()),
                     e);

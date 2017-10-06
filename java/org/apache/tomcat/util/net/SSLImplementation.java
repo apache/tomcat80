@@ -66,7 +66,7 @@ public abstract class SSLImplementation {
                 return new org.apache.tomcat.util.net.jsse.JSSEImplementation();
             }
             Class<?> clazz = Class.forName(className);
-            return (SSLImplementation) clazz.newInstance();
+            return (SSLImplementation) clazz.getConstructor().newInstance();
         } catch (Exception e) {
             if (logger.isDebugEnabled())
                 logger

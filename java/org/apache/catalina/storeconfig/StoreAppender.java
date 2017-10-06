@@ -315,12 +315,10 @@ public class StoreAppender {
      *
      * @param bean
      * @return an object from same class as bean parameter
-     * @throws InstantiationException
-     * @throws IllegalAccessException
+     * @throws ReflectiveOperationException Error creating a new instance
      */
-    public Object defaultInstance(Object bean) throws InstantiationException,
-            IllegalAccessException {
-        return bean.getClass().newInstance();
+    public Object defaultInstance(Object bean) throws ReflectiveOperationException {
+        return bean.getClass().getConstructor().newInstance();
     }
 
     /**

@@ -3327,7 +3327,7 @@ public class StandardContext extends ContainerBase
                 try {
                     Class<?> clazz = Class.forName(instanceListeners[i]);
                     InstanceListener listener =
-                      (InstanceListener) clazz.newInstance();
+                            (InstanceListener) clazz.getConstructor().newInstance();
                     wrapper.addInstanceListener(listener);
                 } catch (Throwable t) {
                     ExceptionUtils.handleThrowable(t);

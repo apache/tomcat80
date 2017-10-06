@@ -774,8 +774,7 @@ public class JspRuntimeLibrary {
         throws JasperException
     {
         try {
-            PropertyEditor pe =
-                (PropertyEditor)propertyEditorClass.newInstance();
+            PropertyEditor pe = (PropertyEditor)propertyEditorClass.getConstructor().newInstance();
             pe.setAsText(attrValue);
             return pe.getValue();
         } catch (Exception ex) {

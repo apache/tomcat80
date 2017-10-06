@@ -646,7 +646,7 @@ public class JSSESocketFactory implements ServerSocketFactory, SSLUtil {
                 throw new InstantiationException(sm.getString(
                         "jsse.invalidTrustManagerClassName", className));
              }
-             Object trustManagerObject = clazz.newInstance();
+             Object trustManagerObject = clazz.getConstructor().newInstance();
              TrustManager trustManager = (TrustManager) trustManagerObject;
              return new TrustManager[]{ trustManager };
         }
