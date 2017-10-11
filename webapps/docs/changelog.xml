@@ -54,6 +54,11 @@
         added in Java 9 to only disable the caching for JAR URL connections.
         (markt)
       </add>
+      <fix>
+        <bug>61597</bug>: Extend the <code>StandardJarScanner</code> to scan
+        JARs on the module path when running on Java 9 and class path scanning
+        is enabled. (markt)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Coyote">
