@@ -67,6 +67,11 @@
         <bug>61601</bug>: Add support for multi-release JARs in JAR scanning and
         web application class loading. (markt)
       </fix>
+      <add>
+        Provide the <code>SessionInitializerFilter</code> that can be used to
+        ensure that an HTTP session exists when initiating a WebSocket
+        connection. Patch provided by isapir. (markt)
+      </add>
     </changelog>
   </subsection>
   <subsection name="Coyote">
