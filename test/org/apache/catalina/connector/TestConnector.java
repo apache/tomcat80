@@ -18,9 +18,7 @@ package org.apache.catalina.connector;
 
 import java.net.SocketTimeoutException;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
+import org.junit.Assert;
 import org.junit.Test;
 
 import org.apache.catalina.Context;
@@ -52,8 +50,8 @@ public class TestConnector extends TomcatBaseTest {
         ByteChunk bc = new ByteChunk();
         int rc = getUrl("http://localhost:" + getPort() + "/", bc, null, null);
 
-        assertEquals(200, rc);
-        assertEquals("OK", bc.toString());
+        Assert.assertEquals(200, rc);
+        Assert.assertEquals("OK", bc.toString());
 
         rc = -1;
         bc.recycle();
@@ -68,7 +66,7 @@ public class TestConnector extends TomcatBaseTest {
             // Make sure the test passes if we do
             rc = 503;
         }
-        assertEquals(503, rc);
+        Assert.assertEquals(503, rc);
     }
 
 
@@ -89,7 +87,7 @@ public class TestConnector extends TomcatBaseTest {
         int localPort1 = connector1.getLocalPort();
         int localPort2 = connector2.getLocalPort();
 
-        assertTrue(localPort1 > 0);
-        assertTrue(localPort2 > 0);
+        Assert.assertTrue(localPort1 > 0);
+        Assert.assertTrue(localPort2 > 0);
     }
 }

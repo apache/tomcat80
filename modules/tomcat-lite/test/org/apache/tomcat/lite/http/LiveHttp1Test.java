@@ -56,7 +56,7 @@ public class LiveHttp1Test extends TestCase {
 
         httpReq.send();
         httpReq.readAll(bodyRecvBuffer, to);
-        assertEquals("Hello world", bodyRecvBuffer.toString());
+        Assert.assertEquals("Hello world", bodyRecvBuffer.toString());
     }
 
     public void testSimpleRequestClose() throws Exception {
@@ -65,7 +65,7 @@ public class LiveHttp1Test extends TestCase {
 
         httpReq.send();
         httpReq.readAll(bodyRecvBuffer, to);
-        assertEquals("Hello world", bodyRecvBuffer.toString());
+        Assert.assertEquals("Hello world", bodyRecvBuffer.toString());
     }
 
     public void testPoolGetRelease() throws Exception {
@@ -86,7 +86,7 @@ public class LiveHttp1Test extends TestCase {
         httpReq.requestURI().set("/chunked/foo");
         httpReq.send();
         httpReq.readAll(bodyRecvBuffer, to);
-        assertTrue(bodyRecvBuffer.toString(), bodyRecvBuffer.toString().indexOf("AAA") >= 0);
+        Assert.assertTrue(bodyRecvBuffer.toString(), bodyRecvBuffer.toString().indexOf("AAA") >= 0);
     }
 
     // Check waitResponseHead()
@@ -97,7 +97,7 @@ public class LiveHttp1Test extends TestCase {
         httpReq.send();
 
         httpReq.readAll(bodyRecvBuffer, to);
-        assertTrue(bodyRecvBuffer.toString().indexOf("GET /echo/foo") > 0);
+        Assert.assertTrue(bodyRecvBuffer.toString().indexOf("GET /echo/foo") > 0);
     }
 
     public void test10() throws Exception {
@@ -147,6 +147,6 @@ public class LiveHttp1Test extends TestCase {
         httpReq.send();
 
         httpReq.readAll(bodyRecvBuffer, to);
-        assertEquals(0, bodyRecvBuffer.remaining());
+        Assert.assertEquals(0, bodyRecvBuffer.remaining());
     }
 }

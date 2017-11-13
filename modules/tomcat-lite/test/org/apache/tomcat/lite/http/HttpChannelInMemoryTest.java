@@ -74,12 +74,12 @@ public class HttpChannelInMemoryTest extends TestCase {
         net.getIn().append(req);
 
         //http = lastServer.get(0);
-        assertTrue(http.getRequest().method().equals("GET"));
-        assertTrue(http.getRequest().protocol().equals("HTTP/1.1"));
-        assertEquals(http.getRequest().getMimeHeaders().size(), 4);
-        assertEquals(http.getRequest().getMimeHeaders().getHeader("Host").toString(),
+        Assert.assertTrue(http.getRequest().method().equals("GET"));
+        Assert.assertTrue(http.getRequest().protocol().equals("HTTP/1.1"));
+        Assert.assertEquals(http.getRequest().getMimeHeaders().size(), 4);
+        Assert.assertEquals(http.getRequest().getMimeHeaders().getHeader("Host").toString(),
                 "Foo.com");
-        assertEquals(http.getRequest().getMimeHeaders().getHeader("H2").toString(),
+        Assert.assertEquals(http.getRequest().getMimeHeaders().getHeader("H2").toString(),
                 "Bar");
 
         http.getOut().append("Response1");
@@ -92,10 +92,10 @@ public class HttpChannelInMemoryTest extends TestCase {
 
         //http = lastServer.get(1);
 
-        assertTrue(http.getRequest().method().equals("HEAD"));
-        assertTrue(http.getRequest().protocol().equals("HTTP/1.1"));
-        assertTrue(http.getRequest().getMimeHeaders().size() == 3);
-        assertTrue(http.getRequest().getMimeHeaders().getHeader("Host")
+        Assert.assertTrue(http.getRequest().method().equals("HEAD"));
+        Assert.assertTrue(http.getRequest().protocol().equals("HTTP/1.1"));
+        Assert.assertTrue(http.getRequest().getMimeHeaders().size() == 3);
+        Assert.assertTrue(http.getRequest().getMimeHeaders().getHeader("Host")
                 .equals("Foo.com"));
     }
 
@@ -106,16 +106,16 @@ public class HttpChannelInMemoryTest extends TestCase {
         "\n";
         net.getIn().append(req);
 
-        assertTrue(http.getRequest().method().equals("GET"));
-        assertTrue(http.getRequest().protocol().equals("HTTP/1.1"));
+        Assert.assertTrue(http.getRequest().method().equals("GET"));
+        Assert.assertTrue(http.getRequest().protocol().equals("HTTP/1.1"));
 
         http.getOut().append("Response1");
         http.getOut().close();
         http.startSending();
         http.release();
 
-        assertTrue(net.out.indexOf("connection:close") > 0);
-        assertFalse(net.isOpen());
+        Assert.assertTrue(net.out.indexOf("connection:close") > 0);
+        Assert.assertFalse(net.isOpen());
     }
 
     public void testHttp10Close() throws IOException {
@@ -124,15 +124,15 @@ public class HttpChannelInMemoryTest extends TestCase {
         "\r\n";
         net.getIn().append(req);
 
-        assertTrue(http.getRequest().method().equals("GET"));
-        assertTrue(http.getRequest().protocol().equals("HTTP/1.0"));
+        Assert.assertTrue(http.getRequest().method().equals("GET"));
+        Assert.assertTrue(http.getRequest().protocol().equals("HTTP/1.0"));
 
         http.getOut().append("Response1");
         http.getOut().close();
         http.startSending();
 
-        assertTrue(net.out.indexOf("connection:close") > 0);
-        assertFalse(net.isOpen());
+        Assert.assertTrue(net.out.indexOf("connection:close") > 0);
+        Assert.assertFalse(net.isOpen());
     }
 
     public void testHttp10KA() throws IOException {
@@ -142,20 +142,20 @@ public class HttpChannelInMemoryTest extends TestCase {
         "\r\n";
         net.getIn().append(req);
 
-        assertTrue(http.getRequest().method().equals("GET"));
-        assertTrue(http.getRequest().protocol().equals("HTTP/1.0"));
+        Assert.assertTrue(http.getRequest().method().equals("GET"));
+        Assert.assertTrue(http.getRequest().protocol().equals("HTTP/1.0"));
 
         http.getOut().append("Hi");
         http.getOut().close();
         http.startSending();
 
         // after request
-        assertEquals(conn.activeHttp, null);
+        Assert.assertEquals(conn.activeHttp, null);
 
-        assertTrue(net.out.indexOf("connection:keep-alive") > 0);
-        assertTrue(net.isOpen());
+        Assert.assertTrue(net.out.indexOf("connection:keep-alive") > 0);
+        Assert.assertTrue(net.isOpen());
         // inserted since we can calculate the response
-        assertEquals(http.getResponse().getHeader("Content-Length"),
+        Assert.assertEquals(http.getResponse().getHeader("Content-Length"),
                    "2");
     }
 
@@ -166,8 +166,8 @@ public class HttpChannelInMemoryTest extends TestCase {
         "\r\n";
         net.getIn().append(req);
 
-        assertTrue(http.getRequest().method().equals("GET"));
-        assertTrue(http.getRequest().protocol().equals("HTTP/1.0"));
+        Assert.assertTrue(http.getRequest().method().equals("GET"));
+        Assert.assertTrue(http.getRequest().protocol().equals("HTTP/1.0"));
 
         http.getOut().append("Hi");
         http.startSending();
@@ -177,14 +177,14 @@ public class HttpChannelInMemoryTest extends TestCase {
         http.startSending();
 
         // after request
-        assertEquals(conn.activeHttp, null);
+        Assert.assertEquals(conn.activeHttp, null);
 
-        assertFalse(net.out.indexOf("connection:keep-alive") > 0);
-        assertFalse(net.isOpen());
+        Assert.assertFalse(net.out.indexOf("connection:keep-alive") > 0);
+        Assert.assertFalse(net.isOpen());
         // inserted since we can calculate the response
-        assertEquals(http.getResponse().getHeader("Content-Length"),
+        Assert.assertEquals(http.getResponse().getHeader("Content-Length"),
                 null);
-        assertEquals(http.getResponse().getHeader("Transfer-Encoding"),
+        Assert.assertEquals(http.getResponse().getHeader("Transfer-Encoding"),
                 null);
     }
 
@@ -198,10 +198,10 @@ public class HttpChannelInMemoryTest extends TestCase {
         MultiMap headers = http.getRequest().getMimeHeaders();
         CBuffer cookie = headers.getHeader("Cookie");
         CBuffer conn = headers.getHeader("Connection");
-        assertEquals(conn.toString(), "close");
-        assertEquals(cookie.toString(), "1234 456");
+        Assert.assertEquals(conn.toString(), "close");
+        Assert.assertEquals(cookie.toString(), "1234 456");
 
-        assertEquals(http.conn.headRecvBuf.toString(),
+        Assert.assertEquals(http.conn.headRecvBuf.toString(),
                 "GET / HTTP/1.0\n" +
                 "Cookie: 1234 456   \n" + // \n -> trailing space
                 "Connection:   Close\n\n");
@@ -211,10 +211,10 @@ public class HttpChannelInMemoryTest extends TestCase {
         net.getIn().append("GET / HTTP/1.1\n"
                 + "Host: localhost\n"
                 + "\n");
-        assertTrue(((Http11Connection)http.conn).keepAlive());
+        Assert.assertTrue(((Http11Connection)http.conn).keepAlive());
 
         net.getIn().close();
-        assertFalse(((Http11Connection)http.conn).keepAlive());
+        Assert.assertFalse(((Http11Connection)http.conn).keepAlive());
     }
 
     public void test2ReqByte2Byte() throws IOException {
@@ -235,10 +235,10 @@ public class HttpChannelInMemoryTest extends TestCase {
             net.getIn().append(req.charAt(i));
         }
 
-        assertTrue(http.getRequest().method().equals("GET"));
-        assertTrue(http.getRequest().protocol().equals("HTTP/1.1"));
-        assertTrue(http.getRequest().getMimeHeaders().size() == 4);
-        assertTrue(http.getRequest().getMimeHeaders().getHeader("Host")
+        Assert.assertTrue(http.getRequest().method().equals("GET"));
+        Assert.assertTrue(http.getRequest().protocol().equals("HTTP/1.1"));
+        Assert.assertTrue(http.getRequest().getMimeHeaders().size() == 4);
+        Assert.assertTrue(http.getRequest().getMimeHeaders().getHeader("Host")
                 .equals("Foo.com"));
 
         // send a response
@@ -249,10 +249,10 @@ public class HttpChannelInMemoryTest extends TestCase {
 
         http.release(); // now second response must be in
 
-        assertTrue(http.getRequest().method().equals("HEAD"));
-        assertTrue(http.getRequest().protocol().equals("HTTP/1.1"));
-        assertTrue(http.getRequest().getMimeHeaders().size() == 2);
-        assertTrue(http.getRequest().getMimeHeaders().getHeader("Host")
+        Assert.assertTrue(http.getRequest().method().equals("HEAD"));
+        Assert.assertTrue(http.getRequest().protocol().equals("HTTP/1.1"));
+        Assert.assertTrue(http.getRequest().getMimeHeaders().size() == 2);
+        Assert.assertTrue(http.getRequest().getMimeHeaders().getHeader("Host")
                 .equals("Foo1.com"));
 
         // send a response - service method will be called
@@ -279,7 +279,7 @@ public class HttpChannelInMemoryTest extends TestCase {
         http.getOut().close();
         http.startSending(); // will call handleEndSend
 
-        assertTrue(allDone);
+        Assert.assertTrue(allDone);
 
     }
 
@@ -322,19 +322,19 @@ public class HttpChannelInMemoryTest extends TestCase {
                 "Connection: Close\n" +
                 "Content-Length: 4\n\n" +
                 "1");
-        assertTrue(headersDone);
+        Assert.assertTrue(headersDone);
         net.getIn().append("234");
 
         net.getIn().close();
-        assertTrue(bodyDone);
+        Assert.assertTrue(bodyDone);
 
 
         http.sendBody.queue("Hi");
         http.getOut().close();
         http.startSending();
-        assertTrue(bodySentDone);
+        Assert.assertTrue(bodySentDone);
 
-        assertTrue(allDone);
+        Assert.assertTrue(allDone);
 
     }
 
@@ -352,15 +352,15 @@ public class HttpChannelInMemoryTest extends TestCase {
         BBuffer res = BBuffer.allocate(1000);
         appData.readAll(res);
 
-        assertEquals(res.toString(), "1234");
-        assertFalse(((Http11Connection)http.conn).keepAlive());
+        Assert.assertEquals(res.toString(), "1234");
+        Assert.assertFalse(((Http11Connection)http.conn).keepAlive());
 
         http.sendBody.queue(res);
         http.getOut().close();
         http.startSending();
 
-        assertTrue(net.getOut().isAppendClosed());
-        assertTrue(net.out.toString().indexOf("\n1234") > 0);
+        Assert.assertTrue(net.getOut().isAppendClosed());
+        Assert.assertTrue(net.out.toString().indexOf("\n1234") > 0);
 
     }
 
@@ -374,11 +374,11 @@ public class HttpChannelInMemoryTest extends TestCase {
         net.getIn().close();
 
         BufferedReader r = http.getRequest().getReader();
-        assertEquals("Line 1", r.readLine());
-        assertEquals("Line 2", r.readLine());
-        assertEquals("Line 3", r.readLine());
-        assertEquals("Line 4", r.readLine());
-        assertEquals(null, r.readLine());
+        Assert.assertEquals("Line 1", r.readLine());
+        Assert.assertEquals("Line 2", r.readLine());
+        Assert.assertEquals("Line 3", r.readLine());
+        Assert.assertEquals("Line 4", r.readLine());
+        Assert.assertEquals(null, r.readLine());
 
     }
 }

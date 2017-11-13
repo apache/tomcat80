@@ -36,8 +36,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import static org.junit.Assert.assertEquals;
-
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -78,10 +76,10 @@ public class TestSendFile extends TomcatBaseTest {
             for (int i = 0; i < ITERATIONS; i++) {
                 long start = System.currentTimeMillis();
                 int rc = getUrl("http://localhost:" + getPort() + "/servlet" + i, bc, null, respHeaders);
-                assertEquals(HttpServletResponse.SC_OK, rc);
+                Assert.assertEquals(HttpServletResponse.SC_OK, rc);
                 System.out.println("Client received " + bc.getLength() + " bytes in "
                         + (System.currentTimeMillis() - start) + " ms.");
-                assertEquals(EXPECTED_CONTENT_LENGTH * (i + 1), bc.getLength());
+                Assert.assertEquals(EXPECTED_CONTENT_LENGTH * (i + 1), bc.getLength());
 
                 bc.recycle();
             }

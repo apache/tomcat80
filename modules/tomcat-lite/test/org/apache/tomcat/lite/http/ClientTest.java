@@ -35,12 +35,12 @@ public class ClientTest extends TestCase {
         HttpRequest req = httpCon.request("http://localhost:8802/echo/test1");
         HttpResponse res = req.waitResponse();
 
-        assertEquals(200, res.getStatus());
+        Assert.assertEquals(200, res.getStatus());
         //assertEquals("", res.getHeader(""));
 
         BufferedReader reader = res.getReader();
         String line1 = reader.readLine();
-        assertEquals("REQ HEAD:", line1);
+        Assert.assertEquals("REQ HEAD:", line1);
     }
 
     public void testSimpleCallback() throws IOException {

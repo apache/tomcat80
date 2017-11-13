@@ -10,7 +10,7 @@ public class CBufferTest extends TestCase {
 
     public void extTest(String path, String exp) {
         CBuffer.newInstance().append(path).getExtension(ext, '/', '.');
-        assertEquals(exp, ext.toString());
+        Assert.assertEquals(exp, ext.toString());
     }
 
     public void testExt() {

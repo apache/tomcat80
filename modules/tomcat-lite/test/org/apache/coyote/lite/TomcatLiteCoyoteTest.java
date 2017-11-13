@@ -34,7 +34,7 @@ public class TomcatLiteCoyoteTest extends TestCase {
 
         BBuffer res = ch.readAll(null, 0);
 
-        assertTrue(res.toString(),
+        Assert.assertTrue(res.toString(),
                 res.toString().indexOf("<title>Apache Tomcat</title>") >= 0);
     }
 

@@ -40,7 +40,7 @@ public class DispatcherTest extends TestCase {
 
         mapper.map(host, uri, mappingData);
 
-        assertEquals("context2", mappingData.context.toString());
-        assertEquals("/foo/bar", mappingData.contextPath.toString());
+        Assert.assertEquals("context2", mappingData.context.toString());
+        Assert.assertEquals("/foo/bar", mappingData.contextPath.toString());
     }
 }

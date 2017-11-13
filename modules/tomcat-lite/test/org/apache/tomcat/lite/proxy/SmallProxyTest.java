@@ -101,9 +101,9 @@ public class SmallProxyTest extends TestCase {
         // wait response...
         // http.sendBody.close();
         String res = net.out.toString();
-        assertTrue(res.indexOf("Hi\nworld\n") > 0);
-        assertTrue(res.indexOf("HTTP/1.0 200 OK") == 0);
-        assertTrue(res.indexOf("tomcatproxy") > 0);
+        Assert.assertTrue(res.indexOf("Hi\nworld\n") > 0);
+        Assert.assertTrue(res.indexOf("HTTP/1.0 200 OK") == 0);
+        Assert.assertTrue(res.indexOf("tomcatproxy") > 0);
 
     }
 }

@@ -35,11 +35,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
@@ -81,41 +76,41 @@ public class TestRequest extends TomcatBaseTest {
 
         // Edge cases around zero
         client.doRequest(-1, false); // Unlimited
-        assertTrue(client.isResponse200());
-        assertTrue(client.isResponseBodyOK());
+        Assert.assertTrue(client.isResponse200());
+        Assert.assertTrue(client.isResponseBodyOK());
         client.reset();
         client.doRequest(0, false); // 0 bytes - too small should fail
-        assertTrue(client.isResponse413());
+        Assert.assertTrue(client.isResponse413());
         client.reset();
         client.doRequest(1, false); // 1 byte - too small should fail
-        assertTrue(client.isResponse413());
+        Assert.assertTrue(client.isResponse413());
 
         client.reset();
 
         // Edge cases around actual content length
         client.reset();
         client.doRequest(6, false); // Too small should fail
-        assertTrue(client.isResponse413());
+        Assert.assertTrue(client.isResponse413());
         client.reset();
         client.doRequest(7, false); // Just enough should pass
-        assertTrue(client.isResponse200());
-        assertTrue(client.isResponseBodyOK());
+        Assert.assertTrue(client.isResponse200());
+        Assert.assertTrue(client.isResponseBodyOK());
         client.reset();
         client.doRequest(8, false); // 1 extra - should pass
-        assertTrue(client.isResponse200());
-        assertTrue(client.isResponseBodyOK());
+        Assert.assertTrue(client.isResponse200());
+        Assert.assertTrue(client.isResponseBodyOK());
 
         // Much larger
         client.reset();
         client.doRequest(8096, false); // Plenty of space - should pass
-        assertTrue(client.isResponse200());
-        assertTrue(client.isResponseBodyOK());
+        Assert.assertTrue(client.isResponse200());
+        Assert.assertTrue(client.isResponseBodyOK());
 
         // Check for case insensitivity
         client.reset();
         client.doRequest(8096, true); // Plenty of space - should pass
-        assertTrue(client.isResponse200());
-        assertTrue(client.isResponseBodyOK());
+        Assert.assertTrue(client.isResponse200());
+        Assert.assertTrue(client.isResponseBodyOK());
     }
 
     /**
@@ -130,8 +125,8 @@ public class TestRequest extends TomcatBaseTest {
         client.reset();
         client.doRequest(6, false); // Too small should fail
         // Response code will be OK, but parameters list will be empty
-        assertTrue(client.isResponse200());
-        assertEquals("", client.getResponseBody());
+        Assert.assertTrue(client.isResponse200());
+        Assert.assertEquals("", client.getResponseBody());
     }
 
     private static class Bug37794Servlet extends HttpServlet {
@@ -283,15 +278,15 @@ public class TestRequest extends TomcatBaseTest {
 
         // No query string
         ByteChunk res = getUrl("http://localhost:" + getPort() + "/");
-        assertEquals("QueryString=null", res.toString());
+        Assert.assertEquals("QueryString=null", res.toString());
 
         // Query string
         res = getUrl("http://localhost:" + getPort() + "/?a=b");
-        assertEquals("QueryString=a=b", res.toString());
+        Assert.assertEquals("QueryString=a=b", res.toString());
 
         // Empty string
         res = getUrl("http://localhost:" + getPort() + "/?");
-        assertEquals("QueryString=", res.toString());
+        Assert.assertEquals("QueryString=", res.toString());
     }
 
     private static final class EchoQueryStringServlet extends HttpServlet {
@@ -334,7 +329,7 @@ public class TestRequest extends TomcatBaseTest {
         tomcat.start();
 
         ByteChunk res = getUrl("http://localhost:" + getPort() + "/");
-        assertEquals(LoginLogoutServlet.OK, res.toString());
+        Assert.assertEquals(LoginLogoutServlet.OK, res.toString());
     }
 
     private static final class LoginLogoutServlet extends HttpServlet {
@@ -377,7 +372,7 @@ public class TestRequest extends TomcatBaseTest {
 
         HttpURLConnection conn = getConnection("http://localhost:" + getPort() + "/");
         InputStream is = conn.getInputStream();
-        assertNotNull(is);
+        Assert.assertNotNull(is);
     }
 
     @Test
@@ -392,7 +387,7 @@ public class TestRequest extends TomcatBaseTest {
         HttpURLConnection conn = getConnection("http://localhost:" + getPort() + "/");
         conn.setChunkedStreamingMode(8 * 1024);
         InputStream is = conn.getInputStream();
-        assertNotNull(is);
+        Assert.assertNotNull(is);
     }
 
     /**
@@ -408,9 +403,9 @@ public class TestRequest extends TomcatBaseTest {
         // Make sure GET works properly
         client.doRequest("GET", "foo=bar", null, null, false);
 
-        assertTrue("Non-200 response for GET request",
+        Assert.assertTrue("Non-200 response for GET request",
                    client.isResponse200());
-        assertEquals("Incorrect response for GET request",
+        Assert.assertEquals("Incorrect response for GET request",
                      "foo=bar",
                      client.getResponseBody());
 
@@ -422,9 +417,9 @@ public class TestRequest extends TomcatBaseTest {
         // POST with separate GET and POST parameters
         client.doRequest("POST", "foo=bar", "application/x-www-form-urlencoded", "bar=baz", true);
 
-        assertTrue("Non-200 response for POST request",
+        Assert.assertTrue("Non-200 response for POST request",
                    client.isResponse200());
-        assertEquals("Incorrect response for POST request",
+        Assert.assertEquals("Incorrect response for POST request",
                      "bar=baz,foo=bar",
                      client.getResponseBody());
 
@@ -433,9 +428,9 @@ public class TestRequest extends TomcatBaseTest {
         // POST with overlapping GET and POST parameters
         client.doRequest("POST", "foo=bar&bar=foo", "application/x-www-form-urlencoded", "bar=baz&foo=baz", true);
 
-        assertTrue("Non-200 response for POST request",
+        Assert.assertTrue("Non-200 response for POST request",
                    client.isResponse200());
-        assertEquals("Incorrect response for POST request",
+        Assert.assertEquals("Incorrect response for POST request",
                      "bar=baz,bar=foo,foo=bar,foo=baz",
                      client.getResponseBody());
 
@@ -444,9 +439,9 @@ public class TestRequest extends TomcatBaseTest {
         // PUT without POST-style parsing
         client.doRequest("PUT", "foo=bar&bar=foo", "application/x-www-form-urlencoded", "bar=baz&foo=baz", false);
 
-        assertTrue("Non-200 response for PUT/noparse request",
+        Assert.assertTrue("Non-200 response for PUT/noparse request",
                    client.isResponse200());
-        assertEquals("Incorrect response for PUT request",
+        Assert.assertEquals("Incorrect response for PUT request",
                      "bar=foo,foo=bar",
                      client.getResponseBody());
 
@@ -455,9 +450,9 @@ public class TestRequest extends TomcatBaseTest {
         // PUT with POST-style parsing
         client.doRequest("PUT", "foo=bar&bar=foo", "application/x-www-form-urlencoded", "bar=baz&foo=baz", true);
 
-        assertTrue("Non-200 response for PUT request",
+        Assert.assertTrue("Non-200 response for PUT request",
                    client.isResponse200());
-        assertEquals("Incorrect response for PUT/parse request",
+        Assert.assertEquals("Incorrect response for PUT/parse request",
                      "bar=baz,bar=foo,foo=bar,foo=baz",
                      client.getResponseBody());
 
@@ -687,10 +682,10 @@ public class TestRequest extends TomcatBaseTest {
                 while ((line = reader.readLine()) != null) {
                     response.add(line);
                 }
-                assertTrue(response.contains("Part äö"));
+                Assert.assertTrue(response.contains("Part äö"));
             }
         } else {
-            fail("OK status was expected: " + status);
+            Assert.fail("OK status was expected: " + status);
         }
     }
 
@@ -838,7 +833,7 @@ public class TestRequest extends TomcatBaseTest {
         if (resultPath == null) {
             resultPath = "";
         }
-        assertEquals(expected, resultPath);
+        Assert.assertEquals(expected, resultPath);
     }
 
     private class Bug56501Servlet extends HttpServlet {

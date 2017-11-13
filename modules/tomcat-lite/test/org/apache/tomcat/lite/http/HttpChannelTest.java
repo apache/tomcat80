@@ -47,15 +47,15 @@ public class HttpChannelTest extends TestCase {
         requestB.recycle();
         methodB.recycle();
         con.parseRequestLine(line, methodB, requestB, queryB, protoB);
-        assertEquals(proto, protoB.toString());
-        assertEquals(req, requestB.toString());
-        assertEquals(qry, queryB.toString());
-        assertEquals(method, methodB.toString());
+        Assert.assertEquals(proto, protoB.toString());
+        Assert.assertEquals(req, requestB.toString());
+        Assert.assertEquals(qry, queryB.toString());
+        Assert.assertEquals(method, methodB.toString());
     }
 
     public void testParams() throws IOException {
         MultiMap params = processQry("a=b&c=d");
-        assertEquals("b", params.getString("a"));
+        Assert.assertEquals("b", params.getString("a"));
     }
 
     private MultiMap processQry(String qry) throws IOException {
@@ -83,11 +83,11 @@ public class HttpChannelTest extends TestCase {
         head.readLine(line);
         con.parseHeader(ch, head, line, name, value);
 
-        assertEquals(expName, name.toString());
-        assertEquals(expValue, value.toString());
+        Assert.assertEquals(expName, name.toString());
+        Assert.assertEquals(expValue, value.toString());
 
-        assertEquals(expLine, line.toString());
-        assertEquals(expRest, head.toString());
+        Assert.assertEquals(expLine, line.toString());
+        Assert.assertEquals(expRest, head.toString());
     }
 
     public void testParseHeader() throws IOException {
@@ -112,9 +112,9 @@ public class HttpChannelTest extends TestCase {
         BBuffer line = BBuffer.wrapper(lineS);
         con.parseResponseLine(line,
                 protoB, statusB, msgB);
-        assertEquals(proto, protoB.toString());
-        assertEquals(status, statusB.toString());
-        assertEquals(msg, msgB.toString());
+        Assert.assertEquals(proto, protoB.toString());
+        Assert.assertEquals(status, statusB.toString());
+        Assert.assertEquals(msg, msgB.toString());
     }
 
     public void testResponse() throws Exception {

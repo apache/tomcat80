@@ -188,8 +188,8 @@ public class LiveHttpThreadedTest extends TestCase {
                 ", connections: " + clientCon.getConnectionPool().getSocketCount() +
                 ", avg: " + (time / reqCnt));
 
-        assertEquals(reqCnt, ok.get());
-        assertEquals(0, tr.errors.get());
+        Assert.assertEquals(reqCnt, ok.get());
+        Assert.assertEquals(0, tr.errors.get());
     }
 
     RequestCompleted reqCallback = new RequestCompleted() {
@@ -275,7 +275,7 @@ public class LiveHttpThreadedTest extends TestCase {
                 }
             };
             tr.run();
-            assertEquals(0, tr.errors.get());
+            Assert.assertEquals(0, tr.errors.get());
             long time = (System.currentTimeMillis() - t0);
 
             System.err.println("====== " + test + " threads: " + thr + ", req: " +

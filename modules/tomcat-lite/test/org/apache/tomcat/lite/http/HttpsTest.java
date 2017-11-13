@@ -34,7 +34,7 @@ public class HttpsTest extends TestCase {
     public void testSimpleServer() throws Exception {
         final HttpConnector httpClient = TestMain.shared().getClient();
         BBuffer res = TestMain.getUrl("https://localhost:8443/hello");
-        assertTrue(res.toString().indexOf("Hello") >= 0);
+        Assert.assertTrue(res.toString().indexOf("Hello") >= 0);
     }
 
 
@@ -46,7 +46,7 @@ public class HttpsTest extends TestCase {
         ch.send();
         BBuffer res = ch.readAll();
 
-        assertTrue(res.toString().indexOf("Hello") >= 0);
+        Assert.assertTrue(res.toString().indexOf("Hello") >= 0);
     }
 
     public void testSimpleClient20() throws Exception {
@@ -66,7 +66,7 @@ public class HttpsTest extends TestCase {
         client.send();
 
         BBuffer res = client.readAll();
-        assertTrue(res.toString().indexOf("<title>Google Accounts</title>") > 0);
+        Assert.assertTrue(res.toString().indexOf("<title>Google Accounts</title>") > 0);
         }
     }
 

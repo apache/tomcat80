@@ -31,7 +31,7 @@ public class SpdyTest extends TestCase {
 
         HttpResponse res = req.waitResponse();
 
-        assertEquals(200, res.getStatus());
+        Assert.assertEquals(200, res.getStatus());
         //assertEquals("", res.getHeader(""));
 
         BufferedReader reader = res.getReader();
@@ -52,7 +52,7 @@ public class SpdyTest extends TestCase {
 
         HttpResponse res = req.waitResponse();
 
-        assertEquals(200, res.getStatus());
+        Assert.assertEquals(200, res.getStatus());
         //assertEquals("", res.getHeader(""));
 
         res.setReadTimeout(2000);
@@ -79,15 +79,15 @@ public class SpdyTest extends TestCase {
 
         HttpChannel spdyChannel = con.channels.get(1);
 
-        assertEquals(1, con.lastFrame.version);
-        assertEquals(1, con.lastFrame.type);
-        assertEquals(1, con.lastFrame.flags);
+        Assert.assertEquals(1, con.lastFrame.version);
+        Assert.assertEquals(1, con.lastFrame.type);
+        Assert.assertEquals(1, con.lastFrame.flags);
 
-        assertEquals(417, con.lastFrame.length);
+        Assert.assertEquals(417, con.lastFrame.length);
 
         // TODO: test req, headers
         HttpRequest req = spdyChannel.getRequest();
-        assertTrue(req.getHeader("accept").indexOf("application/xml") >= 0);
+        Assert.assertTrue(req.getHeader("accept").indexOf("application/xml") >= 0);
 
     }
 
@@ -108,13 +108,13 @@ public class SpdyTest extends TestCase {
 
         HttpChannel spdyChannel = con.channels.get(1);
 
-        assertEquals(1, con.lastFrame.version);
-        assertEquals(1, con.lastFrame.type);
-        assertEquals(1, con.lastFrame.flags);
+        Assert.assertEquals(1, con.lastFrame.version);
+        Assert.assertEquals(1, con.lastFrame.type);
+        Assert.assertEquals(1, con.lastFrame.flags);
 
         // TODO: test req, headers
         HttpRequest req = spdyChannel.getRequest();
-        assertTrue(req.getHeader("accept").indexOf("application/xml") >= 0);
+        Assert.assertTrue(req.getHeader("accept").indexOf("application/xml") >= 0);
 
     }
 
@@ -134,10 +134,10 @@ public class SpdyTest extends TestCase {
 
         SpdyConnection con = new SpdyConnection(memSpdyCon, new RemoteServer());
         con.dataReceived(iob);
-        assertEquals(1, con.currentInFrame.version);
-        assertEquals(0xFFFF, con.currentInFrame.type);
-        assertEquals(0xFF, con.currentInFrame.flags);
-        assertEquals(0xFFFFFF, con.currentInFrame.length);
+        Assert.assertEquals(1, con.currentInFrame.version);
+        Assert.assertEquals(0xFFFF, con.currentInFrame.type);
+        Assert.assertEquals(0xFF, con.currentInFrame.flags);
+        Assert.assertEquals(0xFFFFFF, con.currentInFrame.length);
 
     }
 
@@ -158,7 +158,7 @@ public class SpdyTest extends TestCase {
             SpdyConnection con = new SpdyConnection(memSpdyCon, new RemoteServer());
             con.dataReceived(iob);
 
-            assertEquals(1, con.streamErrors.get());
+            Assert.assertEquals(1, con.streamErrors.get());
 
     }
 

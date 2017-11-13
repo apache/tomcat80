@@ -37,57 +37,57 @@ public class ProxyTest extends TestCase {
   public void xtestRequestSlowChunked() throws Exception {
       resStr =
           TestMain.get("http://localhost:8903/sleep/1c").toString();
-      assertEquals("sleep 1csleep 1c", resStr);
+      Assert.assertEquals("sleep 1csleep 1c", resStr);
   }
 
   public void testSingleRequest() throws Exception {
       String resStr =
           TestMain.get("http://localhost:8903/hello").toString();
-      assertEquals("Hello world", resStr);
+      Assert.assertEquals("Hello world", resStr);
   }
 
 
   public void test2Requests() throws Exception {
       String resStr =
           TestMain.get("http://localhost:8903/hello").toString();
-      assertEquals("Hello world", resStr);
+      Assert.assertEquals("Hello world", resStr);
       resStr =
           TestMain.get("http://localhost:8903/hello?a=b").toString();
-      assertEquals("Hello world", resStr);
+      Assert.assertEquals("Hello world", resStr);
   }
 
   public void testRequestSimple() throws Exception {
       resStr =
           TestMain.get("http://localhost:8903/hello").toString();
-      assertEquals("Hello world", resStr);
+      Assert.assertEquals("Hello world", resStr);
       resStr =
           TestMain.get("http://localhost:8903/hello").toString();
-      assertEquals("Hello world", resStr);
+      Assert.assertEquals("Hello world", resStr);
       resStr =
           TestMain.get("http://localhost:8903/hello").toString();
-      assertEquals(resStr, "Hello world");
+      Assert.assertEquals(resStr, "Hello world");
 
   }
 
   public void testExtAdapter() throws Exception {
       String res =
               TestMain.get("http://www.apache.org/").toString();
-      assertTrue(res.indexOf("Apache") > 0);
+      Assert.assertTrue(res.indexOf("Apache") > 0);
 
       Thread.currentThread().sleep(100);
       // second time - are we reusing ?
       res =
           TestMain.get("http://www.apache.org/").toString();
 
-      assertTrue(res.indexOf("Apache") > 0);
+      Assert.assertTrue(res.indexOf("Apache") > 0);
 
   }
 
   public void testStaticAdapter() throws Exception {
 
-      assertEquals("Hello world",
+      Assert.assertEquals("Hello world",
           TestMain.get("http://localhost:8802/hello").toString());
-      assertEquals("Hello world2",
+      Assert.assertEquals("Hello world2",
           TestMain.get("http://localhost:8802/2nd").toString());
 
     }
@@ -97,7 +97,7 @@ public class ProxyTest extends TestCase {
       String resStr =
           TestMain.get("http://localhost:8903/echo/foo?q=a&b")
           .toString();
-      assertTrue(resStr, resStr.indexOf("foo?q=a&b") > 0);
+      Assert.assertTrue(resStr, resStr.indexOf("foo?q=a&b") > 0);
   }
 
 
@@ -106,8 +106,8 @@ public class ProxyTest extends TestCase {
       String resStr =
           TestMain.get("http://localhost:8903/chunked/test")
           .toString();
-      assertEquals(4, resStr.length());
-      assertTrue(resStr.indexOf("AAA") >= 0);
+      Assert.assertEquals(4, resStr.length());
+      Assert.assertTrue(resStr.indexOf("AAA") >= 0);
   }
 
 
@@ -115,6 +115,6 @@ public class ProxyTest extends TestCase {
       // Slow
       String resStr =
           TestMain.get("http://localhost:8903/sleep/1").toString();
-      assertEquals("sleep 1sleep 1", resStr.toString());
+      Assert.assertEquals("sleep 1sleep 1", resStr.toString());
   }
 }

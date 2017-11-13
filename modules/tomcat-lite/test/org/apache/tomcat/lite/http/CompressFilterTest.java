@@ -33,11 +33,11 @@ public class CompressFilterTest extends TestCase {
         out.close();
         cf.decompress(out, in);
 
-        assertEquals(in.copyAll(null).toString(), clear);
-        assertTrue(in.isAppendClosed());
+        Assert.assertEquals(in.copyAll(null).toString(), clear);
+        Assert.assertTrue(in.isAppendClosed());
 
         if (xtra != null) {
-            assertEquals(out.copyAll(null).toString(), xtra);
+            Assert.assertEquals(out.copyAll(null).toString(), xtra);
         }
     }
 

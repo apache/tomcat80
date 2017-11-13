@@ -41,7 +41,7 @@ public class BBufferTest extends TestCase {
     BBuffer h3 = BBuffer.wrapper("a b");
 
     public void hashTest(String s) {
-        assertEquals(s.hashCode(), BBuffer.wrapper(s).hashCode());
+        Assert.assertEquals(s.hashCode(), BBuffer.wrapper(s).hashCode());
     }
 
     public void testHash() {
@@ -53,107 +53,107 @@ public class BBufferTest extends TestCase {
     }
 
     public void testReadToSpace() {
-        assertEquals(3, l8.readToSpace(res));
-        assertEquals("GET", res.toString());
-        assertEquals(" /\n", l8.toString());
+        Assert.assertEquals(3, l8.readToSpace(res));
+        Assert.assertEquals("GET", res.toString());
+        Assert.assertEquals(" /\n", l8.toString());
 
-        assertEquals(0, l1.readToSpace(res));
-        assertEquals("", res.toString());
-        assertEquals("", l1.toString());
+        Assert.assertEquals(0, l1.readToSpace(res));
+        Assert.assertEquals("", res.toString());
+        Assert.assertEquals("", l1.toString());
     }
 
     public void testReadToDelim() {
-        assertEquals(1, h1.readToDelimOrSpace((byte)'?', res));
-        assertEquals("a", res.toString());
-        assertEquals("", h1.toString());
+        Assert.assertEquals(1, h1.readToDelimOrSpace((byte)'?', res));
+        Assert.assertEquals("a", res.toString());
+        Assert.assertEquals("", h1.toString());
 
-        assertEquals(1, h2.readToDelimOrSpace((byte)'?', res));
-        assertEquals("a", res.toString());
-        assertEquals("?b", h2.toString());
+        Assert.assertEquals(1, h2.readToDelimOrSpace((byte)'?', res));
+        Assert.assertEquals("a", res.toString());
+        Assert.assertEquals("?b", h2.toString());
 
-        assertEquals(1, h3.readToDelimOrSpace((byte)'?', res));
-        assertEquals("a", res.toString());
-        assertEquals(" b", h3.toString());
+        Assert.assertEquals(1, h3.readToDelimOrSpace((byte)'?', res));
+        Assert.assertEquals("a", res.toString());
+        Assert.assertEquals(" b", h3.toString());
     }
 
     public void testGet() {
-        assertEquals(0x20, s1.get(0));
-        assertEquals(0x0a, s1.get(1));
+        Assert.assertEquals(0x20, s1.get(0));
+        Assert.assertEquals(0x0a, s1.get(1));
         try {
             s1.get(2);
         } catch(ArrayIndexOutOfBoundsException ex) {
             return;
         }
-        fail("Exception");
+        Assert.fail("Exception");
     }
 
     public void testSkipSpace() {
-        assertEquals(1, s1.skipSpace());
-        assertEquals("\n", s1.toString());
+        Assert.assertEquals(1, s1.skipSpace());
+        Assert.assertEquals("\n", s1.toString());
 
-        assertEquals(1, s2.skipSpace());
-        assertEquals("a", s2.toString());
+        Assert.assertEquals(1, s2.skipSpace());
+        Assert.assertEquals("a", s2.toString());
 
-        assertEquals(2, s3.skipSpace());
-        assertEquals("", s3.toString());
+        Assert.assertEquals(2, s3.skipSpace());
+        Assert.assertEquals("", s3.toString());
 
-        assertEquals(3, s4.skipSpace());
-        assertEquals("a", s4.toString());
+        Assert.assertEquals(3, s4.skipSpace());
+        Assert.assertEquals("a", s4.toString());
 
-        assertEquals(0, l1.skipSpace());
-        assertEquals("", l1.toString());
+        Assert.assertEquals(0, l1.skipSpace());
+        Assert.assertEquals("", l1.toString());
     }
 
     public void testLFLF() {
-        assertTrue(f1.hasLFLF());
-        assertTrue(f2.hasLFLF());
-        assertTrue(f3.hasLFLF());
+        Assert.assertTrue(f1.hasLFLF());
+        Assert.assertTrue(f2.hasLFLF());
+        Assert.assertTrue(f3.hasLFLF());
 
-        assertFalse(f4.hasLFLF());
-        assertFalse(l1.hasLFLF());
-        assertFalse(l2.hasLFLF());
-        assertFalse(l3.hasLFLF());
+        Assert.assertFalse(f4.hasLFLF());
+        Assert.assertFalse(l1.hasLFLF());
+        Assert.assertFalse(l2.hasLFLF());
+        Assert.assertFalse(l3.hasLFLF());
 
-        assertFalse(l10.hasLFLF());
-        assertFalse(l11.hasLFLF());
-        assertFalse(l12.hasLFLF());
+        Assert.assertFalse(l10.hasLFLF());
+        Assert.assertFalse(l11.hasLFLF());
+        Assert.assertFalse(l12.hasLFLF());
     }
 
     public void testReadLine() {
-        assertEquals(-1, l1.readLine(res));
-        assertEquals("", res.toString());
-        assertEquals("", l1.toString());
+        Assert.assertEquals(-1, l1.readLine(res));
+        Assert.assertEquals("", res.toString());
+        Assert.assertEquals("", l1.toString());
 
-        assertEquals(-1, l1a.readLine(res));
-        assertEquals("", res.toString());
-        assertEquals("a", l1a.toString());
+        Assert.assertEquals(-1, l1a.readLine(res));
+        Assert.assertEquals("", res.toString());
+        Assert.assertEquals("a", l1a.toString());
 
-        assertEquals(0, l2.readLine(res));
-        assertEquals("", l2.toString());
-        assertEquals("", res.toString());
-        assertEquals(0, l3.readLine(res));
-        assertEquals("", l3.toString());
-        assertEquals("", res.toString());
-        assertEquals(0, l4.readLine(res));
-        assertEquals("", res.toString());
+        Assert.assertEquals(0, l2.readLine(res));
+        Assert.assertEquals("", l2.toString());
+        Assert.assertEquals("", res.toString());
+        Assert.assertEquals(0, l3.readLine(res));
+        Assert.assertEquals("", l3.toString());
+        Assert.assertEquals("", res.toString());
+        Assert.assertEquals(0, l4.readLine(res));
+        Assert.assertEquals("", res.toString());
 
-        assertEquals(0, l5.readLine(res));
-        assertEquals("", res.toString());
-        assertEquals("a", l5.toString());
-        assertEquals(0, l5_b.readLine(res));
-        assertEquals("", res.toString());
-        assertEquals("a", l5_b.toString());
-        assertEquals(0, l5_a.readLine(res));
-        assertEquals("", res.toString());
-        assertEquals("a", l5_a.toString());
+        Assert.assertEquals(0, l5.readLine(res));
+        Assert.assertEquals("", res.toString());
+        Assert.assertEquals("a", l5.toString());
+        Assert.assertEquals(0, l5_b.readLine(res));
+        Assert.assertEquals("", res.toString());
+        Assert.assertEquals("a", l5_b.toString());
+        Assert.assertEquals(0, l5_a.readLine(res));
+        Assert.assertEquals("", res.toString());
+        Assert.assertEquals("a", l5_a.toString());
 
-        assertEquals(1, l6.readLine(res));
-        assertEquals("a", res.toString());
+        Assert.assertEquals(1, l6.readLine(res));
+        Assert.assertEquals("a", res.toString());
 
-        assertEquals(4, l7.readLine(res));
-        assertEquals("GET ", res.toString());
-        assertEquals(5, l8.readLine(res));
-        assertEquals("GET /", res.toString());
+        Assert.assertEquals(4, l7.readLine(res));
+        Assert.assertEquals("GET ", res.toString());
+        Assert.assertEquals(5, l8.readLine(res));
+        Assert.assertEquals("GET /", res.toString());
 
     }
 }
