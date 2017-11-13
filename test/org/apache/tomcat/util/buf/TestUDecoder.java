@@ -16,9 +16,7 @@
  */
 package org.apache.tomcat.util.buf;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
+import org.junit.Assert;
 import org.junit.Test;
 
 public class TestUDecoder {
@@ -32,7 +30,7 @@ public class TestUDecoder {
         } catch (Exception e) {
             exception = e;
         }
-        assertTrue(exception instanceof IllegalArgumentException);
+        Assert.assertTrue(exception instanceof IllegalArgumentException);
 
         // Edge case trying to trigger ArrayIndexOutOfBoundsException
         exception = null;
@@ -41,47 +39,47 @@ public class TestUDecoder {
         } catch (Exception e) {
             exception = e;
         }
-        assertTrue(exception instanceof IllegalArgumentException);
+        Assert.assertTrue(exception instanceof IllegalArgumentException);
     }
 
     @Test
     public void testURLDecodeStringValidIso88591Start() {
 
         String result = UDecoder.URLDecode("%41xxxx", "ISO-8859-1");
-        assertEquals("Axxxx", result);
+        Assert.assertEquals("Axxxx", result);
     }
 
     @Test
     public void testURLDecodeStringValidIso88591Middle() {
 
         String result = UDecoder.URLDecode("xx%41xx", "ISO-8859-1");
-        assertEquals("xxAxx", result);
+        Assert.assertEquals("xxAxx", result);
     }
 
     @Test
     public void testURLDecodeStringValidIso88591End() {
 
         String result = UDecoder.URLDecode("xxxx%41", "ISO-8859-1");
-        assertEquals("xxxxA", result);
+        Assert.assertEquals("xxxxA", result);
     }
 
     @Test
     public void testURLDecodeStringValidUtf8Start() {
         String result = UDecoder.URLDecode("%c3%aaxxxx", "UTF-8");
-        assertEquals("\u00eaxxxx", result);
+        Assert.assertEquals("\u00eaxxxx", result);
     }
 
     @Test
     public void testURLDecodeStringValidUtf8Middle() {
 
         String result = UDecoder.URLDecode("xx%c3%aaxx", "UTF-8");
-        assertEquals("xx\u00eaxx", result);
+        Assert.assertEquals("xx\u00eaxx", result);
     }
 
     @Test
     public void testURLDecodeStringValidUtf8End() {
 
         String result = UDecoder.URLDecode("xxxx%c3%aa", "UTF-8");
-        assertEquals("xxxx\u00ea", result);
+        Assert.assertEquals("xxxx\u00ea", result);
     }
 }
