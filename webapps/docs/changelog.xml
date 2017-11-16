@@ -80,6 +80,11 @@
         <bug>61568</bug>: Avoid a potential <code>SecurityException</code> when
         using the NIO2 connector and a new thread is added to the pool. (markt)
       </fix>
+      <fix>
+        <bug>61736</bug>: Improve performance of NIO connector when clients
+        leave large time gaps between network packets. Patch provided by Zilong
+        Song. (markt)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="WebSocket">
