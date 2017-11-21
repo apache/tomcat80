@@ -193,7 +193,8 @@ public class Nio2ServletOutputStream extends AbstractServletOutputStream<Nio2Cha
 
     @Override
     protected void doClose() throws IOException {
-        channel.close(true);
+        // Close via the endpoint to ensure the connection count is correctly
+        // tracked
+        ((Nio2Endpoint) endpoint).closeSocket(socketWrapper, null);
     }
-
 }

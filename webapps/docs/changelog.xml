@@ -89,6 +89,12 @@
         leave large time gaps between network packets. Patch provided by Zilong
         Song. (markt)
       </fix>
+      <fix>
+        <bug>61773</bug>: Fix a connection counting bug in the NIO2 connector
+        that meant connections using the non-blocking I/O features of the
+        Servlet API (which includes the WebSocket implementation on Tomcat
+        8.0.x) were not removed from the current connection count. (markt)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="WebSocket">
