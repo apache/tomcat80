@@ -381,6 +381,10 @@
         <bug>61563</bug>: Correct typos in Spanish translation. Patch provided by
         Gonzalo Vásquez. (csutherl)
       </fix>
+      <update>
+        <bug>61599</bug>: Update to Commons Daemon 1.1.0 for improved Java 9
+        support. (markt)
+      </update>
     </changelog>
   </subsection>
 </section>
