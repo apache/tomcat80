@@ -99,6 +99,7 @@ public class WsSession implements Session {
             Constants.DEFAULT_BUFFER_SIZE;
     private volatile long maxIdleTimeout = 0;
     private volatile long lastActive = System.currentTimeMillis();
+    private volatile long lastPong = System.currentTimeMillis();
     private Map<FutureToSendHandler,FutureToSendHandler> futures = new ConcurrentHashMap<>();
 
     /**
@@ -789,6 +790,13 @@ public class WsSession implements Session {
         lastActive = System.currentTimeMillis();
     }
 
+    protected long getLastPong() {
+        return lastPong;
+    }
+
+    protected void updateLastPong() {
+        lastPong = System.currentTimeMillis();
+    }
 
     protected void checkExpiration() {
         long timeout = maxIdleTimeout;
