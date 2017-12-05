@@ -45,6 +45,15 @@
   issues do not "pop up" wrt. others).
 -->
 <section name="Tomcat 8.0.49 (violetagg)" rtext="In development">
+  <subsection name="Web applications">
+    <changelog>
+      <add>
+        <bug>61223</bug>: Add the mbeans-descriptors.dtd file to the custom
+        MBean documentation so users have a reference to use when constructing
+        mbeans-descriptiors.xml files for custom components. (markt)
+      </add>
+    </changelog>
+  </subsection>
 </section>
 <section name="Tomcat 8.0.48 (violetagg)" rtext="release in progress">
   <subsection name="Catalina">
