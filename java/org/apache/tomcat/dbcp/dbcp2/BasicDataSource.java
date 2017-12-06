@@ -106,7 +106,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     /**
      * The default auto-commit state of connections created by this pool.
      */
-    private volatile Boolean defaultAutoCommit = null;
+    private volatile Boolean defaultAutoCommit;
 
     /**
      * Returns the default auto-commit property.
@@ -137,7 +137,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     /**
      * The default read-only state of connections created by this pool.
      */
-    private transient Boolean defaultReadOnly = null;
+    private transient Boolean defaultReadOnly;
 
     /**
      * Returns the default readOnly property.
@@ -198,7 +198,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     }
 
 
-    private Integer defaultQueryTimeout = null;
+    private Integer defaultQueryTimeout;
 
     /**
      * Obtain the default query timeout that will be used for {@link java.sql.Statement Statement}s
@@ -223,7 +223,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     /**
      * The default "catalog" of connections created by this pool.
      */
-    private volatile String defaultCatalog = null;
+    private volatile String defaultCatalog;
 
     /**
      * Returns the default catalog.
@@ -282,7 +282,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     /**
      * The instance of the JDBC Driver to use.
      */
-    private Driver driver = null;
+    private Driver driver;
 
     /**
      * Returns the JDBC Driver that has been configured for use by this pool.
@@ -315,7 +315,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     /**
      * The fully qualified Java class name of the JDBC driver to be used.
      */
-    private String driverClassName = null;
+    private String driverClassName;
 
     /**
      * Returns the JDBC driver class name.
@@ -356,7 +356,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * If specified, {@link Class#forName(String, boolean, ClassLoader)} is
      * used.
      */
-    private ClassLoader driverClassLoader = null;
+    private ClassLoader driverClassLoader;
 
     /**
      * Returns the class loader specified for loading the JDBC driver. Returns
@@ -1005,7 +1005,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * The connection password to be passed to our JDBC driver to establish
      * a connection.
      */
-    private volatile String password = null;
+    private volatile String password;
 
     /**
      * Returns the password passed to the JDBC driver to establish connections.
@@ -1035,7 +1035,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * The connection URL to be passed to our JDBC driver to establish
      * a connection.
      */
-    private String url = null;
+    private String url;
 
     /**
      * Returns the JDBC connection {@link #url} property.
@@ -1066,7 +1066,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * The connection username to be passed to our JDBC driver to
      * establish a connection.
      */
-    private String username = null;
+    private String username;
 
     /**
      * Returns the JDBC connection {@link #username} property.
@@ -1100,7 +1100,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * one row. If not specified, {@link Connection#isValid(int)} will be used
      * to validate connections.
      */
-    private volatile String validationQuery = null;
+    private volatile String validationQuery;
 
     /**
      * Returns the validation query used to validate connections before
@@ -1310,7 +1310,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
         this.logExpiredConnections = logExpiredConnections;
     }
 
-    private String jmxName = null;
+    private String jmxName;
 
     /**
      * Returns the JMX name that has been requested for this DataSource. If the
@@ -1473,7 +1473,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
     /**
      * The object pool that internally manages our connections.
      */
-    private volatile GenericObjectPool<PoolableConnection> connectionPool = null;
+    private volatile GenericObjectPool<PoolableConnection> connectionPool;
 
     protected GenericObjectPool<PoolableConnection> getConnectionPool() {
         return connectionPool;
@@ -1497,7 +1497,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * be acquired <strong>ONLY</strong> by calls to the
      * <code>createDataSource()</code> method.
      */
-    private volatile DataSource dataSource = null;
+    private volatile DataSource dataSource;
 
     /**
      * The PrintWriter to which log messages should be directed.
@@ -1666,6 +1666,10 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
         }
         abandonedConfig.setRemoveAbandonedOnMaintenance(
                 removeAbandonedOnMaintenance);
+        final GenericObjectPool<?> gop = this.connectionPool;
+        if (gop != null) {
+            gop.setAbandonedConfig(abandonedConfig);
+        }
     }
 
     /**
@@ -1698,6 +1702,10 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
             abandonedConfig = new AbandonedConfig();
         }
         abandonedConfig.setRemoveAbandonedOnBorrow(removeAbandonedOnBorrow);
+        final GenericObjectPool<?> gop = this.connectionPool;
+        if (gop != null) {
+            gop.setAbandonedConfig(abandonedConfig);
+        }
     }
 
     /**
@@ -1743,6 +1751,10 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
             abandonedConfig = new AbandonedConfig();
         }
         abandonedConfig.setRemoveAbandonedTimeout(removeAbandonedTimeout);
+        final GenericObjectPool<?> gop = this.connectionPool;
+        if (gop != null) {
+            gop.setAbandonedConfig(abandonedConfig);
+        }
     }
 
     /**
@@ -1771,6 +1783,10 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
             abandonedConfig = new AbandonedConfig();
         }
         abandonedConfig.setLogAbandoned(logAbandoned);
+        final GenericObjectPool<?> gop = this.connectionPool;
+        if (gop != null) {
+            gop.setAbandonedConfig(abandonedConfig);
+        }
     }
 
     /**
@@ -1795,6 +1811,10 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
             abandonedConfig = new AbandonedConfig();
         }
         abandonedConfig.setLogWriter(logWriter);
+        final GenericObjectPool<?> gop = this.connectionPool;
+        if (gop != null) {
+            gop.setAbandonedConfig(abandonedConfig);
+        }
     }
 
     /**
@@ -1828,6 +1848,10 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
             abandonedConfig = new AbandonedConfig();
         }
         abandonedConfig.setUseUsageTracking(usageTracking);
+        final GenericObjectPool<?> gop = this.connectionPool;
+        if (gop != null) {
+            gop.setAbandonedConfig(abandonedConfig);
+        }
     }
 
     // --------------------------------------------------------- Public Methods
@@ -2039,7 +2063,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
                         driverConnectionFactory);
                 poolableConnectionFactory.setPoolStatements(
                         poolPreparedStatements);
-                poolableConnectionFactory.setMaxOpenPrepatedStatements(
+                poolableConnectionFactory.setMaxOpenPreparedStatements(
                         maxOpenPreparedStatements);
                 success = true;
             } catch (final SQLException se) {
@@ -2196,15 +2220,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
         final GenericObjectPoolConfig config = new GenericObjectPoolConfig();
         updateJmxName(config);
         config.setJmxEnabled(registeredJmxName != null);  // Disable JMX on the underlying pool if the DS is not registered.
-        GenericObjectPool<PoolableConnection> gop;
-        if (abandonedConfig != null &&
-                (abandonedConfig.getRemoveAbandonedOnBorrow() ||
-                 abandonedConfig.getRemoveAbandonedOnMaintenance())) {
-            gop = new GenericObjectPool<>(factory, config, abandonedConfig);
-        }
-        else {
-            gop = new GenericObjectPool<>(factory, config);
-        }
+        final GenericObjectPool<PoolableConnection> gop = createObjectPool(factory, config, abandonedConfig);
         gop.setMaxTotal(maxTotal);
         gop.setMaxIdle(maxIdle);
         gop.setMinIdle(minIdle);
@@ -2221,6 +2237,29 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
         gop.setEvictionPolicyClassName(evictionPolicyClassName);
         factory.setPool(gop);
         connectionPool = gop;
+    }
+
+    /**
+     * Creates an object pool used to provide pooling support for {@link Connection JDBC connections}.
+     *
+     * @param factory         the object factory
+     * @param poolConfig      the object pool configuration
+     * @param abandonedConfig the abandoned objects configuration
+     * @return a non-null instance
+     */
+    protected  GenericObjectPool<PoolableConnection> createObjectPool(
+            final PoolableConnectionFactory factory, final GenericObjectPoolConfig poolConfig,
+            final AbandonedConfig abandonedConfig) {
+        GenericObjectPool<PoolableConnection> gop;
+        if (abandonedConfig != null &&
+                (abandonedConfig.getRemoveAbandonedOnBorrow() ||
+                        abandonedConfig.getRemoveAbandonedOnMaintenance())) {
+            gop = new GenericObjectPool<>(factory, poolConfig, abandonedConfig);
+        }
+        else {
+            gop = new GenericObjectPool<>(factory, poolConfig);
+        }
+        return gop;
     }
 
     /**
@@ -2280,7 +2319,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
             connectionFactory.setDefaultCatalog(defaultCatalog);
             connectionFactory.setCacheState(cacheState);
             connectionFactory.setPoolStatements(poolPreparedStatements);
-            connectionFactory.setMaxOpenPrepatedStatements(maxOpenPreparedStatements);
+            connectionFactory.setMaxOpenPreparedStatements(maxOpenPreparedStatements);
             connectionFactory.setMaxConnLifetimeMillis(maxConnLifetimeMillis);
             connectionFactory.setRollbackOnReturn(getRollbackOnReturn());
             connectionFactory.setEnableAutoCommitOnReturn(getEnableAutoCommitOnReturn());

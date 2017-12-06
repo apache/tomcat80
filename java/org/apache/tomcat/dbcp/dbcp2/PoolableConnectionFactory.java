@@ -157,7 +157,12 @@ public class PoolableConnectionFactory
         this.poolStatements = poolStatements;
     }
 
+    @Deprecated // Due to typo in method name.
     public void setMaxOpenPrepatedStatements(final int maxOpenPreparedStatements) {
+        setMaxOpenPreparedStatements(maxOpenPreparedStatements);
+    }
+
+    public void setMaxOpenPreparedStatements(final int maxOpenPreparedStatements) {
         this.maxOpenPreparedStatements = maxOpenPreparedStatements;
     }
 
