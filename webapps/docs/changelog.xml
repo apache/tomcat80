@@ -54,6 +54,13 @@
       </add>
     </changelog>
   </subsection>
+  <subsection name="Other">
+    <changelog>
+      <update>
+        Update the internal fork of Commons Pool 2 to 2.4.3. (markt)
+      </update>
+    </changelog>
+  </subsection>
 </section>
 <section name="Tomcat 8.0.48 (violetagg)" rtext="release in progress">
   <subsection name="Catalina">
