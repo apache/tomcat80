@@ -290,7 +290,7 @@ public class Digester extends DefaultHandler2 {
     /**
      * The Log to which most logging calls will be made.
      */
-    protected Log log = LogFactory.getLog("org.apache.tomcat.util.digester.Digester");
+    protected Log log = LogFactory.getLog(Digester.class);
 
 
     /**
