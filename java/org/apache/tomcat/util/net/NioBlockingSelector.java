@@ -373,11 +373,11 @@ public class NioBlockingSelector {
         private class RunnableAdd implements Runnable {
 
             private final SocketChannel ch;
-            private final NioSocketWrapper key;
+            private final KeyAttachment key;
             private final int ops;
             private final KeyReference ref;
 
-            public RunnableAdd(SocketChannel ch, NioSocketWrapper key, int ops, KeyReference ref) {
+            public RunnableAdd(SocketChannel ch, KeyAttachment key, int ops, KeyReference ref) {
                 this.ch = ch;
                 this.key = key;
                 this.ops = ops;
@@ -408,10 +408,10 @@ public class NioBlockingSelector {
         private class RunnableRemove implements Runnable {
 
             private final SocketChannel ch;
-            private final NioSocketWrapper key;
+            private final KeyAttachment key;
             private final int ops;
 
-            public RunnableRemove(SocketChannel ch, NioSocketWrapper key, int ops) {
+            public RunnableRemove(SocketChannel ch, KeyAttachment key, int ops) {
                 this.ch = ch;
                 this.key = key;
                 this.ops = ops;
