@@ -399,7 +399,7 @@ public class NioBlockingSelector {
                 } catch (CancelledKeyException cx) {
                     cancel(sk, key, ops);
                 } catch (ClosedChannelException cx) {
-                    cancel(sk, key, ops);
+                    cancel(null, key, ops);
                 }
             }
         }
