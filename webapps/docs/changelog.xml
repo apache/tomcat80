@@ -45,6 +45,14 @@
   issues do not "pop up" wrt. others).
 -->
 <section name="Tomcat 8.0.49 (violetagg)" rtext="In development">
+  <subsection name="Coyote">
+    <changelog>
+      <fix>
+        <bug>61932</bug>: Allow a call to <code>AsyncContext.dispatch()</code>
+        to terminate non-blocking I/O. (markt)
+      </fix>
+    </changelog>
+  </subsection>
   <subsection name="Jasper">
     <changelog>
       <fix>
