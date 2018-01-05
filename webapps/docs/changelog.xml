@@ -67,6 +67,9 @@
         <bug>61932</bug>: Allow a call to <code>AsyncContext.dispatch()</code>
         to terminate non-blocking I/O. (markt)
       </fix>
+      <fix>
+        Fix NIO2 handshaking with a full input buffer. (remm)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Jasper">

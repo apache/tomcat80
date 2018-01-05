@@ -286,7 +286,11 @@ public class SecureNio2Channel extends Nio2Channel  {
                         if (handshakeStatus == HandshakeStatus.NEED_TASK)
                             handshakeStatus = tasks();
                     } else if (handshake.getStatus() == Status.BUFFER_UNDERFLOW) {
-                        //read more data, reregister for OP_READ
+                        if (netInBuffer.position() == netInBuffer.limit()) {
+                            //clear the buffer if we have emptied it out on data
+                            netInBuffer.clear();
+                        }
+                        //read more data
                         if (async) {
                             sc.read(netInBuffer, socket, handshakeReadCompletionHandler);
                         } else {
@@ -396,11 +400,6 @@ public class SecureNio2Channel extends Nio2Channel  {
      * @throws IOException
      */
     protected SSLEngineResult handshakeUnwrap() throws IOException {
-
-        if (netInBuffer.position() == netInBuffer.limit()) {
-            //clear the buffer if we have emptied it out on data
-            netInBuffer.clear();
-        }
         SSLEngineResult result;
         boolean cont = false;
         //loop while we can perform pure SSLEngine data
