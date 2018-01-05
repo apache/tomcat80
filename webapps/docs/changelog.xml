@@ -47,6 +47,11 @@
 <section name="Tomcat 8.0.49 (violetagg)" rtext="In development">
   <subsection name="Catalina">
     <changelog>
+      <add>
+        <bug>57619</bug>: Implement a small optimisation to how JAR URLs are
+        processed to reduce the storage of duplicate String objects in memory.
+        Patch provided by Dmitri Blinov. (markt)
+      </add>
       <fix>
         <bug>61916</bug>: Extend the <code>AddDefaultCharsetFilter</code> to add
         a character set when the content type is set via
