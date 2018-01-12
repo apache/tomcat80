@@ -323,9 +323,8 @@ public class Http11AprProcessor extends AbstractHttp11Processor<Long> {
                     } catch (Exception e) {
                         log.warn(sm.getString("http11processor.socket.info"), e);
                     }
-                } else {
-                    request.remoteHost().setString(socketWrapper.getRemoteHost());
                 }
+                request.remoteHost().setString(socketWrapper.getRemoteHost());
             }
             break;
         }
