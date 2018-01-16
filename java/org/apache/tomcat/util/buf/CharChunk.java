@@ -32,13 +32,17 @@ public final class CharChunk extends AbstractChunk implements CharSequence {
 
     private static final long serialVersionUID = 1L;
 
-    // Input interface, used when the buffer is emptied.
+    /**
+     * Input interface, used when the buffer is empty.
+     */
     public static interface CharInputChannel {
 
         /**
-         * Read new bytes ( usually the internal conversion buffer ). The
-         * implementation is allowed to ignore the parameters, and mutate the
-         * chunk if it wishes to implement its own buffering.
+         * Read new characters.
+         *
+         * @return The number of characters read
+         *
+         * @throws IOException If an I/O error occurs during reading
          */
         public int realReadChars(char cbuf[], int off, int len) throws IOException;
     }
@@ -52,14 +56,19 @@ public final class CharChunk extends AbstractChunk implements CharSequence {
         /**
          * Send the bytes ( usually the internal conversion buffer ). Expect 8k
          * output if the buffer is full.
+         *
+         * @param buf characters that will be written
+         * @param off offset in the characters array
+         * @param len length that will be written
+         * @throws IOException If an I/O occurs while writing the characters
          */
-        public void realWriteChars(char cbuf[], int off, int len) throws IOException;
+        public void realWriteChars(char buf[], int off, int len) throws IOException;
     }
 
     // --------------------
 
     // char[]
-    private char buff[];
+    private char[] buff;
 
     // -1: grow indefinitely
     // maximum amount to be cached
@@ -78,8 +87,8 @@ public final class CharChunk extends AbstractChunk implements CharSequence {
     }
 
 
-    public CharChunk(int size) {
-        allocate(size, -1);
+    public CharChunk(int initial) {
+        allocate(initial, -1);
     }
 
 
@@ -104,6 +113,13 @@ public final class CharChunk extends AbstractChunk implements CharSequence {
     }
 
 
+    /**
+     * Sets the buffer to the specified subarray of characters.
+     *
+     * @param c the characters
+     * @param off the start offset of the characters
+     * @param len the length of the characters
+     */
     public void setChars(char[] c, int off, int len) {
         buff = c;
         start = off;
@@ -113,12 +129,17 @@ public final class CharChunk extends AbstractChunk implements CharSequence {
     }
 
 
-    // compat
+    /**
+     * @return the buffer.
+     */
     public char[] getChars() {
         return getBuffer();
     }
 
 
+    /**
+     * @return the buffer.
+     */
     public char[] getBuffer() {
         return buff;
     }
@@ -328,6 +349,12 @@ public final class CharChunk extends AbstractChunk implements CharSequence {
     }
 
 
+    /**
+     * Send the buffer to the sink. Called by append() when the limit is
+     * reached. You can also call it explicitly to force the data to be written.
+     *
+     * @throws IOException Writing overflow data to the output channel failed
+     */
     public void flushBuffer() throws IOException {
         // assert out!=null
         if (out == null) {
@@ -509,9 +536,12 @@ public final class CharChunk extends AbstractChunk implements CharSequence {
 
 
     /**
-     * Returns true if the message bytes starts with the specified string.
+     * Returns true if the buffer starts with the specified string.
      *
      * @param s the string
+     * @param pos The position
+     *
+     * @return <code>true</code> if the start matches
      */
     public boolean startsWithIgnoreCase(String s, int pos) {
         char[] c = buff;
@@ -550,40 +580,6 @@ public final class CharChunk extends AbstractChunk implements CharSequence {
     }
 
 
-    @Override
-    protected int getBufferElement(int index) {
-        return buff[index];
-    }
-
-
-    public int indexOf(char c) {
-        return indexOf(c, start);
-    }
-
-
-    /**
-     * Returns true if the message bytes starts with the specified string.
-     *
-     * @param c the character
-     */
-    public int indexOf(char c, int starting) {
-        int ret = indexOf(buff, start + starting, end, c);
-        return (ret >= start) ? ret - start : -1;
-    }
-
-
-    public static int indexOf(char chars[], int off, int cend, char qq) {
-        while (off < cend) {
-            char b = chars[off];
-            if (b == qq) {
-                return off;
-            }
-            off++;
-        }
-        return -1;
-    }
-
-
     public int indexOf(String src, int srcOff, int srcLen, int myOff) {
         char first = src.charAt(srcOff);
 
@@ -604,6 +600,58 @@ public final class CharChunk extends AbstractChunk implements CharSequence {
                     return i - start; // found it
                 }
             }
+        }
+        return -1;
+    }
+
+
+    @Override
+    protected int getBufferElement(int index) {
+        return buff[index];
+    }
+
+
+    public int indexOf(char c) {
+        return indexOf(c, start);
+    }
+
+
+    /**
+     * Returns the first instance of the given character in this CharChunk
+     * starting at the specified char. If the character is not found, -1 is
+     * returned. <br>
+     *
+     * @param c The character
+     * @param starting The start position
+     * @return The position of the first instance of the character or -1 if the
+     *         character is not found.
+     */
+    public int indexOf(char c, int starting) {
+        int ret = indexOf(buff, start + starting, end, c);
+        return (ret >= start) ? ret - start : -1;
+    }
+
+
+    /**
+     * Returns the first instance of the given character in the given char array
+     * between the specified start and end. <br>
+     *
+     * @param chars The array to search
+     * @param start The point to start searching from in the array
+     * @param end The point to stop searching in the array
+     * @param s The character to search for
+     * @return The position of the first instance of the character or -1 if the
+     *         character is not found.
+     */
+    public static int indexOf(char chars[], int start, int end, char s) {
+        int offset = start;
+
+        while (offset < end) {
+            char c = chars[offset];
+            if (c == s) {
+                return offset;
+            }
+            offset++;
         }
         return -1;
     }
