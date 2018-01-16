@@ -429,6 +429,7 @@ public final class ByteChunk extends AbstractChunk {
             tmp = new byte[newSize];
         }
 
+        // Compacts buffer
         System.arraycopy(buff, start, tmp, 0, end - start);
         buff = tmp;
         tmp = null;
