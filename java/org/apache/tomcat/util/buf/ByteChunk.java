@@ -108,8 +108,6 @@ public final class ByteChunk extends AbstractChunk {
 
     private Charset charset;
 
-    private boolean isSet = false; // XXX
-
     // How much can it grow, when data is added
     private int limit = -1;
 
@@ -130,21 +128,10 @@ public final class ByteChunk extends AbstractChunk {
     }
 
 
-    public boolean isNull() {
-        return !isSet; // buff==null;
-    }
-
-
-    /**
-     * Resets the message buff to an uninitialized state.
-     */
+    @Override
     public void recycle() {
-        // buff = null;
+        super.recycle();
         charset = null;
-        start = 0;
-        end = 0;
-        isSet = false;
-        hasHashCode = false;
     }
 
 
