@@ -70,12 +70,9 @@ public final class CharChunk extends AbstractChunk implements CharSequence {
     // char[]
     private char[] buff;
 
-    // -1: grow indefinitely
-    // maximum amount to be cached
-    private int limit = -1;
-
-    private CharInputChannel in = null;
-    private CharOutputChannel out = null;
+    // transient as serialization is primarily for values via, e.g. JMX
+    private transient CharInputChannel in = null;
+    private transient CharOutputChannel out = null;
 
     private boolean optimizedWrite = true;
 
@@ -94,13 +91,19 @@ public final class CharChunk extends AbstractChunk implements CharSequence {
 
     // --------------------
 
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone();
+    }
+
+
     // -------------------- Setup --------------------
 
     public void allocate(int initial, int limit) {
         if (buff == null || buff.length < initial) {
             buff = new char[initial];
         }
-        this.limit = limit;
+        setLimit(limit);
         start = 0;
         end = 0;
         isSet = true;
@@ -146,24 +149,9 @@ public final class CharChunk extends AbstractChunk implements CharSequence {
 
 
     /**
-     * Maximum amount of data in this buffer.
-     *
-     * If -1 or not set, the buffer will grow indefinitely. Can be smaller than
-     * the current buffer size ( which will not shrink ). When the limit is
-     * reached, the buffer will be flushed ( if out is set ) or throw exception.
-     */
-    public void setLimit(int limit) {
-        this.limit = limit;
-    }
-
-
-    public int getLimit() {
-        return limit;
-    }
-
-
-    /**
      * When the buffer is empty, read the data from the input channel.
+     *
+     * @param in The input channel
      */
     public void setCharInputChannel(CharInputChannel in) {
         this.in = in;
@@ -172,9 +160,10 @@ public final class CharChunk extends AbstractChunk implements CharSequence {
 
     /**
      * When the buffer is full, write the data to the output channel. Also used
-     * when large amount of data is appended.
+     * when large amount of data is appended. If not set, the buffer will grow
+     * to the limit.
      *
-     * If not set, the buffer will grow to the limit.
+     * @param out The output channel
      */
     public void setCharOutputChannel(CharOutputChannel out) {
         this.out = out;
@@ -185,9 +174,10 @@ public final class CharChunk extends AbstractChunk implements CharSequence {
 
     public void append(char b) throws IOException {
         makeSpace(1);
+        int limit = getLimitInternal();
 
         // couldn't make space
-        if (limit > 0 && end >= limit) {
+        if (end >= limit) {
             flushBuffer();
         }
         buff[end++] = b;
@@ -200,19 +190,17 @@ public final class CharChunk extends AbstractChunk implements CharSequence {
 
 
     /**
-     * Add data to the buffer
+     * Add data to the buffer.
+     *
+     * @param src Char array
+     * @param off Offset
+     * @param len Length
+     * @throws IOException Writing overflow data to the output channel failed
      */
     public void append(char src[], int off, int len) throws IOException {
         // will grow, up to limit
         makeSpace(len);
-
-        // if we don't have limit: makeSpace can grow as it wants
-        if (limit < 0) {
-            // assert: makeSpace made enough space
-            System.arraycopy(src, off, buff, end, len);
-            end += len;
-            return;
-        }
+        int limit = getLimitInternal();
 
         // Optimize on a common case.
         // If the buffer is empty and the source is going to fill up all the
@@ -223,27 +211,22 @@ public final class CharChunk extends AbstractChunk implements CharSequence {
             return;
         }
 
-        // if we have limit and we're below
+        // if we are below the limit
         if (len <= limit - end) {
-            // makeSpace will grow the buffer to the limit,
-            // so we have space
             System.arraycopy(src, off, buff, end, len);
-
             end += len;
             return;
         }
 
-        // need more space than we can afford, need to flush
-        // buffer
+        // Need more space than we can afford, need to flush buffer.
 
-        // the buffer is already at ( or bigger than ) limit
+        // The buffer is already at (or bigger than) limit.
 
         // Optimization:
-        // If len-avail < length ( i.e. after we fill the buffer with
-        // what we can, the remaining will fit in the buffer ) we'll just
-        // copy the first part, flush, then copy the second part - 1 write
-        // and still have some space for more. We'll still have 2 writes, but
-        // we write more on the first.
+        // If len-avail < length (i.e. after we fill the buffer with what we
+        // can, the remaining will fit in the buffer) we'll just copy the first
+        // part, flush, then copy the second part - 1 write and still have some
+        // space for more. We'll still have 2 writes, but we write more on the first.
 
         if (len + end < 2 * limit) {
             /*
@@ -271,7 +254,10 @@ public final class CharChunk extends AbstractChunk implements CharSequence {
 
 
     /**
-     * Append a string to the buffer
+     * Append a string to the buffer.
+     *
+     * @param s The string
+     * @throws IOException Writing overflow data to the output channel failed
      */
     public void append(String s) throws IOException {
         append(s, 0, s.length());
@@ -279,7 +265,12 @@ public final class CharChunk extends AbstractChunk implements CharSequence {
 
 
     /**
-     * Append a string to the buffer
+     * Append a string to the buffer.
+     *
+     * @param s The string
+     * @param off Offset
+     * @param len Length
+     * @throws IOException Writing overflow data to the output channel failed
      */
     public void append(String s, int off, int len) throws IOException {
         if (s == null) {
@@ -288,14 +279,7 @@ public final class CharChunk extends AbstractChunk implements CharSequence {
 
         // will grow, up to limit
         makeSpace(len);
-
-        // if we don't have limit: makeSpace can grow as it wants
-        if (limit < 0) {
-            // assert: makeSpace made enough space
-            s.getChars(off, off + len, buff, end);
-            end += len;
-            return;
-        }
+        int limit = getLimitInternal();
 
         int sOff = off;
         int sEnd = off + len;
@@ -321,7 +305,7 @@ public final class CharChunk extends AbstractChunk implements CharSequence {
     }
 
 
-    public int substract(char src[], int off, int len) throws IOException {
+    public int substract(char dest[], int off, int len) throws IOException {
         if (checkEof()) {
             return -1;
         }
@@ -329,7 +313,7 @@ public final class CharChunk extends AbstractChunk implements CharSequence {
         if (len > getLength()) {
             n = getLength();
         }
-        System.arraycopy(buff, start, src, off, n);
+        System.arraycopy(buff, start, dest, off, n);
         start += n;
         return n;
     }
@@ -358,7 +342,7 @@ public final class CharChunk extends AbstractChunk implements CharSequence {
     public void flushBuffer() throws IOException {
         // assert out!=null
         if (out == null) {
-            throw new IOException("Buffer overflow, no sink " + limit + " " + buff.length);
+            throw new IOException("Buffer overflow, no sink " + getLimit() + " " + buff.length);
         }
         out.realWriteChars(buff, start, end - start);
         end = start;
@@ -367,16 +351,20 @@ public final class CharChunk extends AbstractChunk implements CharSequence {
 
     /**
      * Make space for len chars. If len is small, allocate a reserve space too.
-     * Never grow bigger than limit.
+     * Never grow bigger than the limit or {@link AbstractChunk#ARRAY_MAX_SIZE}.
+     *
+     * @param count The size
      */
     public void makeSpace(int count) {
         char[] tmp = null;
 
-        int newSize;
-        int desiredSize = end + count;
+        int limit = getLimitInternal();
+
+        long newSize;
+        long desiredSize = end + count;
 
         // Can't grow above the limit
-        if (limit > 0 && desiredSize > limit) {
+        if (desiredSize > limit) {
             desiredSize = limit;
         }
 
@@ -384,28 +372,25 @@ public final class CharChunk extends AbstractChunk implements CharSequence {
             if (desiredSize < 256) {
                 desiredSize = 256; // take a minimum
             }
-            buff = new char[desiredSize];
+            buff = new char[(int) desiredSize];
         }
 
-        // limit < buf.length ( the buffer is already big )
+        // limit < buf.length (the buffer is already big)
         // or we already have space XXX
         if (desiredSize <= buff.length) {
             return;
         }
         // grow in larger chunks
-        if (desiredSize < 2 * buff.length) {
-            newSize = buff.length * 2;
-            if (limit > 0 && newSize > limit) {
-                newSize = limit;
-            }
-            tmp = new char[newSize];
+        if (desiredSize < 2L * buff.length) {
+            newSize = buff.length * 2L;
         } else {
-            newSize = buff.length * 2 + count;
-            if (limit > 0 && newSize > limit) {
-                newSize = limit;
-            }
-            tmp = new char[newSize];
+            newSize = buff.length * 2L + count;
         }
+
+        if (newSize > limit) {
+            newSize = limit;
+        }
+        tmp = new char[(int) newSize];
 
         // Some calling code assumes buffer will not be compacted
         System.arraycopy(buff, 0, tmp, 0, end);
@@ -447,7 +432,8 @@ public final class CharChunk extends AbstractChunk implements CharSequence {
      * Compares the message bytes to the specified String object.
      *
      * @param s the String to compare
-     * @return true if the comparison succeeded, false otherwise
+     * @return <code>true</code> if the comparison succeeded, <code>false</code>
+     *         otherwise
      */
     public boolean equals(String s) {
         char[] c = buff;
@@ -469,7 +455,8 @@ public final class CharChunk extends AbstractChunk implements CharSequence {
      * Compares the message bytes to the specified String object.
      *
      * @param s the String to compare
-     * @return true if the comparison succeeded, false otherwise
+     * @return <code>true</code> if the comparison succeeded, <code>false</code>
+     *         otherwise
      */
     public boolean equalsIgnoreCase(String s) {
         char[] c = buff;
@@ -515,9 +502,9 @@ public final class CharChunk extends AbstractChunk implements CharSequence {
 
 
     /**
-     * Returns true if the message bytes starts with the specified string.
-     *
-     * @param s the string
+     * @return <code>true</code> if the message bytes starts with the specified
+     *         string.
+     * @param s The string
      */
     public boolean startsWith(String s) {
         char[] c = buff;
@@ -560,9 +547,9 @@ public final class CharChunk extends AbstractChunk implements CharSequence {
 
 
     /**
-     * Returns true if the message bytes end with the specified string.
-     *
-     * @param s the string
+     * @return <code>true</code> if the message bytes end with the specified
+     *         string.
+     * @param s The string
      */
     public boolean endsWith(String s) {
         char[] c = buff;
