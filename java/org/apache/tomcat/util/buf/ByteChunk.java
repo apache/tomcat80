@@ -17,7 +17,6 @@
 package org.apache.tomcat.util.buf;
 
 import java.io.IOException;
-import java.io.Serializable;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.charset.Charset;
@@ -64,7 +63,7 @@ import java.nio.charset.StandardCharsets;
  * @author Costin Manolache
  * @author Remy Maucherat
  */
-public final class ByteChunk implements Cloneable, Serializable {
+public final class ByteChunk extends AbstractChunk {
 
     private static final long serialVersionUID = 1L;
 
