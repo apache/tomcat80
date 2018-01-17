@@ -93,6 +93,12 @@
   </subsection>
   <subsection name="Jasper">
     <changelog>
+      <add>
+        <bug>43925</bug>: Add a new system property
+        (<code>org.apache.jasper.runtime.BodyContentImpl.BUFFER_SIZE</code>) to
+        control the size of the buffer used by Jasper when buffering tag bodies.
+        (markt)
+      </add>
       <fix>
         <bug>61854</bug>: When using sets and/or maps in EL expressions, ensure
         that Jasper correctly parses the expression. Patch provided by Ricardo
