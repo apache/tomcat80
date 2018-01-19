@@ -44,7 +44,17 @@
   They eventually become mixed with the numbered issues. (I.e., numbered
   issues do not "pop up" wrt. others).
 -->
-<section name="Tomcat 8.0.49 (violetagg)" rtext="In development">
+<section name="Tomcat 8.0.50 (violetagg)" rtext="In development">
+  <subsection name="Catalina">
+    <changelog>
+      <fix>
+        Prevent a stack trace being written to standard out when running on Java
+        10 due to changes in the <code>LogManager</code> implementation. (markt)
+      </fix>
+    </changelog>
+  </subsection>
+</section>
+<section name="Tomcat 8.0.49 (violetagg)" rtext="Release in progress">
   <subsection name="Catalina">
     <changelog>
       <fix>
