@@ -38,7 +38,6 @@ import org.apache.catalina.Realm;
 import org.apache.catalina.Session;
 import org.apache.catalina.TomcatPrincipal;
 import org.apache.catalina.Valve;
-import org.apache.catalina.Wrapper;
 import org.apache.catalina.connector.Request;
 import org.apache.catalina.connector.Response;
 import org.apache.catalina.realm.GenericPrincipal;
@@ -483,13 +482,6 @@ public abstract class AuthenticatorBase extends ValveBase
                  */
                 return;
             }
-        }
-
-        // The Servlet may specify security constraints through annotations.
-        // Ensure that they have been processed before constraints are checked
-        Wrapper wrapper = request.getMappingData().wrapper;
-        if (wrapper != null) {
-            wrapper.servletSecurityAnnotationScan();
         }
 
         Realm realm = this.context.getRealm();
