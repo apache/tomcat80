@@ -327,6 +327,10 @@ public class ManagerServlet extends HttpServlet implements ContainerServlet {
 
         // Prepare our output writer to generate the response message
         response.setContentType("text/plain; charset=" + Constants.CHARSET);
+        // Stop older versions of IE thinking they know best. We set text/plain
+        // in the line above for a reason. IE's behaviour is unwanted at best
+        // and dangerous at worst.
+        response.setHeader("X-Content-Type-Options", "nosniff");
         PrintWriter writer = response.getWriter();
 
         // Process the requested command
@@ -416,6 +420,10 @@ public class ManagerServlet extends HttpServlet implements ContainerServlet {
 
         // Prepare our output writer to generate the response message
         response.setContentType("text/plain;charset="+Constants.CHARSET);
+        // Stop older versions of IE thinking they know best. We set text/plain
+        // in the line above for a reason. IE's behaviour is unwanted at best
+        // and dangerous at worst.
+        response.setHeader("X-Content-Type-Options", "nosniff");
         PrintWriter writer = response.getWriter();
 
         // Process the requested command
