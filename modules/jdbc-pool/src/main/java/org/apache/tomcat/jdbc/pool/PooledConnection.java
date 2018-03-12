@@ -771,4 +771,11 @@ public class PooledConnection {
         return attributes;
     }
 
+    public void clearWarnings() {
+        try {
+            connection.clearWarnings();
+        } catch (SQLException e) {
+            log.warn("Unable to clear Warnings, connection will be closed.", e);
+        }
+    }
 }
