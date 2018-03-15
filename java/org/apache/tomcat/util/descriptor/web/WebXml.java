@@ -977,7 +977,8 @@ public class WebXml extends XmlEncodingBase implements DocumentProperties.Encodi
                         resourceEnvRef.getName());
                 appendElement(sb, INDENT4, "resource-env-ref-type",
                         resourceEnvRef.getType());
-                // TODO mapped-name
+                appendElement(sb, INDENT4, "mapped-name",
+                        resourceEnvRef.getProperty("mappedName"));
                 for (InjectionTarget target :
                         resourceEnvRef.getInjectionTargets()) {
                     sb.append("    <injection-target>\n");
@@ -1002,10 +1003,9 @@ public class WebXml extends XmlEncodingBase implements DocumentProperties.Encodi
             appendElement(sb, INDENT4, "res-auth", resourceRef.getAuth());
             // resource-ref/res-sharing-scope was introduced in Servlet 2.3
             if (getMajorVersion() > 2 || getMinorVersion() > 2) {
-                appendElement(sb, INDENT4, "res-sharing-scope",
-                        resourceRef.getScope());
+                appendElement(sb, INDENT4, "res-sharing-scope", resourceRef.getScope());
             }
-            // TODO mapped-name
+            appendElement(sb, INDENT4, "mapped-name", resourceRef.getProperty("mappedName"));
             for (InjectionTarget target : resourceRef.getInjectionTargets()) {
                 sb.append("    <injection-target>\n");
                 appendElement(sb, INDENT6, "injection-target-class",
@@ -1091,7 +1091,7 @@ public class WebXml extends XmlEncodingBase implements DocumentProperties.Encodi
             appendElement(sb, INDENT4, "env-entry-name", envEntry.getName());
             appendElement(sb, INDENT4, "env-entry-type", envEntry.getType());
             appendElement(sb, INDENT4, "env-entry-value", envEntry.getValue());
-            // TODO mapped-name
+            appendElement(sb, INDENT4, "mapped-name", envEntry.getProperty("mappedName"));
             for (InjectionTarget target : envEntry.getInjectionTargets()) {
                 sb.append("    <injection-target>\n");
                 appendElement(sb, INDENT6, "injection-target-class",
@@ -1113,7 +1113,7 @@ public class WebXml extends XmlEncodingBase implements DocumentProperties.Encodi
             appendElement(sb, INDENT4, "home", ejbRef.getHome());
             appendElement(sb, INDENT4, "remote", ejbRef.getRemote());
             appendElement(sb, INDENT4, "ejb-link", ejbRef.getLink());
-            // TODO mapped-name
+            appendElement(sb, INDENT4, "mapped-name", ejbRef.getProperty("mappedName"));
             for (InjectionTarget target : ejbRef.getInjectionTargets()) {
                 sb.append("    <injection-target>\n");
                 appendElement(sb, INDENT6, "injection-target-class",
@@ -1138,7 +1138,7 @@ public class WebXml extends XmlEncodingBase implements DocumentProperties.Encodi
                 appendElement(sb, INDENT4, "local-home", ejbLocalRef.getHome());
                 appendElement(sb, INDENT4, "local", ejbLocalRef.getLocal());
                 appendElement(sb, INDENT4, "ejb-link", ejbLocalRef.getLink());
-                // TODO mapped-name
+                appendElement(sb, INDENT4, "mapped-name", ejbLocalRef.getProperty("mappedName"));
                 for (InjectionTarget target : ejbLocalRef.getInjectionTargets()) {
                     sb.append("    <injection-target>\n");
                     appendElement(sb, INDENT6, "injection-target-class",
@@ -1197,7 +1197,7 @@ public class WebXml extends XmlEncodingBase implements DocumentProperties.Encodi
                     sb.append("    </handler>\n");
                 }
                 // TODO handler-chains
-                // TODO mapped-name
+                appendElement(sb, INDENT4, "mapped-name", serviceRef.getProperty("mappedName"));
                 for (InjectionTarget target : serviceRef.getInjectionTargets()) {
                     sb.append("    <injection-target>\n");
                     appendElement(sb, INDENT6, "injection-target-class",
@@ -1252,7 +1252,7 @@ public class WebXml extends XmlEncodingBase implements DocumentProperties.Encodi
                         mdr.getUsage());
                 appendElement(sb, INDENT4, "message-destination-link",
                         mdr.getLink());
-                // TODO mapped-name
+                appendElement(sb, INDENT4, "mapped-name", mdr.getProperty("mappedName"));
                 for (InjectionTarget target : mdr.getInjectionTargets()) {
                     sb.append("    <injection-target>\n");
                     appendElement(sb, INDENT6, "injection-target-class",
@@ -1272,7 +1272,8 @@ public class WebXml extends XmlEncodingBase implements DocumentProperties.Encodi
                 appendElement(sb, INDENT4, "display-name", md.getDisplayName());
                 appendElement(sb, INDENT4, "message-destination-name",
                         md.getName());
-                // TODO mapped-name
+                appendElement(sb, INDENT4, "mapped-name", md.getProperty("mappedName"));
+                // TODO lookup-name
                 sb.append("  </message-destination>\n");
             }
             sb.append('\n');
