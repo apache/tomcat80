@@ -332,10 +332,9 @@ public class WebAnnotationSet {
 
             resource.setName(name);
             resource.setType(type);
-
             resource.setDescription(annotation.description());
-
             resource.setValue(annotation.mappedName());
+            resource.setLookupName(annotation.lookup());
 
             context.getNamingResources().addEnvironment(resource);
 
@@ -346,9 +345,9 @@ public class WebAnnotationSet {
 
             service.setName(name);
             service.setWsdlfile(annotation.mappedName());
-
             service.setType(type);
             service.setDescription(annotation.description());
+            service.setLookupName(annotation.lookup());
 
             context.getNamingResources().addService(service);
 
@@ -377,6 +376,7 @@ public class WebAnnotationSet {
             resource.setScope(annotation.shareable() ? "Shareable" : "Unshareable");
             resource.setProperty("mappedName", annotation.mappedName());
             resource.setDescription(annotation.description());
+            resource.setLookupName(annotation.lookup());
 
             context.getNamingResources().addResource(resource);
 
@@ -388,9 +388,9 @@ public class WebAnnotationSet {
 
             resource.setName(name);
             resource.setType(type);
-
             resource.setUsage(annotation.mappedName());
             resource.setDescription(annotation.description());
+            resource.setLookupName(annotation.lookup());
 
             context.getNamingResources().addMessageDestinationRef(resource);
 
@@ -406,9 +406,9 @@ public class WebAnnotationSet {
 
             resource.setName(name);
             resource.setType(type);
-
             resource.setProperty("mappedName", annotation.mappedName());
             resource.setDescription(annotation.description());
+            resource.setLookupName(annotation.lookup());
 
             context.getNamingResources().addResourceEnvRef(resource);
         }
