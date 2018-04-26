@@ -62,7 +62,7 @@ public class HttpParser {
                 if (c == '{' || c == '}' || c == '|') {
                     REQUEST_TARGET_ALLOW[c] = true;
                 } else {
-                    log.warn(sm.getString("httpparser.invalidRequestTargetCharacter",
+                    log.warn(sm.getString("http.invalidRequestTargetCharacter",
                             Character.valueOf(c)));
                 }
             }
@@ -521,7 +521,8 @@ public class HttpParser {
                     octetCount++;
                     octet = -1;
                 } else {
-                    throw new IllegalArgumentException();
+                    throw new IllegalArgumentException(
+                            sm.getString("http.invalidOctet", Integer.toString(octet)));
                 }
             } else if (isNumeric(c)) {
                 if (octet == -1) {
@@ -533,7 +534,7 @@ public class HttpParser {
                 break;
             } else if (c == -1) {
                 if (inIPv6) {
-                    throw new IllegalArgumentException();
+                    throw new IllegalArgumentException(sm.getString("http.noClosingBracket"));
                 } else {
                     pos = -1;
                     break;
@@ -543,19 +544,22 @@ public class HttpParser {
                     pos++;
                     break;
                 } else {
-                    throw new IllegalArgumentException();
+                    throw new IllegalArgumentException(sm.getString("http.closingBracket"));
                 }
             } else {
-                throw new IllegalArgumentException();
+                throw new IllegalArgumentException(sm.getString(
+                        "http.illegalCharacterIpv4", Character.toString((char) c)));
             }
             pos++;
         } while (true);
 
         if (octetCount != 4) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException(
+                    sm.getString("http.wrongOctetCount", Integer.toString(octetCount)));
         }
         if (octet < 0 || octet > 255) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException(
+                    sm.getString("http.invalidOctet", Integer.toString(octet)));
         }
 
         return pos;
@@ -570,7 +574,7 @@ public class HttpParser {
         // Must start with '['
         int c = reader.read();
         if (c != '[') {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException(sm.getString("http.noOpeningBracket"));
         }
 
         int h16Count = 0;
@@ -583,7 +587,7 @@ public class HttpParser {
             c = reader.read();
             if (h16Count == 0 && precedingColonsCount == 1 && c != ':') {
                 // Can't start with a single :
-                throw new IllegalArgumentException();
+                throw new IllegalArgumentException(sm.getString("http.singleColonStart"));
             }
             if (HttpParser.isHex(c)) {
                 if (h16Size == 0) {
@@ -593,18 +597,19 @@ public class HttpParser {
                 }
                 h16Size++;
                 if (h16Size > 4) {
-                    throw new IllegalArgumentException();
+                    throw new IllegalArgumentException(sm.getString("http.invalidHextet"));
                 }
             } else if (c == ':') {
                 if (precedingColonsCount >=2 ) {
                     // ::: is not allowed
-                    throw new IllegalArgumentException();
+                    throw new IllegalArgumentException(sm.getString("http.tooManyColons"));
                 } else {
                     if(precedingColonsCount == 1) {
                         // End of ::
                         if (parsedDoubleColon ) {
                             // Only allowed one :: sequence
-                            throw new IllegalArgumentException();
+                            throw new IllegalArgumentException(
+                                    sm.getString("http.tooManyDoubleColons"));
                         }
                         parsedDoubleColon = true;
                         // :: represents at least one h16 block
@@ -618,7 +623,7 @@ public class HttpParser {
             } else if (c == ']') {
                 if (precedingColonsCount == 1) {
                     // Can't end on a single ':'
-                    throw new IllegalArgumentException();
+                    throw new IllegalArgumentException(sm.getString("http.singleColonEnd"));
                 }
                 pos++;
                 break;
@@ -630,18 +635,21 @@ public class HttpParser {
                     h16Count++;
                     break;
                 } else {
-                    throw new IllegalArgumentException();
+                    throw new IllegalArgumentException(sm.getString("http.invalidIpv4Location"));
                 }
             } else {
-                throw new IllegalArgumentException();
+                throw new IllegalArgumentException(sm.getString(
+                        "http.illegalCharacterIpv6", Character.toString((char) c)));
             }
             pos++;
         } while (true);
 
         if (h16Count > 8) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException(
+                    sm.getString("http.tooManyHextets", Integer.toString(h16Count)));
         } else if (h16Count != 8 && !parsedDoubleColon) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException(
+                    sm.getString("http.tooFewHextets", Integer.toString(h16Count)));
         }
 
         c = reader.read();
@@ -651,7 +659,8 @@ public class HttpParser {
             if(c == -1) {
                 return -1;
             }
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException(
+                    sm.getString("http.illegalAfterIpv6", Character.toString((char) c)));
         }
     }
 
@@ -694,13 +703,13 @@ public class HttpParser {
 
 
     private enum DomainParseState {
-        NEW(     true, false, false, false, false, false),
-        ALPHA(   true,  true,  true,  true,  true,  true),
-        NUMERIC( true,  true,  true,  true,  true,  true),
-        PERIOD(  true, false, false, false,  true,  true),
-        HYPHEN(  true,  true,  true, false, false, false),
-        COLON(  false, false, false, false, false, false),
-        END(    false, false, false, false, false, false);
+        NEW(     true, false, false, false, false, false, " at the start of"),
+        ALPHA(   true,  true,  true,  true,  true,  true, " after a letter in"),
+        NUMERIC( true,  true,  true,  true,  true,  true, " after a number in"),
+        PERIOD(  true, false, false, false,  true,  true, " after a period in"),
+        HYPHEN(  true,  true,  true, false, false, false, " after a hypen in"),
+        COLON(  false, false, false, false, false, false, " after a colon in"),
+        END(    false, false, false, false, false, false, " at the end of");
 
         private final boolean mayContinue;
         private final boolean allowsNumeric;
@@ -708,15 +717,17 @@ public class HttpParser {
         private final boolean allowsPeriod;
         private final boolean allowsColon;
         private final boolean allowsEnd;
+        private final String errorLocation;
 
         private DomainParseState(boolean mayContinue, boolean allowsNumeric, boolean allowsHyphen,
-                boolean allowsPeriod, boolean allowsColon, boolean allowsEnd) {
+                boolean allowsPeriod, boolean allowsColon, boolean allowsEnd, String errorLocation) {
             this.mayContinue = mayContinue;
             this.allowsNumeric = allowsNumeric;
             this.allowsHyphen = allowsHyphen;
             this.allowsPeriod = allowsPeriod;
             this.allowsColon = allowsColon;
             this.allowsEnd = allowsEnd;
+            this.errorLocation = errorLocation;
         }
 
         public boolean mayContinue() {
@@ -730,34 +741,40 @@ public class HttpParser {
                 if (allowsNumeric) {
                     return NUMERIC;
                 } else {
-                    throw new IllegalArgumentException();
+                    throw new IllegalArgumentException(sm.getString("http.invalidCharacterDomain",
+                            Character.toString((char) c), errorLocation));
                 }
             } else if (c == '.') {
                 if (allowsPeriod) {
                     return PERIOD;
                 } else {
-                    throw new IllegalArgumentException();
+                    throw new IllegalArgumentException(sm.getString("http.invalidCharacterDomain",
+                            Character.toString((char) c), errorLocation));
                 }
             } else if (c == ':') {
                 if (allowsColon) {
                     return COLON;
                 } else {
-                    throw new IllegalArgumentException();
+                    throw new IllegalArgumentException(sm.getString("http.invalidCharacterDomain",
+                            Character.toString((char) c), errorLocation));
                 }
             } else if (c == -1) {
                 if (allowsEnd) {
                     return END;
                 } else {
-                    throw new IllegalArgumentException();
+                    throw new IllegalArgumentException(sm.getString("http.invalidCharacterDomain",
+                            Character.toString((char) c), errorLocation));
                 }
             } else if (c == '-') {
                 if (allowsHyphen) {
                     return HYPHEN;
                 } else {
-                    throw new IllegalArgumentException();
+                    throw new IllegalArgumentException(sm.getString("http.invalidCharacterDomain",
+                            Character.toString((char) c), errorLocation));
                 }
             } else {
-                throw new IllegalArgumentException();
+                throw new IllegalArgumentException(sm.getString(
+                        "http.illegalCharacterDomain", Character.toString((char) c)));
             }
         }
     }
