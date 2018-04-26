@@ -814,7 +814,7 @@ public class WsSession implements Session {
         }
     }
 
-    private static enum State {
+    private enum State {
         OPEN,
         SENDING_CLOSED,
         CLOSED_SENT,
