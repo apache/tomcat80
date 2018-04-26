@@ -68,9 +68,8 @@ public class TestCometProcessor extends TomcatBaseTest {
         socket.setSoTimeout(5000);
 
         final OutputStream os = socket.getOutputStream();
-        String requestLine = "POST http://localhost:" + getPort() +
-                "/comet HTTP/1.1\r\n";
-        os.write(requestLine.getBytes());
+        os.write("POST /comet HTTP/1.1\r\n".getBytes());
+        os.write(("host: localhost:" + getPort() + "\r\n").getBytes());
         os.write("transfer-encoding: chunked\r\n".getBytes());
         os.write("\r\n".getBytes());
 
@@ -90,9 +89,8 @@ public class TestCometProcessor extends TomcatBaseTest {
         }
 
         // Send a standard HTTP request on the same connection
-        requestLine = "GET http://localhost:" + getPort() +
-                "/hello HTTP/1.1\r\n";
-        os.write(requestLine.getBytes());
+        os.write("GET /hello HTTP/1.1\r\n".getBytes());
+        os.write(("host: localhost:" + getPort() + "\r\n").getBytes());
         os.write("\r\n".getBytes());
 
         // Check for the expected response
@@ -134,9 +132,8 @@ public class TestCometProcessor extends TomcatBaseTest {
         socket.setSoTimeout(5000);
 
         final OutputStream os = socket.getOutputStream();
-        String requestLine = "POST http://localhost:" + getPort() +
-                "/comet HTTP/1.1\r\n";
-        os.write(requestLine.getBytes());
+        os.write("POST /comet HTTP/1.1\r\n".getBytes());
+        os.write(("host: localhost:" + getPort() + "\r\n").getBytes());
         os.write("transfer-encoding: chunked\r\n".getBytes());
         os.write("\r\n".getBytes());
         // Don't send any data
@@ -160,9 +157,8 @@ public class TestCometProcessor extends TomcatBaseTest {
         }
 
         // Send a standard HTTP request on the same connection
-        requestLine = "GET http://localhost:" + getPort() +
-                "/hello HTTP/1.1\r\n";
-        os.write(requestLine.getBytes());
+        os.write("GET /hello HTTP/1.1\r\n".getBytes());
+        os.write(("host: localhost:" + getPort() + "\r\n").getBytes());
         os.write("connection: close\r\n".getBytes());
         os.write("\r\n".getBytes());
 
@@ -205,9 +201,8 @@ public class TestCometProcessor extends TomcatBaseTest {
         socket.setSoTimeout(5000);
 
         final OutputStream os = socket.getOutputStream();
-        String requestLine = "POST http://localhost:" + getPort() +
-                "/comet HTTP/1.1\r\n";
-        os.write(requestLine.getBytes());
+        os.write("POST /comet HTTP/1.1\r\n".getBytes());
+        os.write(("host: localhost:" + getPort() + "\r\n").getBytes());
         os.write("transfer-encoding: chunked\r\n".getBytes());
         os.write("\r\n".getBytes());
         // Don't send any data
@@ -282,9 +277,8 @@ public class TestCometProcessor extends TomcatBaseTest {
         socket.setSoTimeout(60000);
 
         final OutputStream os = socket.getOutputStream();
-        String requestLine = "POST http://localhost:" + getPort() +
-                "/ HTTP/1.1\r\n";
-        os.write(requestLine.getBytes());
+        os.write("POST / HTTP/1.1\r\n".getBytes());
+        os.write(("host: localhost:" + getPort() + "\r\n").getBytes());
         os.write("transfer-encoding: chunked\r\n".getBytes());
         os.write("\r\n".getBytes());
 
@@ -370,9 +364,8 @@ public class TestCometProcessor extends TomcatBaseTest {
         socket.setSoTimeout(10000);
 
         final OutputStream os = socket.getOutputStream();
-        String requestLine = "POST http://localhost:" + getPort() +
-                "/ HTTP/1.1\r\n";
-        os.write(requestLine.getBytes());
+        os.write("POST / HTTP/1.1\r\n".getBytes());
+        os.write(("host: localhost:" + getPort() + "\r\n").getBytes());
         os.write("transfer-encoding: chunked\r\n".getBytes());
         os.write("\r\n".getBytes());
 
