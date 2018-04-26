@@ -293,7 +293,8 @@ public class Http11AprProtocol extends AbstractHttp11Protocol<Long> {
                     proto.getMaxHttpHeaderSize(), proto.getRejectIllegalHeaderName(),
                     (AprEndpoint)proto.endpoint, proto.getMaxTrailerSize(),
                     proto.getAllowedTrailerHeadersAsSet(), proto.getMaxExtensionSize(),
-                    proto.getMaxSwallowSize());
+                    proto.getMaxSwallowSize(), proto.getRelaxedPathChars(),
+                    proto.getRelaxedQueryChars());
             proto.configureProcessor(processor);
             // APR specific configuration
             processor.setClientCertProvider(proto.getClientCertProvider());

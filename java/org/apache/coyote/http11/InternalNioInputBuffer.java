@@ -26,6 +26,7 @@ import org.apache.coyote.Request;
 import org.apache.juli.logging.Log;
 import org.apache.juli.logging.LogFactory;
 import org.apache.tomcat.util.buf.ByteChunk;
+import org.apache.tomcat.util.http.parser.HttpParser;
 import org.apache.tomcat.util.net.AbstractEndpoint;
 import org.apache.tomcat.util.net.NioChannel;
 import org.apache.tomcat.util.net.NioEndpoint;
@@ -48,8 +49,8 @@ public class InternalNioInputBuffer extends AbstractNioInputBuffer<NioChannel> {
      * Alternate constructor.
      */
     public InternalNioInputBuffer(Request request, int headerBufferSize,
-            boolean rejectIllegalHeaderName) {
-        super(request, headerBufferSize, rejectIllegalHeaderName);
+            boolean rejectIllegalHeaderName, HttpParser httpParser) {
+        super(request, headerBufferSize, rejectIllegalHeaderName, httpParser);
         inputStreamInputBuffer = new SocketInputBuffer();
     }
 

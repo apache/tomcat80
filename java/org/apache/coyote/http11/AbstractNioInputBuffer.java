@@ -77,13 +77,14 @@ public abstract class AbstractNioInputBuffer<S> extends AbstractInputBuffer<S> {
      * Alternate constructor.
      */
     public AbstractNioInputBuffer(Request request, int headerBufferSize,
-            boolean rejectIllegalHeaderName) {
+            boolean rejectIllegalHeaderName, HttpParser httpParser) {
 
         this.request = request;
         headers = request.getMimeHeaders();
 
         this.headerBufferSize = headerBufferSize;
         this.rejectIllegalHeaderName = rejectIllegalHeaderName;
+        this.httpParser = httpParser;
 
         filterLibrary = new InputFilter[0];
         activeFilters = new InputFilter[0];
@@ -281,10 +282,10 @@ public abstract class AbstractNioInputBuffer<S> extends AbstractInputBuffer<S> {
                     end = pos;
                 } else if ((buf[pos] == Constants.QUESTION) && (parsingRequestLineQPos == -1)) {
                     parsingRequestLineQPos = pos;
-                } else if (parsingRequestLineQPos != -1 && !HttpParser.isQuery(buf[pos])) {
+                } else if (parsingRequestLineQPos != -1 && !httpParser.isQueryRelaxed(buf[pos])) {
                     // %nn decoding will be checked at the point of decoding
                     throw new IllegalArgumentException(sm.getString("iib.invalidRequestTarget"));
-                } else if (HttpParser.isNotRequestTarget(buf[pos])) {
+                } else if (httpParser.isNotRequestTargetRelaxed(buf[pos])) {
                     // This is a general check that aims to catch problems early
                     // Detailed checking of each part of the request target will
                     // happen in AbstractHttp11Processor#prepareRequest()

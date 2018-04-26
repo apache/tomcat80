@@ -168,7 +168,8 @@ public class Http11Protocol extends AbstractHttp11JsseProtocol<Socket> {
                     proto.getMaxHttpHeaderSize(), proto.getRejectIllegalHeaderName(),
                     (JIoEndpoint)proto.endpoint, proto.getMaxTrailerSize(),
                     proto.getAllowedTrailerHeadersAsSet(), proto.getMaxExtensionSize(),
-                    proto.getMaxSwallowSize());
+                    proto.getMaxSwallowSize(), proto.getRelaxedPathChars(),
+                    proto.getRelaxedQueryChars());
             proto.configureProcessor(processor);
             // BIO specific configuration
             processor.setDisableKeepAlivePercentage(proto.getDisableKeepAlivePercentage());

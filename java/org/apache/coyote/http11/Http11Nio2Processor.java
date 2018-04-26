@@ -32,6 +32,7 @@ import org.apache.coyote.http11.filters.BufferedInputFilter;
 import org.apache.juli.logging.Log;
 import org.apache.juli.logging.LogFactory;
 import org.apache.tomcat.util.ExceptionUtils;
+import org.apache.tomcat.util.http.parser.HttpParser;
 import org.apache.tomcat.util.net.AbstractEndpoint.Handler.SocketState;
 import org.apache.tomcat.util.net.Nio2Channel;
 import org.apache.tomcat.util.net.Nio2Endpoint;
@@ -64,12 +65,15 @@ public class Http11Nio2Processor extends AbstractHttp11Processor<Nio2Channel> {
 
     public Http11Nio2Processor(int maxHttpHeaderSize, boolean rejectIllegalHeaderName,
             Nio2Endpoint endpoint, int maxTrailerSize, Set<String> allowedTrailerHeaders,
-            int maxExtensionSize, int maxSwallowSize) {
+            int maxExtensionSize, int maxSwallowSize, String relaxedPathChars,
+            String relaxedQueryChars) {
 
         super(endpoint);
 
+        httpParser = new HttpParser(relaxedPathChars, relaxedQueryChars);
+
         inputBuffer = new InternalNio2InputBuffer(request, maxHttpHeaderSize,
-                rejectIllegalHeaderName);
+                rejectIllegalHeaderName, httpParser);
         request.setInputBuffer(inputBuffer);
 
         outputBuffer = new InternalNio2OutputBuffer(response, maxHttpHeaderSize);
