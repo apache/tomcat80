@@ -63,6 +63,10 @@
         correctly handle bots that crawl multiple hosts and/or web applications
         when the Valve is configured on a Host or an Engine. (fschumacher)
       </fix>
+      <fix>
+        <bug>62329</bug>: Correctly list resources in JAR files when directories
+        do not have dedicated entries. Patch provided by Meelis Müür. (markt)
+      </fix>
     </changelog>
   </subsection>
   <subsection name="Coyote">
