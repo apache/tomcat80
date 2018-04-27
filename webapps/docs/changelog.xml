@@ -128,6 +128,15 @@
       </fix>
     </changelog>
   </subsection>
+  <subsection name="Other">
+    <changelog>
+      <fix>
+        Avoid warning when running under Cygwin when the
+        <code>JAVA_ENDORSED_DIRS</code> environment variable is not set. Patch
+        provided by Zemian Deng. (markt)
+      </fix>
+    </changelog>
+  </subsection>
 </section>
 <section name="Tomcat 8.0.51 (violetagg)" rtext="2018-04-13">
   <subsection name="Catalina">
