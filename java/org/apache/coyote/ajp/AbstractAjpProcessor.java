@@ -1099,10 +1099,10 @@ public abstract class AbstractAjpProcessor<S> extends AbstractProcessor<S> {
             if (messageLength > message.getBuffer().length) {
                 // Message too long for the buffer
                 // Need to trigger a 400 response
-                throw new IllegalArgumentException(sm.getString(
-                        "ajpprocessor.header.tooLong",
-                        Integer.valueOf(messageLength),
-                        Integer.valueOf(buf.length)));
+                String msg = sm.getString("ajpprocessor.header.tooLong",
+                        Integer.valueOf(messageLength), Integer.valueOf(buf.length));
+                getLog().error(msg);
+                throw new IllegalArgumentException(msg);
             }
             read(buf, headerLength, messageLength, true);
             return true;
