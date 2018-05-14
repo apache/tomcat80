@@ -60,9 +60,6 @@ import org.apache.tomcat.util.res.StringManager;
 
 public abstract class AbstractHttp11Processor<S> extends AbstractProcessor<S> {
 
-    private final UserDataHelper userDataHelper;
-
-
     /**
      * The string manager for this package.
      */
@@ -261,7 +258,6 @@ public abstract class AbstractHttp11Processor<S> extends AbstractProcessor<S> {
 
     public AbstractHttp11Processor(AbstractEndpoint<S> endpoint) {
         super(endpoint);
-        userDataHelper = new UserDataHelper(getLog());
     }
 
 
