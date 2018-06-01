@@ -17,6 +17,9 @@
 
 package org.apache.jasper.security;
 
+import org.apache.juli.logging.Log;
+import org.apache.juli.logging.LogFactory;
+
 /**
  * Static class used to preload java classes when using the Java SecurityManager
  * so that the defineClassInPackage RuntimePermission does not trigger an
@@ -24,9 +27,6 @@ package org.apache.jasper.security;
  */
 
 public final class SecurityClassLoad {
-
-    private static final org.apache.juli.logging.Log log = org.apache.juli.logging.LogFactory
-            .getLog(SecurityClassLoad.class);
 
     public static void securityClassLoad(ClassLoader loader) {
 
@@ -59,6 +59,7 @@ public final class SecurityClassLoad {
 
             loadAnonymousInnerClasses(loader, basePackage + "runtime.JspWriterImpl");
         } catch (ClassNotFoundException ex) {
+            Log log = LogFactory.getLog(SecurityClassLoad.class);
             log.error("SecurityClassLoad", ex);
         }
     }

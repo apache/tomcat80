@@ -39,6 +39,8 @@ import javax.servlet.descriptor.JspConfigDescriptor;
 import javax.servlet.descriptor.JspPropertyGroupDescriptor;
 import javax.servlet.descriptor.TaglibDescriptor;
 
+import org.apache.juli.logging.Log;
+import org.apache.juli.logging.LogFactory;
 import org.apache.tomcat.util.buf.UDecoder;
 import org.apache.tomcat.util.descriptor.XmlIdentifiers;
 import org.apache.tomcat.util.digester.DocumentProperties;
@@ -60,8 +62,7 @@ public class WebXml extends XmlEncodingBase implements DocumentProperties.Encodi
     private static final StringManager sm =
         StringManager.getManager(Constants.PACKAGE_NAME);
 
-    private static final org.apache.juli.logging.Log log=
-        org.apache.juli.logging.LogFactory.getLog(WebXml.class);
+    private final Log log = LogFactory.getLog(WebXml.class);
 
     // Global defaults are overridable but Servlets and Servlet mappings need to
     // be unique. Duplicates normally trigger an error. This flag indicates if
@@ -1903,7 +1904,7 @@ public class WebXml extends XmlEncodingBase implements DocumentProperties.Encodi
         return true;
     }
 
-    private static <T extends ResourceBase> boolean mergeResourceMap(
+    private <T extends ResourceBase> boolean mergeResourceMap(
             Map<String, T> fragmentResources, Map<String, T> mainResources,
             Map<String, T> tempResources, WebXml fragment) {
         for (T resource : fragmentResources.values()) {
@@ -1931,7 +1932,7 @@ public class WebXml extends XmlEncodingBase implements DocumentProperties.Encodi
         return true;
     }
 
-    private static <T> boolean mergeMap(Map<String,T> fragmentMap,
+    private <T> boolean mergeMap(Map<String,T> fragmentMap,
             Map<String,T> mainMap, Map<String,T> tempMap, WebXml fragment,
             String mapName) {
         for (Entry<String, T> entry : fragmentMap.entrySet()) {
@@ -2124,7 +2125,7 @@ public class WebXml extends XmlEncodingBase implements DocumentProperties.Encodi
     }
 
 
-    private static boolean mergeLifecycleCallback(
+    private boolean mergeLifecycleCallback(
             Map<String, String> fragmentMap, Map<String, String> tempMap,
             WebXml fragment, String mapName) {
         for (Entry<String, String> entry : fragmentMap.entrySet()) {
@@ -2157,17 +2158,22 @@ public class WebXml extends XmlEncodingBase implements DocumentProperties.Encodi
      */
     public static Set<WebXml> orderWebFragments(WebXml application,
             Map<String,WebXml> fragments, ServletContext servletContext) {
+        return application.orderWebFragments(fragments, servletContext);
+    }
+
+
+    private Set<WebXml> orderWebFragments(Map<String,WebXml> fragments,
+            ServletContext servletContext) {
 
         Set<WebXml> orderedFragments = new LinkedHashSet<>();
 
-        boolean absoluteOrdering =
-            (application.getAbsoluteOrdering() != null);
+        boolean absoluteOrdering = getAbsoluteOrdering() != null;
         boolean orderingPresent = false;
 
         if (absoluteOrdering) {
             orderingPresent = true;
             // Only those fragments listed should be processed
-            Set<String> requestedOrder = application.getAbsoluteOrdering();
+            Set<String> requestedOrder = getAbsoluteOrdering();
 
             for (String requestedName : requestedOrder) {
                 if (WebXml.ORDER_OTHERS.equals(requestedName)) {
