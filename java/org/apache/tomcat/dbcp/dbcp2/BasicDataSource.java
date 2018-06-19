@@ -2217,7 +2217,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      */
     protected void createConnectionPool(final PoolableConnectionFactory factory) {
         // Create an object pool to contain our active connections
-        final GenericObjectPoolConfig config = new GenericObjectPoolConfig();
+        final GenericObjectPoolConfig<PoolableConnection> config = new GenericObjectPoolConfig<>();
         updateJmxName(config);
         config.setJmxEnabled(registeredJmxName != null);  // Disable JMX on the underlying pool if the DS is not registered.
         final GenericObjectPool<PoolableConnection> gop = createObjectPool(factory, config, abandonedConfig);
@@ -2248,7 +2248,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      * @return a non-null instance
      */
     protected  GenericObjectPool<PoolableConnection> createObjectPool(
-            final PoolableConnectionFactory factory, final GenericObjectPoolConfig poolConfig,
+            final PoolableConnectionFactory factory, final GenericObjectPoolConfig<PoolableConnection> poolConfig,
             final AbandonedConfig abandonedConfig) {
         GenericObjectPool<PoolableConnection> gop;
         if (abandonedConfig != null &&
@@ -2424,7 +2424,7 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
         // NO-OP
     }
 
-    private void updateJmxName(final GenericObjectPoolConfig config) {
+    private void updateJmxName(final GenericObjectPoolConfig<PoolableConnection> config) {
         if (registeredJmxName == null) {
             return;
         }
