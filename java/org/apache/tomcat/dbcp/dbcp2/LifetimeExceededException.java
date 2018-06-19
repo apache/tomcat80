@@ -41,5 +41,4 @@ class LifetimeExceededException extends Exception {
     public LifetimeExceededException(final String message) {
         super(message);
     }
-
 }

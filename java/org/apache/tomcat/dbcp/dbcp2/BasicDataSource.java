@@ -412,7 +412,6 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
      *
      * @param lifo
      *            the new value for the LIFO property
-     *
      */
     public synchronized void setLifo(final boolean lifo) {
         this.lifo = lifo;
@@ -2025,13 +2024,6 @@ public class BasicDataSource implements DataSource, BasicDataSourceMXBean, MBean
             }
         } catch (final SQLException e) {
             throw new IllegalStateException("Cannot invalidate connection: Unwrapping poolable connection failed.", e);
-        }
-
-        // attempt to close the connection for good measure
-        try {
-            connection.close();
-        } catch (Exception e) {
-            // ignore any exceptions here
         }
 
         try {

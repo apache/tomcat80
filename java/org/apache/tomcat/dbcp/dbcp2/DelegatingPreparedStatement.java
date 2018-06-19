@@ -245,7 +245,7 @@ public class DelegatingPreparedStatement extends DelegatingStatement implements 
         }
     }
 
-    /** @deprecated */
+    /** @deprecated Use setAsciiStream(), setCharacterStream() or setNCharacterStream() */
     @Deprecated
     @Override
     public void setUnicodeStream(final int parameterIndex, final InputStream x, final int length) throws SQLException {

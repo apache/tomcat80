@@ -44,7 +44,7 @@ public class PoolableConnection extends DelegatingConnection<Connection> impleme
     static {
         try {
             MBEAN_SERVER = ManagementFactory.getPlatformMBeanServer();
-        } catch (Exception ex) {
+        } catch (NoClassDefFoundError | Exception ex) {
             // ignore - JMX not available
         }
     }
