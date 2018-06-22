@@ -84,6 +84,7 @@
   <!-- Servlet 3.1 spec requires 1.7+ -->
   <property name="compile.source" value="1.7"/>
   <property name="compile.target" value="1.7"/>
+  <property name="compile.release" value="7"/>
 
   <!-- Locations to create the JAR artifacts -->
   <!-- Standard JARs -->
@@ -617,6 +618,7 @@
            deprecation="${compile.deprecation}"
            source="${compile.source}"
            target="${compile.target}"
+           release="${compile.release}"
            excludes="**/.svn/**"
            encoding="ISO-8859-1"
            includeAntRuntime="true" >
@@ -668,6 +670,7 @@
            deprecation="${compile.deprecation}"
            source="${compile.source}"
            target="${compile.target}"
+           release="${compile.release}"
            excludes="**/.svn/**"
            encoding="ISO-8859-1"
            includeAntRuntime="true" >
@@ -1083,6 +1086,7 @@
              debug="${compile.debug}" deprecation="${compile.deprecation}"
              source="${compile.source}"
              target="${compile.target}"
+             release="${compile.release}"
              classpath="${tomcat.classes}"
              excludes="**/CVS/**,**/.svn/**"
              encoding="ISO-8859-1"
@@ -1095,6 +1099,7 @@
              debug="${compile.debug}" deprecation="${compile.deprecation}"
              source="${compile.source}"
              target="${compile.target}"
+             release="${compile.release}"
              classpath="$tomcat.lcasses}"
              excludes="**/CVS/**,**/.svn/**"
              encoding="ISO-8859-1"
@@ -1328,6 +1333,7 @@
            deprecation="${compile.deprecation}"
            source="${compile.source}"
            target="${compile.target}"
+           release="${compile.release}"
            encoding="ISO-8859-1"
            includeantruntime="true">
       <classpath refid="tomcat.test.classpath" />
@@ -1782,6 +1788,8 @@
            debug="${compile.debug}"
            deprecation="${compile.deprecation}"
            source="${compile.source}"
+           target="${compile.target}"
+           release="${compile.release}"
            encoding="ISO-8859-1"
            includeantruntime="false">
       <classpath refid="tomcat.webservices.classpath" />
