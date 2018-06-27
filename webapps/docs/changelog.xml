@@ -264,6 +264,10 @@
         Support building with Java 9+ while preserving the Java 7 compatibility
         at runtime (requires Ant 1.9.8 or later). (ebourg)
       </update>
+      <add>
+        Implement checksum checks when downloading dependencies that are used
+        to build Tomcat. (kkolinko)
+      </add>
     </changelog>
   </subsection>
 </section>
