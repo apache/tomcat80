@@ -629,7 +629,7 @@ public class Nio2Endpoint extends AbstractEndpoint<Nio2Channel> {
                         return; // don't close on comet timeout
                     }
                 } else {
-                    // Don't dispatch if the lines below are canceling the key
+                    // Don't dispatch if the lines below are cancelling the key
                     processSocket0(socket, status, false);
                 }
             }
