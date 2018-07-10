@@ -170,8 +170,8 @@
 
     <!--sign the zip, the tar.gz and the pom -->
     <antcall target="-sign" >
-      <param name="file.in" value="@{file}" />
-      <param name="file.out" value="@{file}.asc" />
+      <param name="file.in" value="@{file}.zip" />
+      <param name="file.out" value="@{file}.zip.asc" />
     </antcall>
     <antcall target="-sign" >
       <param name="file.in" value="@{file}.tar.gz" />
