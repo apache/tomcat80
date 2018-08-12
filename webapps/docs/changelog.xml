@@ -61,6 +61,15 @@
       </fix>
     </changelog>
   </subsection>
+  <subsection name="Other">
+    <changelog>
+      <fix>
+        Switch the build script to use http for downloads from an ASF mirror
+        using the closer.lua script to avoid failures due to HTTPS to HTTP
+        redirects. (rjung)
+      </fix>
+    </changelog>
+  </subsection>
 </section>
 <section name="Tomcat 8.0.53 (violetagg)" rtext="2018-07-05">
   <subsection name="Catalina">
